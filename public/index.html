@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZenPy — Master Python Through 100 Progressive Challenges</title>
+    <meta name="description" content="ZenPy is a free gamified Python learning platform. Solve 100 progressive challenges, earn XP, collect Zen coins, and compete on leaderboards. Built for learners who want to go from zero to building a mini language model.">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <style>
+        .landing-nav { padding: 0 40px; }
+
+        /* Hero */
+        .hero {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 140px 32px 80px;
+            text-align: left;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border: 1px solid var(--border);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.04em;
+            margin-bottom: 20px;
+        }
+        .hero h1 .accent { color: var(--accent); }
+        .hero .lead {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 560px;
+            line-height: 1.8;
+            margin-bottom: 32px;
+        }
+        .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        /* Terminal preview */
+        .terminal-preview {
+            max-width: 800px;
+            margin: 0 auto 80px;
+            padding: 0 32px;
+        }
+        .terminal-window {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-lg);
+        }
+        .terminal-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border: 1px solid var(--border);
+        }
+        .terminal-body {
+            padding: 20px;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+        .terminal-body .comment { color: var(--text-muted); }
+        .terminal-body .keyword { color: var(--accent); }
+        .terminal-body .string { color: var(--success); }
+        .terminal-body .fn { color: var(--info); }
+        .terminal-body .output { color: var(--warning); }
+        .terminal-body .cursor-blink {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--accent);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        /* Sections */
+        .section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 32px;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+        }
+        .section-divider {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+        .section-divider hr {
+            border-top: 1px dashed var(--border);
+        }
+
+        /* Feature cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translate(-2px, -2px);
+            box-shadow: var(--shadow-accent);
+        }
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .feature-icon svg { width: 24px; height: 24px; }
+        .feature-card h4 { font-size: 0.9rem; margin-bottom: 6px; }
+        .feature-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+
+        /* Journey / Phases */
+        .phases-list { list-style: none; }
+        .phases-list li {
+            display: flex;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .phase-num {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--border);
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+        .phase-info h4 { font-size: 0.88rem; margin-bottom: 2px; }
+        .phase-info p { font-size: 0.78rem; color: var(--text-muted); }
+
+        /* How it works */
+        .steps-row {
+            display: flex;
+            gap: 2px;
+        }
+        .step-card {
+            flex: 1;
+            padding: 20px 16px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        .step-num {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        .step-card h4 { font-size: 0.85rem; margin-bottom: 4px; }
+        .step-card p { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* About callout */
+        .callout {
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            padding: 32px;
+            box-shadow: var(--shadow-accent);
+        }
+        .callout h3 { margin-bottom: 12px; }
+        .callout p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 12px; }
+        .callout ul { list-style: none; padding: 0; }
+        .callout ul li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .callout .check-icon { color: var(--success); display: inline-flex; width: 16px; height: 16px; }
+        .callout .check-icon svg { width: 100%; height: 100%; }
+
+        /* Footer */
+        .landing-footer {
+            border-top: 2px solid var(--border);
+            padding: 32px;
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 2rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .steps-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-header landing-nav">
+        <a href="/" class="nav-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF1493" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Zen<span>Py</span>
+        </a>
+        <div class="nav-links">
+            <a href="/login" class="btn btn-ghost btn-sm">Login</a>
+            <a href="/signup" class="btn btn-primary btn-sm">Sign Up</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            open-source python learning
+        </div>
+        <h1>Learn Python<br>the <span class="accent">hard way,</span><br>the fun way.</h1>
+        <p class="lead">
+            100 progressive challenges that take you from <code>print("Hello")</code> to building
+            a mini Transformer language model — all in your browser. No setup. No hand-holding.
+            Just you, a compiler, and 100 problems that actually teach you something.
+        </p>
+        <div class="hero-actions">
+            <a href="/signup" class="btn btn-primary btn-lg animate-glow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2l.27-.27M19.13 4.87a15.1 15.1 0 00-11.31 4.36l-3.54 3.54 7.07 7.07 3.54-3.54a15.1 15.1 0 004.36-11.31L19.13 4.87z"/><circle cx="15" cy="9" r="1.5" fill="currentColor"/></svg>
+                Start from Q1
+            </a>
+            <a href="#about" class="btn btn-secondary btn-lg">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                Learn More
+            </a>
+        </div>
+    </section>
+
+    <!-- Terminal Preview -->
+    <div class="terminal-preview">
+        <div class="terminal-window">
+            <div class="terminal-bar">
+                <span class="terminal-dot"></span>
+                <span class="terminal-dot"></span>
+                <span class="terminal-dot"></span>
+                zenpy — practice.py
+            </div>
+            <div class="terminal-body">
+                <span class="comment"># Q1: Print Your Name</span><br>
+                <span class="keyword">def</span> <span class="fn">solve</span>():<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">print</span>(<span class="string">"Hello, World!"</span>)<br>
+                <br>
+                <span class="output">>>> Hello, World!</span><br>
+                <span class="output" style="color:var(--success);">All tests passed +10 XP</span><span class="cursor-blink"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-divider"><hr></div>
+
+    <!-- About ZenPy -->
+    <section class="section" id="about">
+        <div class="callout">
+            <h3>What is ZenPy?</h3>
+            <p>
+                ZenPy is a gamified Python learning platform built for people who learn by doing.
+                We don't believe in passive video tutorials or hand-holding. Instead, we give you
+                100 carefully sequenced problems — each one building directly on the last — that
+                take you from absolute zero to implementing your own neural network and mini Transformer.
+            </p>
+            <p>
+                Every problem runs in your browser using Pyodide (a full Python interpreter compiled to WebAssembly).
+                No installations, no setup, no excuses. Write code, hit submit, get instant feedback.
+            </p>
+            <p style="font-size:0.82rem; color:var(--text-muted);">
+                We're brand new. There are no thousands of users yet. No inflated stats via mockups.
+                Just a solid curriculum, a clean interface, and a genuine belief that the best way
+                to learn programming is to write programs. If you're early, you'll be at the top
+                of the leaderboard before anyone else shows up.
+            </p>
+            <ul class="mt-2">
+                <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span> 100 curated problems: basics → control flow → functions → data structures → NLP → neural nets</li>
+                <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span> In-browser Python compiler — zero setup required</li>
+                <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span> XP + Zen coins + achievements + leaderboards</li>
+                <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span> Sequential unlocking — no skipping, no shortcuts</li>
+                <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span> Real-time global chat with your fellow coders</li>
+                <li><span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span> Completely free. No ads. No paywall.</li>
+            </ul>
+        </div>
+    </section>
+
+    <div class="section-divider"><hr></div>
+
+    <!-- The Journey (9 Phases) -->
+    <section class="section">
+        <h2 class="section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            The Journey: 9 Phases, 100 Problems
+        </h2>
+        <p class="section-desc">Each phase builds on what you learned before. No random exercises — a real curriculum.</p>
+
+        <ul class="phases-list stagger">
+            <li><div class="phase-num">0</div><div class="phase-info"><h4>The Absolute Basics</h4><p>Q1–Q10 · print, variables, input, strings, lists</p></div></li>
+            <li><div class="phase-num">1</div><div class="phase-info"><h4>Control Flow</h4><p>Q11–Q20 · if/else, for/while loops, break, continue, nested loops</p></div></li>
+            <li><div class="phase-num">2</div><div class="phase-info"><h4>Functions</h4><p>Q21–Q30 · def, return, scope, recursion (factorial, fibonacci)</p></div></li>
+            <li><div class="phase-num">3</div><div class="phase-info"><h4>Strings & Lists</h4><p>Q31–Q40 · slicing, comprehensions, enumerate, zip, sorting</p></div></li>
+            <li><div class="phase-num">4</div><div class="phase-info"><h4>Dicts & File I/O</h4><p>Q41–Q50 · dictionaries, file reading/writing, word frequency</p></div></li>
+            <li><div class="phase-num">5</div><div class="phase-info"><h4>Bigram Model</h4><p>Q51–Q60 · tokenization, vocabulary, unigrams, bigrams, probabilities</p></div></li>
+            <li><div class="phase-num">6</div><div class="phase-info"><h4>Text Generation</h4><p>Q61–Q70 · generators, smoothing, perplexity, temperature sampling</p></div></li>
+            <li><div class="phase-num">7</div><div class="phase-info"><h4>N-gram & Neural Foundations</h4><p>Q71–Q80 · n-grams, embeddings, cosine similarity, neural layers</p></div></li>
+            <li><div class="phase-num">8</div><div class="phase-info"><h4>Bigram Neural Network</h4><p>Q81–Q90 · one-hot, cross-entropy, backprop, training, batches</p></div></li>
+            <li><div class="phase-num">9</div><div class="phase-info"><h4>Mini Transformer</h4><p>Q91–Q100 · attention, layer norm, positional encoding, beam search</p></div></li>
+        </ul>
+    </section>
+
+    <div class="section-divider"><hr></div>
+
+    <!-- Features -->
+    <section class="section">
+        <h2 class="section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Features
+        </h2>
+        <p class="section-desc">Everything you need to learn, compete, and have fun.</p>
+
+        <div class="features-grid stagger">
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
+                <h4>Browser Python Compiler</h4>
+                <p>Full Python 3 running in your browser via Pyodide (WebAssembly). Write, run, and test code without installing anything.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                <h4>Timed Challenges</h4>
+                <p>Each question has an optimal time. Beat it for bonus XP. A visible timer keeps you aware of your pace.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                <h4>XP & Leveling</h4>
+                <p>Earn XP from solving problems. Bonus for speed, first attempts, and streaks. Level up every 250 XP.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 9h-3a1.5 1.5 0 000 3h1a1.5 1.5 0 010 3h-3m2-8v1m0 6v1"/></svg></div>
+                <h4>Zen Coins & Shop</h4>
+                <p>Earn coins for solving and staying active. Spend them on golden names, avatar frames, fire effects, and titles.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2m12 6h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 22h6m-3-4v4m-4-8a4 4 0 004 4 4 4 0 004-4V3H8v11z"/></svg></div>
+                <h4>4 Leaderboards</h4>
+                <p>Progression (furthest question), Speed (fastest solver), XP (total experience), and Zen (richest coder).</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+                <h4>Global Chat</h4>
+                <p>Real-time chat with other learners. Ask questions, share progress, flex your styled name. Moderated and safe.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"><hr></div>
+
+    <!-- How it works -->
+    <section class="section">
+        <h2 class="section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            How It Works
+        </h2>
+        <p class="section-desc">Five steps. That's it.</p>
+
+        <div class="steps-row stagger">
+            <div class="step-card"><div class="step-num">01</div><h4>Sign Up</h4><p>2 minutes, free</p></div>
+            <div class="step-card"><div class="step-num">02</div><h4>Start Q1</h4><p>Begin at the basics</p></div>
+            <div class="step-card"><div class="step-num">03</div><h4>Code</h4><p>In-browser compiler</p></div>
+            <div class="step-card"><div class="step-num">04</div><h4>Unlock</h4><p>Solve to progress</p></div>
+            <div class="step-card"><div class="step-num">05</div><h4>Compete</h4><p>Climb leaderboards</p></div>
+        </div>
+    </section>
+
+    <div class="section-divider"><hr></div>
+
+    <!-- CTA -->
+    <section class="section" style="text-align:center; padding: 80px 32px;">
+        <h2 style="font-size:1.8rem; margin-bottom:12px;">Ready to start?</h2>
+        <p style="color:var(--text-muted); margin-bottom:28px; font-size:0.9rem;">
+            No credit card. No installations. Just 100 problems and a compiler.
+        </p>
+        <a href="/signup" class="btn btn-primary btn-lg animate-glow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Create Free Account
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <p>Made with code, not with marketing budgets &mdash; ZenPy 2024</p>
+    </footer>
+</body>
+</html>

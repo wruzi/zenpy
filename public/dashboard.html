@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — ZenPy</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-profile">
+                <div class="sidebar-avatar" id="sidebarAvatar">
+                    <img src="/assets/images/default-avatar.png" alt="avatar">
+                </div>
+                <div class="sidebar-username" id="sidebarUsername">—</div>
+                <div class="sidebar-title" id="sidebarTitle">Newbie</div>
+                <div class="sidebar-stats">
+                    <div class="stat"><div class="stat-value" id="sidebarLevel">1</div><div class="stat-label">LVL</div></div>
+                    <div class="stat"><div class="stat-value" id="sidebarZen">0</div><div class="stat-label">Zen</div></div>
+                    <div class="stat"><div class="stat-value" id="sidebarStreak">0</div><div class="stat-label">Streak</div></div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/dashboard" class="active">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+                    Dashboard
+                </a>
+                <a href="/practice">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+                    Practice
+                </a>
+                <a href="/profile">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                    Profile
+                </a>
+                <a href="/leaderboard">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2m12 6h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 22h6m-3-4v4m-4-8a4 4 0 004 4 4 4 0 004-4V3H8v11z"/></svg></span>
+                    Leaderboard
+                </a>
+                <a href="/shop">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>
+                    Shop
+                </a>
+                <a href="/chat">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+                    Chat
+                </a>
+                <a href="/community">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+                    Community
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout();return false;" class="btn btn-ghost btn-sm w-full">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main-content">
+            <div class="main-header">
+                <div>
+                    <h2 id="welcomeMsg">Dashboard</h2>
+                    <p class="text-muted text-sm" id="currentQuestionMsg">Loading your progress...</p>
+                </div>
+                <div class="top-stats">
+                    <div class="top-stat">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                        <span class="value" id="topXP">0</span>
+                    </div>
+                    <div class="top-stat">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 9h-3a1.5 1.5 0 000 3h1a1.5 1.5 0 010 3h-3m2-8v1m0 6v1"/></svg></span>
+                        <span class="value" id="topZen">0</span>
+                    </div>
+                    <div class="top-stat">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2"><path d="M12 22c-4.97 0-9-2.69-9-6s2-6.5 4-9c0 3.5 2 5 4 6.5 2-1.5 4-3 4-6.5 2 2.5 4 5 4 9s-4.03 6-7 6z"/></svg></span>
+                        <span class="value" id="topStreak">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid stagger">
+                <div class="stat-card">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+                    <div class="stat-info"><h4 id="statCurrentQ">0/100</h4><p>Questions Solved</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                    <div class="stat-info"><h4 id="statTotalXP">0</h4><p>Total XP</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 9h-3a1.5 1.5 0 000 3h1a1.5 1.5 0 010 3h-3m2-8v1m0 6v1"/></svg></div>
+                    <div class="stat-info"><h4 id="statZen">0</h4><p>Zen Coins</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><path d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2m12 6h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 22h6m-3-4v4m-4-8a4 4 0 004 4 4 4 0 004-4V3H8v11z"/></svg></div>
+                    <div class="stat-info"><h4 id="statRank">—</h4><p>Global Rank</p></div>
+                </div>
+            </div>
+
+            <!-- Level + Zen Timer -->
+            <div class="grid-2 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            Level Progress
+                        </span>
+                        <span class="badge" id="levelBadge">Level 1</span>
+                    </div>
+                    <div class="d-flex align-center gap-2">
+                        <div class="circular-progress">
+                            <svg width="120" height="120">
+                                <circle class="bg" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="0"></circle>
+                                <circle class="fg" id="levelCircle" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73"></circle>
+                            </svg>
+                            <span class="value" id="levelValue">1</span>
+                        </div>
+                        <div>
+                            <div class="progress-bar mb-1" style="width:200px;">
+                                <div class="fill" id="xpProgressBar" style="width:0%"></div>
+                            </div>
+                            <p class="text-muted text-sm" id="xpText">0 / 250 XP to next level</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" id="dailyQuizCard" style="position: relative; overflow: hidden;">
+                    <div class="card-header">
+                        <span class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                            Daily Python Quiz
+                        </span>
+                        <span class="badge" id="quizRewardBadge">+100 Zen</span>
+                    </div>
+                    <div id="quizContent" style="transition: opacity 0.3s ease; display:flex; flex-direction:column; gap:12px;">
+                        <p id="quizQuestionText" style="font-size: 0.95rem; font-weight: 500; color:var(--text-primary); line-height: 1.4;">Loading today's question...</p>
+                        <div id="quizOptions" style="display: flex; flex-direction: column; gap: 8px;">
+                            <!-- Options injected by JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Overlay state -->
+                    <div id="quizCooldownOverlay" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; z-index:10;">
+                        <h3 style="color:var(--text-primary); margin-bottom:8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">New Question Arrives</h3>
+                        <p class="session-code" id="quizCountdown" style="font-size:1.8rem; letter-spacing:0.1em; color:var(--accent); text-shadow: 0 2px 4px rgba(0,0,0,0.8); font-weight:900;">00:00:00</p>
+                        <p class="text-muted text-sm mt-1" style="text-shadow: 0 1px 2px rgba(0,0,0,0.8);">timer till 12am IST</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid-2 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="12" width="4" height="8"/><rect x="10" y="8" width="4" height="12"/><rect x="17" y="4" width="4" height="16"/></svg>
+                            Question Times
+                        </span>
+                    </div>
+                    <canvas id="questionTimesChart" height="200"></canvas>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                            Performance
+                        </span>
+                    </div>
+                    <canvas id="performanceChart" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Achievements + Quick Facts Row -->
+            <div class="grid-2 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><circle cx="12" cy="16" r="5"/><path d="M8.21 13.89L7 3h10l-1.21 10.89"/><path d="M12 11v2"/></svg>
+                            Achievements
+                        </span>
+                    </div>
+                    <div id="achievementsList">
+                        <p class="text-muted text-sm">No achievements yet. Start solving to earn badges.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><rect x="3" y="12" width="4" height="8"/><rect x="10" y="8" width="4" height="12"/><rect x="17" y="4" width="4" height="16"/></svg>
+                            Quick Facts
+                        </span>
+                    </div>
+                    <div id="quickFacts">
+                        <p class="text-muted text-sm">Loading analytics...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Python Quick Reference -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <span class="card-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        Python Quick Reference
+                    </span>
+                    <span class="badge">DOCS</span>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;">
+                    <div style="padding:12px;border:1px solid var(--border);">
+                        <h4 style="font-size:0.78rem;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Variables & Types</h4>
+                        <pre style="font-size:0.75rem;color:var(--text-secondary);line-height:1.8;margin:0;">name = "ZenPy"       <span style="color:var(--text-muted)"># str</span>
+age = 25             <span style="color:var(--text-muted)"># int</span>
+pi = 3.14            <span style="color:var(--text-muted)"># float</span>
+active = True        <span style="color:var(--text-muted)"># bool</span>
+items = [1, 2, 3]    <span style="color:var(--text-muted)"># list</span>
+data = {"k": "v"}    <span style="color:var(--text-muted)"># dict</span></pre>
+                    </div>
+                    <div style="padding:12px;border:1px solid var(--border);">
+                        <h4 style="font-size:0.78rem;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Control Flow</h4>
+                        <pre style="font-size:0.75rem;color:var(--text-secondary);line-height:1.8;margin:0;">if x > 0:
+    print("positive")
+elif x == 0:
+    print("zero")
+else:
+    print("negative")
+
+for i in range(10):
+    print(i)</pre>
+                    </div>
+                    <div style="padding:12px;border:1px solid var(--border);">
+                        <h4 style="font-size:0.78rem;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Functions</h4>
+                        <pre style="font-size:0.75rem;color:var(--text-secondary);line-height:1.8;margin:0;">def greet(name):
+    """Greets a person."""
+    return f"Hello, {name}!"
+
+result = greet("Coder")
+print(result)</pre>
+                    </div>
+                    <div style="padding:12px;border:1px solid var(--border);">
+                        <h4 style="font-size:0.78rem;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">List Comprehension</h4>
+                        <pre style="font-size:0.75rem;color:var(--text-secondary);line-height:1.8;margin:0;">squares = [x**2 for x in range(10)]
+evens = [x for x in nums if x%2==0]
+pairs = [(a,b) for a in A
+                for b in B]</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Python Tip -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><path d="M9 18h6m-5 4h4M12 2a7 7 0 00-3 13.33V17h6v-1.67A7 7 0 0012 2z"/></svg>
+                        Daily Python Tip
+                    </span>
+                </div>
+                <div id="dailyTip" style="font-size:0.88rem;line-height:1.7;color:var(--text-secondary);"></div>
+            </div>
+
+            <script>
+                // Daily tip rotation
+                const tips = [
+                    {title:"f-strings are powerful",code:'name = "World"\nprint(f"Hello, {name}!")  # Hello, World!\nprint(f"{2+2=}")  # 2+2=4'},
+                    {title:"Use enumerate() instead of range(len())",code:'fruits = ["apple", "banana"]\nfor i, fruit in enumerate(fruits):\n    print(f"{i}: {fruit}")'},
+                    {title:"Unpacking is Pythonic",code:'a, b, *rest = [1, 2, 3, 4, 5]\n# a=1, b=2, rest=[3,4,5]'},
+                    {title:"List comprehensions > loops",code:'# Instead of:\nresult = []\nfor x in range(10):\n    result.append(x**2)\n# Use:\nresult = [x**2 for x in range(10)]'},
+                    {title:"The walrus operator :=",code:'# Assign and test in one line\nif (n := len(data)) > 10:\n    print(f"List is too long: {n}")'},
+                    {title:"Use zip to iterate in parallel",code:'names = ["Alice", "Bob"]\nages = [25, 30]\nfor name, age in zip(names, ages):\n    print(f"{name} is {age}")'},
+                    {title:"Dictionary .get() with defaults",code:'d = {"a": 1}\nval = d.get("b", 0)  # Returns 0 if key missing\n# Better than d["b"] which raises KeyError'}
+                ];
+                const today = new Date().getDay();
+                const tip = tips[today % tips.length];
+                document.getElementById('dailyTip').innerHTML = `
+                    <h4 style="font-size:0.9rem;color:var(--text-primary);margin-bottom:8px;">${tip.title}</h4>
+                    <pre style="padding:12px;background:var(--bg-primary);border:1px solid var(--border);font-size:0.8rem;line-height:1.8;color:var(--success);overflow-x:auto;">${tip.code}</pre>
+                `;
+            </script>
+        </main>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+    <script src="/js/icons.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/gamification.js"></script>
+    <script src="/js/charts.js"></script>
+
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

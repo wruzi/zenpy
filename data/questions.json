@@ -1,0 +1,2456 @@
+[
+  {
+    "id": 1,
+    "title": "Print Your Name",
+    "description": "Write a program that prints your name to the screen using `print()`.",
+    "difficulty": "beginner",
+    "category": "Phase 0: Basics",
+    "concepts": [
+      "print"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use the print() function with your name in quotes"
+    ],
+    "optimalTime": 30,
+    "xpBase": 10,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Print Multiple Lines",
+    "description": "Print your name, your age, and your favorite color, each on a separate line, using three separate `print` statements.",
+    "difficulty": "beginner",
+    "category": "Phase 0: Basics",
+    "concepts": [
+      "print",
+      "multiple statements"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use three separate print() calls, one for each item"
+    ],
+    "optimalTime": 45,
+    "xpBase": 20,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "line_count",
+        "expectedLines": 3,
+        "description": "Must output exactly 3 lines"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Variables",
+    "description": "Create a variable called `name` and assign it your name. Then print `My name is` followed by the variable.",
+    "difficulty": "beginner",
+    "category": "Phase 0: Basics",
+    "concepts": [
+      "variables",
+      "string concatenation"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use = to assign a value",
+      "Use print('My name is', name)"
+    ],
+    "optimalTime": 45,
+    "xpBase": 30,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "output_contains",
+        "mustContain": "My name is",
+        "description": "Output must contain 'My name is'"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Simple Arithmetic",
+    "description": "Create two variables `a = 5` and `b = 3`. Print the result of `a + b`, `a - b`, `a * b`, and `a / b` each on separate lines.",
+    "difficulty": "beginner",
+    "category": "Phase 0: Basics",
+    "concepts": [
+      "arithmetic",
+      "variables"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use print() with arithmetic operators +, -, *, /"
+    ],
+    "optimalTime": 60,
+    "xpBase": 40,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "8\n2\n15\n1.6666666666666667",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "User Input",
+    "description": "Ask the user for their name using `input()`, store it in a variable, and then print a greeting like `Hello, [name]!` using an f-string.",
+    "difficulty": "beginner",
+    "category": "Phase 0: Basics",
+    "concepts": [
+      "input",
+      "f-strings"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use input('Enter your name: ') to get user input",
+      "Use f'Hello, {name}!' to format"
+    ],
+    "optimalTime": 60,
+    "xpBase": 50,
+    "testCases": [
+      {
+        "input": "Alice",
+        "expectedOutput": "Hello, Alice!",
+        "hidden": false
+      },
+      {
+        "input": "Bob",
+        "expectedOutput": "Hello, Bob!",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "String Concatenation",
+    "description": "Ask for first name and last name separately using `input()`, then print the full name by concatenating them with a space in between.",
+    "difficulty": "beginner",
+    "category": "Phase 0: Basics",
+    "concepts": [
+      "input",
+      "concatenation"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use + to concatenate strings",
+      "Don't forget the space: first + ' ' + last"
+    ],
+    "optimalTime": 60,
+    "xpBase": 60,
+    "testCases": [
+      {
+        "input": "John\nDoe",
+        "expectedOutput": "John Doe",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Type Conversion",
+    "description": "Ask the user for a number (as a string via `input()`), convert it to an integer using `int()`, multiply it by 2, and print the result.",
+    "difficulty": "beginner",
+    "category": "Phase 0: Basics",
+    "concepts": [
+      "int()",
+      "type conversion"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use int() to convert string to integer",
+      "num = int(input(...))"
+    ],
+    "optimalTime": 60,
+    "xpBase": 70,
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "10",
+        "hidden": false
+      },
+      {
+        "input": "12",
+        "expectedOutput": "24",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Working with Strings",
+    "description": "Create a variable `sentence = \"The quick brown fox jumps over the lazy dog\"`. Print the length of the sentence using `len()`. Then print the first 10 characters using slicing.",
+    "difficulty": "beginner",
+    "category": "Phase 0: Basics",
+    "concepts": [
+      "len()",
+      "slicing"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use len(sentence) for length",
+      "Use sentence[:10] for first 10 chars"
+    ],
+    "optimalTime": 60,
+    "xpBase": 80,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "43\nThe quick ",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Lists Introduction",
+    "description": "Create a list `fruits = [\"apple\", \"banana\", \"cherry\"]`. Print the list, then print the first element and the last element.",
+    "difficulty": "beginner",
+    "category": "Phase 0: Basics",
+    "concepts": [
+      "lists",
+      "indexing"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use fruits[0] for first, fruits[-1] for last"
+    ],
+    "optimalTime": 60,
+    "xpBase": 90,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "['apple', 'banana', 'cherry']\napple\ncherry",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "title": "List Operations",
+    "description": "Start with `fruits = [\"apple\", \"banana\", \"cherry\"]`. Append \"orange\" to the list, then remove \"banana\". Print the final list.",
+    "difficulty": "beginner",
+    "category": "Phase 0: Basics",
+    "concepts": [
+      "append",
+      "remove"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use .append('orange') and .remove('banana')"
+    ],
+    "optimalTime": 60,
+    "xpBase": 100,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "['apple', 'cherry', 'orange']",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "title": "Even or Odd",
+    "description": "Ask the user for a number using `input()` and print whether it is `Even` or `Odd` using an `if` statement and the modulo operator `%`.",
+    "difficulty": "beginner",
+    "category": "Phase 1: Control Flow",
+    "concepts": [
+      "if/else",
+      "modulo"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use num % 2 == 0 to check if even"
+    ],
+    "optimalTime": 60,
+    "xpBase": 110,
+    "testCases": [
+      {
+        "input": "4",
+        "expectedOutput": "Even",
+        "hidden": false
+      },
+      {
+        "input": "7",
+        "expectedOutput": "Odd",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "title": "Largest of Three",
+    "description": "Ask for three numbers using `input()` and print the largest one. Do NOT use the built-in `max()` function.",
+    "difficulty": "beginner",
+    "category": "Phase 1: Control Flow",
+    "concepts": [
+      "if/elif/else",
+      "comparison"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use if/elif/else to compare all three"
+    ],
+    "optimalTime": 90,
+    "xpBase": 120,
+    "testCases": [
+      {
+        "input": "3\n7\n5",
+        "expectedOutput": "7",
+        "hidden": false
+      },
+      {
+        "input": "10\n2\n8",
+        "expectedOutput": "10",
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "title": "For Loop - Sum",
+    "description": "Use a `for` loop with `range()` to calculate the sum of all numbers from 1 to 100. Print the result.",
+    "difficulty": "beginner",
+    "category": "Phase 1: Control Flow",
+    "concepts": [
+      "for loop",
+      "range",
+      "sum"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use range(1, 101)",
+      "Keep a running total variable"
+    ],
+    "optimalTime": 60,
+    "xpBase": 130,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "5050",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "title": "While Loop - Countdown",
+    "description": "Use a `while` loop to print numbers from 10 down to 1, then print \"Blast off!\" at the end.",
+    "difficulty": "beginner",
+    "category": "Phase 1: Control Flow",
+    "concepts": [
+      "while loop"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Start with n = 10, loop while n >= 1, decrement each iteration"
+    ],
+    "optimalTime": 60,
+    "xpBase": 140,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "10\n9\n8\n7\n6\n5\n4\n3\n2\n1\nBlast off!",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "title": "Loop through a List",
+    "description": "Given `fruits = [\"apple\", \"banana\", \"cherry\"]`, use a `for` loop to print each fruit on a separate line.",
+    "difficulty": "beginner",
+    "category": "Phase 1: Control Flow",
+    "concepts": [
+      "for loop",
+      "lists"
+    ],
+    "initialCode": "",
+    "hints": [
+      "for fruit in fruits: print(fruit)"
+    ],
+    "optimalTime": 45,
+    "xpBase": 150,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "apple\nbanana\ncherry",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "title": "List Sum",
+    "description": "Given `numbers = [4, 7, 2, 9, 5]`, write a `for` loop to calculate the sum. Do NOT use the built-in `sum()` function. Print the result.",
+    "difficulty": "beginner",
+    "category": "Phase 1: Control Flow",
+    "concepts": [
+      "for loop",
+      "accumulator"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Create a total = 0 variable, add each number in the loop"
+    ],
+    "optimalTime": 60,
+    "xpBase": 160,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "27",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "title": "Find Maximum in List",
+    "description": "Using a loop, find the largest number in `[3, 7, 2, 9, 5]` without using `max()`. Print the result.",
+    "difficulty": "beginner",
+    "category": "Phase 1: Control Flow",
+    "concepts": [
+      "for loop",
+      "max finding"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Track the largest number seen so far in a variable"
+    ],
+    "optimalTime": 60,
+    "xpBase": 170,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "9",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "title": "Break - Find First Even",
+    "description": "Write a loop over `[3, 7, 8, 2, 9]` that uses `break` to stop when it finds the first even number. Print that number.",
+    "difficulty": "beginner",
+    "category": "Phase 1: Control Flow",
+    "concepts": [
+      "break"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use if num % 2 == 0: print(num); break"
+    ],
+    "optimalTime": 60,
+    "xpBase": 180,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "8",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "title": "Continue - Skip Multiples of 3",
+    "description": "Print numbers from 1 to 20, but skip any number divisible by 3. Use `continue` to skip.",
+    "difficulty": "beginner",
+    "category": "Phase 1: Control Flow",
+    "concepts": [
+      "continue"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use if i % 3 == 0: continue"
+    ],
+    "optimalTime": 60,
+    "xpBase": 190,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "1\n2\n4\n5\n7\n8\n10\n11\n13\n14\n16\n17\n19\n20",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "title": "Nested Loop - Multiplication Table",
+    "description": "Print the multiplication table for numbers 1 through 5 in a grid format using nested loops. Each row should have numbers separated by spaces.",
+    "difficulty": "intermediate",
+    "category": "Phase 1: Control Flow",
+    "concepts": [
+      "nested loops"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use two for loops",
+      "Use print(i*j, end=' ') and print() for newline"
+    ],
+    "optimalTime": 120,
+    "xpBase": 200,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "1 2 3 4 5\n2 4 6 8 10\n3 6 9 12 15\n4 8 12 16 20\n5 10 15 20 25",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "title": "Simple Function",
+    "description": "Write a function called `greet()` that prints \"Hello, welcome!\" when called. Then call the function.",
+    "difficulty": "beginner",
+    "category": "Phase 2: Functions",
+    "concepts": [
+      "def",
+      "functions"
+    ],
+    "initialCode": "",
+    "hints": [
+      "def greet(): print('Hello, welcome!')"
+    ],
+    "optimalTime": 45,
+    "xpBase": 210,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "Hello, welcome!",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "title": "Function with Parameter",
+    "description": "Write a function `greet_person(name)` that prints \"Hello, [name]!\". Call it with any name you like.",
+    "difficulty": "beginner",
+    "category": "Phase 2: Functions",
+    "concepts": [
+      "parameters"
+    ],
+    "initialCode": "",
+    "hints": [
+      "def greet_person(name): print(f'Hello, {name}!')"
+    ],
+    "optimalTime": 60,
+    "xpBase": 220,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "output_contains",
+        "mustContain": "Hello,",
+        "description": "Output must contain 'Hello,'"
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "title": "Return Value",
+    "description": "Write a function `add(a, b)` that returns the sum of a and b. Call it with `add(5, 3)` and print the result.",
+    "difficulty": "beginner",
+    "category": "Phase 2: Functions",
+    "concepts": [
+      "return"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use return a + b"
+    ],
+    "optimalTime": 60,
+    "xpBase": 230,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "8",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "title": "Function with Default Parameter",
+    "description": "Write a function `power(base, exponent=2)` that returns base raised to exponent. Print `power(3)` and `power(2, 3)`.",
+    "difficulty": "beginner",
+    "category": "Phase 2: Functions",
+    "concepts": [
+      "default parameters"
+    ],
+    "initialCode": "",
+    "hints": [
+      "def power(base, exponent=2): return base ** exponent"
+    ],
+    "optimalTime": 60,
+    "xpBase": 240,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "9\n8",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "title": "Multiple Return Values",
+    "description": "Write a function `get_min_max(numbers)` that returns both the minimum and maximum values from a list as a tuple. Test with `[3, 1, 9, 4, 7]`.",
+    "difficulty": "intermediate",
+    "category": "Phase 2: Functions",
+    "concepts": [
+      "multiple returns",
+      "tuples"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Return a tuple: return (min_val, max_val)",
+      "Don't use min() or max()"
+    ],
+    "optimalTime": 90,
+    "xpBase": 250,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "(1, 9)",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "title": "Docstrings",
+    "description": "Write a function `get_min_max` with a docstring that says \"Returns the minimum and maximum values from a list.\" Then print the docstring using `print(get_min_max.__doc__)`.",
+    "difficulty": "beginner",
+    "category": "Phase 2: Functions",
+    "concepts": [
+      "docstrings",
+      "__doc__"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use triple quotes inside the function as first line"
+    ],
+    "optimalTime": 60,
+    "xpBase": 260,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "Returns the minimum and maximum values from a list.",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "title": "Scope",
+    "description": "Create a variable `x = 10` outside a function. Write a function that modifies x to 20 using `global`. Print x before and after calling the function.",
+    "difficulty": "intermediate",
+    "category": "Phase 2: Functions",
+    "concepts": [
+      "scope",
+      "global"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use the global keyword inside the function"
+    ],
+    "optimalTime": 90,
+    "xpBase": 270,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "10\n20",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "title": "Using Functions from Previous Problems",
+    "description": "Write a function `calculate_average(numbers)` that returns the average. Use it on `[1, 2, 3, 4, 5]` and print the result.",
+    "difficulty": "intermediate",
+    "category": "Phase 2: Functions",
+    "concepts": [
+      "function composition"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Sum the numbers, divide by len()"
+    ],
+    "optimalTime": 90,
+    "xpBase": 280,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "3.0",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "title": "Recursion - Factorial",
+    "description": "Write a recursive function `factorial(n)` that returns n!. Print `factorial(5)` (should be 120).",
+    "difficulty": "intermediate",
+    "category": "Phase 2: Functions",
+    "concepts": [
+      "recursion"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Base case: if n <= 1: return 1",
+      "Recursive: return n * factorial(n-1)"
+    ],
+    "optimalTime": 90,
+    "xpBase": 290,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "120",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "title": "Recursion - Fibonacci",
+    "description": "Write a recursive function `fibonacci(n)` that returns the nth Fibonacci number. Print `fibonacci(5)` (should be 5).",
+    "difficulty": "intermediate",
+    "category": "Phase 2: Functions",
+    "concepts": [
+      "recursion",
+      "fibonacci"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Base: fib(0)=0, fib(1)=1",
+      "Recursive: return fib(n-1) + fib(n-2)"
+    ],
+    "optimalTime": 90,
+    "xpBase": 300,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "5",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "title": "String Slicing",
+    "description": "Given `s = \"Hello, World!\"`, use string slicing to extract and print just the word \"World\".",
+    "difficulty": "beginner",
+    "category": "Phase 3: Strings & Lists",
+    "concepts": [
+      "slicing"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use s[7:12]"
+    ],
+    "optimalTime": 45,
+    "xpBase": 310,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "World",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "title": "String Methods",
+    "description": "Given `sentence = \"the quick brown fox\"`, print it in lowercase, then uppercase, then title case, each on a separate line.",
+    "difficulty": "beginner",
+    "category": "Phase 3: Strings & Lists",
+    "concepts": [
+      "lower",
+      "upper",
+      "title"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use .lower(), .upper(), .title()"
+    ],
+    "optimalTime": 60,
+    "xpBase": 320,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "the quick brown fox\nTHE QUICK BROWN FOX\nThe Quick Brown Fox",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "title": "Split and Join",
+    "description": "Split the sentence \"The quick brown fox\" into words, then join them back with hyphens. Print the result.",
+    "difficulty": "beginner",
+    "category": "Phase 3: Strings & Lists",
+    "concepts": [
+      "split",
+      "join"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use .split() and '-'.join()"
+    ],
+    "optimalTime": 60,
+    "xpBase": 330,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "The-quick-brown-fox",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "title": "Character Count",
+    "description": "Write a function `count_char(text, char)` that returns how many times `char` appears in `text`. Test with count_char(\"hello world\", \"l\") and print the result.",
+    "difficulty": "intermediate",
+    "category": "Phase 3: Strings & Lists",
+    "concepts": [
+      "counting",
+      "loops"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Loop through each character and count matches"
+    ],
+    "optimalTime": 60,
+    "xpBase": 340,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "3",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "title": "Palindrome Checker",
+    "description": "Write a function `is_palindrome(s)` that returns True if s reads the same forwards and backwards (case insensitive). Test with \"racecar\".",
+    "difficulty": "intermediate",
+    "category": "Phase 3: Strings & Lists",
+    "concepts": [
+      "palindrome",
+      "string manipulation"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Clean the string: s = s.lower()",
+      "Compare s == s[::-1]"
+    ],
+    "optimalTime": 90,
+    "xpBase": 350,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "True",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "title": "List Comprehension - Squares",
+    "description": "Use a list comprehension to create a list of squares of numbers from 1 to 10. Print the list.",
+    "difficulty": "intermediate",
+    "category": "Phase 3: Strings & Lists",
+    "concepts": [
+      "list comprehension"
+    ],
+    "initialCode": "",
+    "hints": [
+      "[x**2 for x in range(1, 11)]"
+    ],
+    "optimalTime": 45,
+    "xpBase": 360,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "title": "List Comprehension - Even Numbers",
+    "description": "From numbers 1 to 10, use a list comprehension with a condition to create a list of even numbers only. Print it.",
+    "difficulty": "intermediate",
+    "category": "Phase 3: Strings & Lists",
+    "concepts": [
+      "list comprehension",
+      "filter"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Add an if condition: [x for x in range(1,11) if x % 2 == 0]"
+    ],
+    "optimalTime": 45,
+    "xpBase": 370,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "[2, 4, 6, 8, 10]",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "title": "Enumerate",
+    "description": "Given `fruits = [\"apple\", \"banana\", \"cherry\"]`, use `enumerate` to print each fruit with its index in format \"0: apple\".",
+    "difficulty": "beginner",
+    "category": "Phase 3: Strings & Lists",
+    "concepts": [
+      "enumerate"
+    ],
+    "initialCode": "",
+    "hints": [
+      "for i, fruit in enumerate(fruits): print(f'{i}: {fruit}')"
+    ],
+    "optimalTime": 45,
+    "xpBase": 380,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "0: apple\n1: banana\n2: cherry",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "title": "Zip",
+    "description": "Use `zip` to pair `names = [\"Alice\", \"Bob\", \"Charlie\"]` and `scores = [85, 92, 78]`, printing \"Alice scored 85\" etc.",
+    "difficulty": "intermediate",
+    "category": "Phase 3: Strings & Lists",
+    "concepts": [
+      "zip"
+    ],
+    "initialCode": "",
+    "hints": [
+      "for name, score in zip(names, scores):"
+    ],
+    "optimalTime": 60,
+    "xpBase": 390,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "Alice scored 85\nBob scored 92\nCharlie scored 78",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "title": "List of Tuples Sorting",
+    "description": "Given `pairs = [(\"Alice\", 85), (\"Bob\", 92), (\"Charlie\", 78)]`, sort by score in descending order using `sorted()` with a `key`. Print the sorted list.",
+    "difficulty": "intermediate",
+    "category": "Phase 3: Strings & Lists",
+    "concepts": [
+      "sorted",
+      "lambda",
+      "tuples"
+    ],
+    "initialCode": "",
+    "hints": [
+      "sorted(pairs, key=lambda x: x[1], reverse=True)"
+    ],
+    "optimalTime": 90,
+    "xpBase": 400,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "[('Bob', 92), ('Alice', 85), ('Charlie', 78)]",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "title": "Creating a Dictionary",
+    "description": "Create a dictionary `student = {\"name\": \"Alice\", \"age\": 20, \"grade\": \"A\"}`. Print it.",
+    "difficulty": "beginner",
+    "category": "Phase 4: Dicts & File I/O",
+    "concepts": [
+      "dictionaries"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use curly braces {} with key: value pairs"
+    ],
+    "optimalTime": 45,
+    "xpBase": 410,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "{'name': 'Alice', 'age': 20, 'grade': 'A'}",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "title": "Accessing Dictionary Values",
+    "description": "Given `student = {\"name\": \"Alice\", \"age\": 20, \"grade\": \"A\"}`, print the name and age on separate lines.",
+    "difficulty": "beginner",
+    "category": "Phase 4: Dicts & File I/O",
+    "concepts": [
+      "dict access"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use student['name'] and student['age']"
+    ],
+    "optimalTime": 45,
+    "xpBase": 420,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "Alice\n20",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "title": "Adding and Updating",
+    "description": "Given `student = {\"name\": \"Alice\", \"age\": 20, \"grade\": \"A\"}`, add \"major\": \"Computer Science\" and update grade to \"A+\". Print the final dictionary.",
+    "difficulty": "beginner",
+    "category": "Phase 4: Dicts & File I/O",
+    "concepts": [
+      "dict update"
+    ],
+    "initialCode": "",
+    "hints": [
+      "student['major'] = 'Computer Science' and student['grade'] = 'A+'"
+    ],
+    "optimalTime": 60,
+    "xpBase": 430,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "{'name': 'Alice', 'age': 20, 'grade': 'A+', 'major': 'Computer Science'}",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "title": "Looping through a Dictionary",
+    "description": "Given `student = {\"name\": \"Alice\", \"age\": 20, \"grade\": \"A\"}`, loop through and print each \"key: value\" on separate lines.",
+    "difficulty": "beginner",
+    "category": "Phase 4: Dicts & File I/O",
+    "concepts": [
+      "dict iteration"
+    ],
+    "initialCode": "",
+    "hints": [
+      "for key, value in student.items(): print(f'{key}: {value}')"
+    ],
+    "optimalTime": 60,
+    "xpBase": 440,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "name: Alice\nage: 20\ngrade: A",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "title": "Word Frequency Counter",
+    "description": "Write a function `word_count(sentence)` that returns a dict of word frequencies. Test with \"the cat and the dog\".",
+    "difficulty": "intermediate",
+    "category": "Phase 4: Dicts & File I/O",
+    "concepts": [
+      "dict",
+      "counting"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Split sentence into words, loop and count using a dict"
+    ],
+    "optimalTime": 90,
+    "xpBase": 450,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "{'the': 2, 'cat': 1, 'and': 1, 'dog': 1}",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "title": "Simulated File Reading",
+    "description": "Given a multi-line string `text = \"\"\"Hello World\\nPython is great\\nI love coding\"\"\"`, loop through the lines and print each one.",
+    "difficulty": "intermediate",
+    "category": "Phase 4: Dicts & File I/O",
+    "concepts": [
+      "file reading",
+      "string splitting"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use text.strip().split('\\n') to get lines"
+    ],
+    "optimalTime": 60,
+    "xpBase": 460,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "Hello World\nPython is great\nI love coding",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "title": "Simulated File Writing",
+    "description": "Simulate file operations: create a list called `content`, append \"Hello World\" and \"New line added\", then print each line.",
+    "difficulty": "intermediate",
+    "category": "Phase 4: Dicts & File I/O",
+    "concepts": [
+      "file writing"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Use a list as a buffer, append lines, then print"
+    ],
+    "optimalTime": 60,
+    "xpBase": 470,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "Hello World\nNew line added",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "title": "Counting Lines",
+    "description": "Given a multi-line string with 5 lines, count and print the number of lines.",
+    "difficulty": "intermediate",
+    "category": "Phase 4: Dicts & File I/O",
+    "concepts": [
+      "file operations",
+      "len"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Split by newline and use len()"
+    ],
+    "optimalTime": 45,
+    "xpBase": 480,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "5",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "title": "Word Frequency from Text",
+    "description": "Given `text = \"the cat and the dog and the fish\"`, count word frequencies and print the dictionary.",
+    "difficulty": "intermediate",
+    "category": "Phase 4: Dicts & File I/O",
+    "concepts": [
+      "word frequency"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Split text into words, use a dict to count"
+    ],
+    "optimalTime": 90,
+    "xpBase": 490,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "{'the': 3, 'cat': 1, 'and': 2, 'dog': 1, 'fish': 1}",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "title": "Most Common Word",
+    "description": "Given `freq = {\"the\": 3, \"cat\": 1, \"and\": 2, \"dog\": 1}`, find and print the word with the highest count.",
+    "difficulty": "intermediate",
+    "category": "Phase 4: Dicts & File I/O",
+    "concepts": [
+      "dict",
+      "max finding"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Loop through items, track the one with highest value"
+    ],
+    "optimalTime": 60,
+    "xpBase": 500,
+    "testCases": [
+      {
+        "input": "",
+        "expectedOutput": "the",
+        "hidden": false
+      }
+    ]
+  },
+  {
+    "id": 51,
+    "title": "Clean Text Function",
+    "description": "Write `clean_text(text)` that converts to lowercase and removes punctuation. Test with a sample sentence.",
+    "difficulty": "intermediate",
+    "category": "Phase 5: Bigram Model",
+    "concepts": [
+      "string cleaning"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how string cleaning works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 510,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 52,
+    "title": "Tokenize Function",
+    "description": "Write `tokenize(text)` that cleans text and splits into words. Return the list of tokens.",
+    "difficulty": "intermediate",
+    "category": "Phase 5: Bigram Model",
+    "concepts": [
+      "tokenization"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how tokenization works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 520,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 53,
+    "title": "Build Vocabulary",
+    "description": "Write `build_vocab(tokens)` returning `word_to_id` and `id_to_word` dictionaries.",
+    "difficulty": "intermediate",
+    "category": "Phase 5: Bigram Model",
+    "concepts": [
+      "vocabulary",
+      "dictionaries"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how vocabulary works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 530,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 54,
+    "title": "Convert Tokens to IDs",
+    "description": "Write `tokens_to_ids(tokens, word_to_id)` converting a list of word tokens to integer IDs.",
+    "difficulty": "intermediate",
+    "category": "Phase 5: Bigram Model",
+    "concepts": [
+      "mapping",
+      "encoding"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how mapping works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 540,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 55,
+    "title": "Load Corpus",
+    "description": "Write `load_corpus(text)` that cleans, tokenizes, and builds vocab from raw text. Return tokens, vocab.",
+    "difficulty": "intermediate",
+    "category": "Phase 5: Bigram Model",
+    "concepts": [
+      "pipeline",
+      "corpus"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how pipeline works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 550,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 56,
+    "title": "Unigram Counts",
+    "description": "Write `count_unigrams(ids, vocab_size)` that returns a list of counts for each word ID.",
+    "difficulty": "intermediate",
+    "category": "Phase 5: Bigram Model",
+    "concepts": [
+      "counting",
+      "unigrams"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how counting works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 560,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 57,
+    "title": "Print Top Words",
+    "description": "Given unigram counts and `id_to_word`, print the top 5 most frequent words.",
+    "difficulty": "intermediate",
+    "category": "Phase 5: Bigram Model",
+    "concepts": [
+      "sorting",
+      "frequency"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how sorting works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 570,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 58,
+    "title": "Bigram Counts",
+    "description": "Write `count_bigrams(ids, vocab_size)` returning a 2D list (matrix) of bigram counts.",
+    "difficulty": "advanced",
+    "category": "Phase 5: Bigram Model",
+    "concepts": [
+      "bigrams",
+      "matrix"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how bigrams works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 580,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 59,
+    "title": "Bigram Probabilities",
+    "description": "Convert bigram count matrix to probability matrix by normalizing each row.",
+    "difficulty": "advanced",
+    "category": "Phase 5: Bigram Model",
+    "concepts": [
+      "probability",
+      "normalization"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how probability works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 590,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 60,
+    "title": "Sentence Probability",
+    "description": "Write `sentence_probability(ids, probs)` that computes the log probability of a sequence.",
+    "difficulty": "advanced",
+    "category": "Phase 5: Bigram Model",
+    "concepts": [
+      "log probability",
+      "evaluation"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how log probability works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 600,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 61,
+    "title": "Simple Text Generator",
+    "description": "Write `generate(start_id, probs, id_to_word, max_length)` using random sampling from probabilities.",
+    "difficulty": "advanced",
+    "category": "Phase 6: Text Generation",
+    "concepts": [
+      "generation",
+      "random"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how generation works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 610,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 62,
+    "title": "IDs to Sentence",
+    "description": "Write `ids_to_sentence(ids, id_to_word)` that joins word strings with spaces.",
+    "difficulty": "intermediate",
+    "category": "Phase 6: Text Generation",
+    "concepts": [
+      "decoding"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how decoding works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 620,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 63,
+    "title": "Interactive Generator",
+    "description": "Ask user for a starting word, look up its ID, generate a sentence, and print it.",
+    "difficulty": "advanced",
+    "category": "Phase 6: Text Generation",
+    "concepts": [
+      "interactive",
+      "input"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how interactive works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 630,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 64,
+    "title": "Add-K Smoothing",
+    "description": "Implement add-k smoothing for bigram probabilities to handle unseen bigrams.",
+    "difficulty": "advanced",
+    "category": "Phase 6: Text Generation",
+    "concepts": [
+      "smoothing",
+      "probability"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how smoothing works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 640,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 65,
+    "title": "Compare Smoothed vs Raw",
+    "description": "Generate with both raw and smoothed probabilities. Print both outputs for comparison.",
+    "difficulty": "advanced",
+    "category": "Phase 6: Text Generation",
+    "concepts": [
+      "comparison",
+      "smoothing"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how comparison works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 650,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 66,
+    "title": "Perplexity",
+    "description": "Implement `perplexity(ids, probs)` as 2^(avg negative log probability).",
+    "difficulty": "advanced",
+    "category": "Phase 6: Text Generation",
+    "concepts": [
+      "perplexity",
+      "evaluation"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how perplexity works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 660,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 67,
+    "title": "Train/Test Split",
+    "description": "Write `split_data(ids, ratio=0.8)` returning train and test ID lists.",
+    "difficulty": "intermediate",
+    "category": "Phase 6: Text Generation",
+    "concepts": [
+      "data splitting"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how data splitting works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 670,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 68,
+    "title": "Evaluate Model",
+    "description": "Build bigram model on train set, compute perplexity on test set. Print results.",
+    "difficulty": "advanced",
+    "category": "Phase 6: Text Generation",
+    "concepts": [
+      "evaluation",
+      "pipeline"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how evaluation works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 680,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 69,
+    "title": "Temperature Sampling",
+    "description": "Modify generate() with a temperature parameter. Implement softmax with temperature manually.",
+    "difficulty": "advanced",
+    "category": "Phase 6: Text Generation",
+    "concepts": [
+      "temperature",
+      "softmax"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how temperature works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 690,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 70,
+    "title": "Temperature Experiments",
+    "description": "Generate sentences at temperatures 0.5, 1.0, 1.5. Print all three and observe differences.",
+    "difficulty": "advanced",
+    "category": "Phase 6: Text Generation",
+    "concepts": [
+      "experimentation"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how experimentation works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 700,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 71,
+    "title": "N-gram Model Class",
+    "description": "Write an NGramModel class that generalizes to any n value. Include count and probability methods.",
+    "difficulty": "advanced",
+    "category": "Phase 7: N-gram & Neural",
+    "concepts": [
+      "classes",
+      "n-grams"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how classes works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 710,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 72,
+    "title": "Bigram vs Trigram",
+    "description": "Create NGramModel with n=2 and n=3, generate text from both, and print for comparison.",
+    "difficulty": "advanced",
+    "category": "Phase 7: N-gram & Neural",
+    "concepts": [
+      "trigram",
+      "comparison"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how trigram works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 720,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 73,
+    "title": "Random Embeddings",
+    "description": "Write `random_embeddings(vocab_size, embed_dim)` returning a 2D list of random floats between -1 and 1.",
+    "difficulty": "intermediate",
+    "category": "Phase 7: N-gram & Neural",
+    "concepts": [
+      "embeddings",
+      "random"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how embeddings works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 730,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 74,
+    "title": "Cosine Similarity",
+    "description": "Implement `cosine_similarity(vec1, vec2)` computing dot product over product of magnitudes.",
+    "difficulty": "intermediate",
+    "category": "Phase 7: N-gram & Neural",
+    "concepts": [
+      "cosine similarity",
+      "vectors"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how cosine similarity works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 740,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 75,
+    "title": "Most Similar Words",
+    "description": "Write `most_similar(word_id, embeddings, id_to_word, top_k=5)` returning most similar words by cosine.",
+    "difficulty": "advanced",
+    "category": "Phase 7: N-gram & Neural",
+    "concepts": [
+      "similarity search"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how similarity search works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 750,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 76,
+    "title": "Co-occurrence Matrix",
+    "description": "Build a co-occurrence matrix from token IDs using a sliding window of configurable size.",
+    "difficulty": "advanced",
+    "category": "Phase 7: N-gram & Neural",
+    "concepts": [
+      "co-occurrence",
+      "matrix"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how co-occurrence works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 760,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 77,
+    "title": "PPMI",
+    "description": "Convert co-occurrence matrix to Positive Pointwise Mutual Information values.",
+    "difficulty": "advanced",
+    "category": "Phase 7: N-gram & Neural",
+    "concepts": [
+      "PPMI",
+      "statistics"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how PPMI works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 770,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 78,
+    "title": "Compare Word Similarities",
+    "description": "Compare similarities using random embeddings vs co-occurrence vs PPMI vectors.",
+    "difficulty": "advanced",
+    "category": "Phase 7: N-gram & Neural",
+    "concepts": [
+      "comparison",
+      "evaluation"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how comparison works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 780,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 79,
+    "title": "Simple Neural Layer",
+    "description": "Write a Linear class with __init__(in_dim, out_dim) and forward(x) using manual matrix multiply.",
+    "difficulty": "advanced",
+    "category": "Phase 7: N-gram & Neural",
+    "concepts": [
+      "neural network",
+      "linear layer"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how neural network works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 790,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 80,
+    "title": "Activation Functions",
+    "description": "Implement ReLU (max(0,x)) and Softmax (exp normalization) classes with forward methods.",
+    "difficulty": "advanced",
+    "category": "Phase 7: N-gram & Neural",
+    "concepts": [
+      "ReLU",
+      "softmax"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how ReLU works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 800,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 81,
+    "title": "One-Hot Encoding",
+    "description": "Write `one_hot(word_id, vocab_size)` that returns a list of 0s with a 1 at the word_id position.",
+    "difficulty": "intermediate",
+    "category": "Phase 8: Neural Network",
+    "concepts": [
+      "one-hot",
+      "encoding"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how one-hot works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 120,
+    "xpBase": 810,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "title": "Two-Layer Network",
+    "description": "Create BigramNN with hidden layer, ReLU activation, output layer, and softmax. Implement forward().",
+    "difficulty": "advanced",
+    "category": "Phase 8: Neural Network",
+    "concepts": [
+      "neural network",
+      "forward pass"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how neural network works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 820,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 83,
+    "title": "Cross-Entropy Loss",
+    "description": "Implement `cross_entropy_loss(predictions, target_id)` as -log(predictions[target_id]).",
+    "difficulty": "advanced",
+    "category": "Phase 8: Neural Network",
+    "concepts": [
+      "cross-entropy",
+      "loss"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how cross-entropy works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 830,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 84,
+    "title": "Manual Gradient",
+    "description": "Compute the gradient of cross-entropy loss w.r.t. softmax output. Print gradient vector.",
+    "difficulty": "advanced",
+    "category": "Phase 8: Neural Network",
+    "concepts": [
+      "gradients",
+      "backprop"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how gradients works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 840,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 85,
+    "title": "Backward Pass",
+    "description": "Add backward() methods to Linear and ReLU classes for gradient computation.",
+    "difficulty": "advanced",
+    "category": "Phase 8: Neural Network",
+    "concepts": [
+      "backpropagation"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how backpropagation works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 850,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 86,
+    "title": "Training Step",
+    "description": "Write `train_step(model, input_id, target_id, lr)` performing forward, loss, backward, update.",
+    "difficulty": "advanced",
+    "category": "Phase 8: Neural Network",
+    "concepts": [
+      "training",
+      "gradient descent"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how training works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 860,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 87,
+    "title": "Train on Corpus",
+    "description": "Loop through training IDs calling train_step. Print loss every 100 steps.",
+    "difficulty": "advanced",
+    "category": "Phase 8: Neural Network",
+    "concepts": [
+      "training loop"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how training loop works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 870,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 88,
+    "title": "Mini-Batches",
+    "description": "Implement `get_batches(ids, batch_size)` and modify training to use batches.",
+    "difficulty": "advanced",
+    "category": "Phase 8: Neural Network",
+    "concepts": [
+      "batching",
+      "training"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how batching works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 880,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 89,
+    "title": "Validation",
+    "description": "Split data into train/val, compute perplexity on validation set. Implement early stopping.",
+    "difficulty": "advanced",
+    "category": "Phase 8: Neural Network",
+    "concepts": [
+      "validation",
+      "early stopping"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how validation works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 890,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 90,
+    "title": "Generate with Neural Model",
+    "description": "Write `generate_neural(model, start_id, length)` sampling from neural network output.",
+    "difficulty": "advanced",
+    "category": "Phase 8: Neural Network",
+    "concepts": [
+      "generation",
+      "neural"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how generation works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 900,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 91,
+    "title": "Scaled Dot-Product Attention",
+    "description": "Implement attention(Q, K, V) with scaled dot product: softmax(QK^T/sqrt(d))V.",
+    "difficulty": "advanced",
+    "category": "Phase 9: Mini Transformer",
+    "concepts": [
+      "attention",
+      "dot product"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how attention works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 910,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 92,
+    "title": "Multi-Head Attention",
+    "description": "Implement single attention head with learnable W_q, W_k, W_v projection matrices.",
+    "difficulty": "advanced",
+    "category": "Phase 9: Mini Transformer",
+    "concepts": [
+      "attention heads"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how attention heads works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 920,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 93,
+    "title": "Layer Normalization",
+    "description": "Implement LayerNorm class that normalizes across the last dimension with learnable gamma/beta.",
+    "difficulty": "advanced",
+    "category": "Phase 9: Mini Transformer",
+    "concepts": [
+      "layer norm"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how layer norm works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 930,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 94,
+    "title": "Feed-Forward Network",
+    "description": "Create FeedForward class with two Linear layers and ReLU activation in between.",
+    "difficulty": "advanced",
+    "category": "Phase 9: Mini Transformer",
+    "concepts": [
+      "feed-forward"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how feed-forward works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 940,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 95,
+    "title": "Transformer Block",
+    "description": "Assemble TransformerBlock with attention, residual connection, layernorm, and feedforward.",
+    "difficulty": "advanced",
+    "category": "Phase 9: Mini Transformer",
+    "concepts": [
+      "transformer",
+      "residual"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how transformer works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 950,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 96,
+    "title": "Positional Encoding",
+    "description": "Write `positional_encoding(seq_len, d_model)` using sine/cosine functions.",
+    "difficulty": "advanced",
+    "category": "Phase 9: Mini Transformer",
+    "concepts": [
+      "positional encoding"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how positional encoding works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 960,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 97,
+    "title": "Mini Transformer Model",
+    "description": "Create MiniTransformer combining embedding, positional encoding, and stacked transformer blocks.",
+    "difficulty": "advanced",
+    "category": "Phase 9: Mini Transformer",
+    "concepts": [
+      "transformer model"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how transformer model works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 970,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 98,
+    "title": "Train Mini Transformer",
+    "description": "Train the transformer on sequences with teacher forcing and causal masking.",
+    "difficulty": "advanced",
+    "category": "Phase 9: Mini Transformer",
+    "concepts": [
+      "training",
+      "causal masking"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how training works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 980,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 99,
+    "title": "Beam Search",
+    "description": "Implement beam search decoding maintaining top-k hypotheses at each step.",
+    "difficulty": "advanced",
+    "category": "Phase 9: Mini Transformer",
+    "concepts": [
+      "beam search",
+      "decoding"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how beam search works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 990,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  },
+  {
+    "id": 100,
+    "title": "Final Integration",
+    "description": "Build the complete pipeline: load data, train model, accept input, generate with beam search.",
+    "difficulty": "advanced",
+    "category": "Phase 9: Mini Transformer",
+    "concepts": [
+      "integration",
+      "pipeline"
+    ],
+    "initialCode": "",
+    "hints": [
+      "Think about how integration works",
+      "Break the problem into smaller steps"
+    ],
+    "optimalTime": 300,
+    "xpBase": 1000,
+    "subjective": true,
+    "testCases": [
+      {
+        "type": "compile_only",
+        "description": "Code must compile and produce output"
+      }
+    ]
+  }
+]

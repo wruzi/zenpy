@@ -1,0 +1,30 @@
+{
+  "name": "zenpy",
+  "version": "1.0.0",
+  "description": "ZenPy - A competitive Python learning platform with gamification, real-time chat, and leaderboards",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js"
+  },
+  "keywords": [
+    "python",
+    "learning",
+    "gamification",
+    "coding"
+  ],
+  "author": "ZenPy Team",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.1.1",
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

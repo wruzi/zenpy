@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — ZenPy</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/animations.css">
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-profile">
+                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/images/default-avatar.png" alt=""></div>
+                <div class="sidebar-username" id="sidebarUsername">Admin</div>
+                <div class="sidebar-title" id="sidebarTitle">Administrator</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/dashboard"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>Dashboard</a>
+                <a href="/admin" class="active"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Admin Panel</a>
+            </nav>
+            <div class="sidebar-footer"><a href="#" onclick="logout();return false;" class="btn btn-ghost btn-sm w-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a></div>
+        </aside>
+
+        <main class="main-content">
+            <div class="main-header">
+                <h2>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Admin Panel
+                </h2>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid mb-3 stagger">
+                <div class="stat-card">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+                    <div class="stat-info"><h4 id="statUsers">0</h4><p>Total Users</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+                    <div class="stat-info"><h4 id="statBanned">0</h4><p>Banned</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+                    <div class="stat-info"><h4 id="statMessages">0</h4><p>Chat Messages</p></div>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                        User Management
+                    </span>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>User</th><th>Email</th><th>Level</th><th>XP</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="usersTable"><tr><td colspan="6" class="text-center text-muted p-3">Loading...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+    <script src="/js/icons.js"></script>
+    <script src="/js/utils.js"></script>
+    <script>
+        if (!requireAuth()) { /* redirected */ }
+        async function loadAdmin() {
+            await setupSidebar();
+            const data = await apiCall('/api/admin/stats');
+            if (data?.success) {
+                document.getElementById('statUsers').textContent = data.stats.totalUsers;
+                document.getElementById('statBanned').textContent = data.stats.bannedUsers;
+                document.getElementById('statMessages').textContent = data.stats.chatMessages;
+            }
+            const usersData = await apiCall('/api/admin/users');
+            if (usersData?.success) {
+                const tbody = document.getElementById('usersTable');
+                if (usersData.users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted p-3">No users yet.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = usersData.users.map(u => `
+                    <tr>
+                        <td class="font-bold">${escapeHTML(u.username)}</td>
+                        <td class="text-muted">${escapeHTML(u.email)}</td>
+                        <td>Lv.${u.level}</td>
+                        <td>${formatNumber(u.xp)}</td>
+                        <td>${u.banned ? '<span class="text-error">Banned</span>' : '<span class="text-success">Active</span>'}</td>
+                        <td>
+                            ${u.banned
+                                ? `<button class="btn btn-success btn-sm" onclick="unbanUser('${u.email}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Unban</button>`
+                                : `<button class="btn btn-danger btn-sm" onclick="banUser('${u.email}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg> Ban</button>`
+                            }
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+        async function banUser(email) {
+            const data = await apiCall('/api/admin/ban', { method: 'POST', body: JSON.stringify({ email, reason: 'admin_ban' }) });
+            if (data?.success) { showToast('User banned', 'success'); loadAdmin(); }
+            else showToast(data?.message || 'Failed', 'error');
+        }
+        async function unbanUser(email) {
+            const data = await apiCall('/api/admin/unban', { method: 'POST', body: JSON.stringify({ email }) });
+            if (data?.success) { showToast('User unbanned', 'success'); loadAdmin(); }
+            else showToast(data?.message || 'Failed', 'error');
+        }
+        document.addEventListener('DOMContentLoaded', loadAdmin);
+    </script>
+</body>
+</html>

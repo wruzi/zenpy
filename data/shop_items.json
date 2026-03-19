@@ -1,0 +1,18 @@
+[
+  {"id":"silver_name","name":"Silver Name","description":"Your username glows with a subtle silver shimmer.","category":"name_style","rarity":"common","price":200,"cssClass":"silver-name","requirement":null},
+  {"id":"gold_name","name":"Gold Name","description":"A rich golden username with soft shimmer animation.","category":"name_style","rarity":"rare","price":500,"cssClass":"gold-name","requirement":{"type":"questions","value":10}},
+  {"id":"rainbow_name","name":"Rainbow Name","description":"Your username cycles through vibrant rainbow colors.","category":"name_style","rarity":"epic","price":1500,"cssClass":"rainbow-name","requirement":{"type":"questions","value":30}},
+  {"id":"fire_effect","name":"Flame Name","description":"Your username burns with cycling fire colors.","category":"effect","rarity":"rare","price":800,"cssClass":"fire-name","requirement":{"type":"questions","value":15}},
+  {"id":"cyberpunk_glow","name":"Cyberpunk Glow","description":"Cyan neon glow with random micro-flicker effect.","category":"effect","rarity":"epic","price":2000,"cssClass":"cyberpunk-name","requirement":{"type":"questions","value":40}},
+  {"id":"glitch_effect","name":"Glitch Effect","description":"Digital glitch displacement with RGB split on your name.","category":"effect","rarity":"legendary","price":3500,"cssClass":"glitch-name","requirement":{"type":"questions","value":60}},
+  {"id":"matrix_rain","name":"Matrix Code","description":"Green terminal-style name, inspired by the Matrix.","category":"effect","rarity":"rare","price":700,"cssClass":"matrix-name","requirement":{"type":"xp","value":1000}},
+  {"id":"sparkle_effect","name":"Sparkle Trail","description":"Tiny sparkle particles float around your golden name.","category":"effect","rarity":"epic","price":2500,"cssClass":"sparkle-name","requirement":{"type":"questions","value":50}},
+  {"id":"trail_effect","name":"Motion Trail","description":"Your name leaves a pink trailing shadow effect.","category":"effect","rarity":"common","price":300,"cssClass":"trail-name","requirement":null},
+  {"id":"neon_frame","name":"Neon Frame","description":"A sharp blue neon double-border around your avatar.","category":"avatar_frame","rarity":"rare","price":600,"cssClass":"neon-frame","requirement":{"type":"questions","value":10}},
+  {"id":"pixel_frame","name":"Pixel Frame","description":"Retro 8-bit pixel border around your avatar.","category":"avatar_frame","rarity":"common","price":350,"cssClass":"pixel-frame","requirement":null},
+  {"id":"crown","name":"Crown Frame","description":"A golden crown sits atop your avatar. Royalty.","category":"avatar_frame","rarity":"legendary","price":5000,"cssClass":"crown-frame","requirement":{"type":"questions","value":80}},
+  {"id":"vip_border","name":"VIP Border","description":"Exclusive star-highlighted border for dedicated coders.","category":"avatar_frame","rarity":"epic","price":1800,"cssClass":"vip-border","requirement":{"type":"streak","value":14}},
+  {"id":"custom_title","name":"Custom Title","description":"Set a custom title that appears under your name.","category":"name_accessory","rarity":"rare","price":1000,"cssClass":"custom-title","requirement":{"type":"xp","value":2000}},
+  {"id":"animated_avatar","name":"Pulse Avatar","description":"Your avatar gently pulses with a breathing animation.","category":"avatar_frame","rarity":"epic","price":1200,"cssClass":"animated-avatar","requirement":{"type":"questions","value":25}},
+  {"id":"emoji_pack","name":"Premium Emojis","description":"Unlock exclusive emoji reactions in the chat.","category":"chat_extra","rarity":"common","price":400,"cssClass":"emoji-pack","requirement":null}
+]

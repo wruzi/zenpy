@@ -1,0 +1,49 @@
+/* ============================================
+   ZenPy - Theme Styles
+   Shop items, name styles, frames, effects
+   No gradients · Hard shadows · Square corners
+   ============================================ */
+
+/* --- Name Styles --- */
+.name-silver { color: #C0C0C0; text-shadow: 2px 2px 0px rgba(192,192,192,0.3); }
+.name-gold { color: #FFD700; text-shadow: 2px 2px 0px rgba(255,215,0,0.3); }
+.name-rainbow { animation: rainbow-shift 3s steps(6) infinite; }
+.name-neon { color: #FF1493; text-shadow: 2px 2px 0px rgba(255,20,147,0.5); }
+.name-flame { color: #FF6B35; text-shadow: 2px 2px 0px rgba(255,107,53,0.3); }
+
+@keyframes rainbow-shift {
+    0% { color: #FF1493; }
+    16% { color: #FF4444; }
+    33% { color: #FFD700; }
+    50% { color: #00FF88; }
+    66% { color: #1E90FF; }
+    83% { color: #9400D3; }
+    100% { color: #FF1493; }
+}
+
+/* --- Avatar Frames --- */
+.frame-neon { border: 3px solid #FF1493 !important; box-shadow: 4px 4px 0px rgba(255,20,147,0.4); }
+.frame-gold { border: 3px solid #FFD700 !important; box-shadow: 4px 4px 0px rgba(255,215,0,0.3); }
+.frame-royal { border: 3px solid #9400D3 !important; box-shadow: 4px 4px 0px rgba(148,0,211,0.3); }
+.frame-animated { border: 3px solid var(--accent) !important; animation: frame-pulse 2s ease infinite; }
+
+@keyframes frame-pulse {
+    0%, 100% { border-color: var(--accent); }
+    50% { border-color: var(--warning); }
+}
+
+/* --- Effects --- */
+.effect-crown::before { content: '♔'; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 16px; color: #FFD700; }
+.effect-fire { position: relative; }
+.effect-fire::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 3px; background: #FF6B35; }
+.effect-sparkles { position: relative; }
+.effect-sparkles::after { content: '✦'; position: absolute; top: -4px; right: -12px; font-size: 10px; color: var(--warning); animation: blink 1s ease infinite; }
+
+/* --- Chat VIP --- */
+.vip-border { border-left: 3px solid var(--warning) !important; padding-left: 12px; }
+
+/* --- Rarity borders on shop cards --- */
+.rarity-common { border-color: #555; }
+.rarity-rare { border-color: var(--info); }
+.rarity-epic { border-color: #9400D3; }
+.rarity-legendary { border-color: var(--warning); box-shadow: 4px 4px 0px rgba(255,215,0,0.2); }

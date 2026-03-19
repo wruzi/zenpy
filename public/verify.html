@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Session — ZenPy</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        .qr-box { text-align: center; padding: 20px; border: 2px solid var(--accent); margin: 16px 0; background: rgba(255, 20, 147, 0.05); }
+        .qr-box canvas { margin: 12px auto; display: block; border-radius: 8px; border: 4px solid var(--bg-card); }
+        .session-code { font-size: 2.2rem; font-weight: 900; letter-spacing: 0.4em; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+        .countdown { font-size: 0.9rem; color: var(--warning); margin-top: 8px; font-weight: bold; }
+        .countdown.expired { color: var(--error); }
+    </style>
+</head>
+<body>
+    <nav class="nav-header">
+        <a href="/" class="nav-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF1493" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Zen<span>Py</span>
+        </a>
+    </nav>
+
+    <div class="auth-page">
+        <div class="auth-card animate-fadeInUp">
+            <h2>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="vertical-align:middle;margin-right:6px;"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Verify Session
+            </h2>
+            <p class="subtitle">Scan the QR or enter the code below to access your account.</p>
+
+            <div id="errorMsg" class="form-error hidden mb-2"></div>
+
+            <div class="qr-box">
+                <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px;">
+                    Your Secret Session Code:
+                </p>
+                <canvas id="qrCanvas"></canvas>
+                <div class="session-code" id="codeDisplay">----</div>
+                <div class="countdown" id="countdown">Expires in 10:00</div>
+            </div>
+
+            <form id="verifySessionForm">
+                <div class="form-group">
+                    <label>Enter 4-Digit Code</label>
+                    <input type="text" id="sessionCodeInput" class="form-control" placeholder="4-digit code" required maxlength="4" style="text-align:center;font-size:1.5rem;letter-spacing:0.3em;font-weight:700;">
+                </div>
+                <button type="submit" id="verifyBtn" class="btn btn-primary w-full" style="font-size: 1rem; padding: 12px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    Verify & Enter ZenPy
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+    <script src="/js/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const email = urlParams.get('email');
+            let remaining = parseInt(urlParams.get('expires')) || 600;
+
+            if (!code || !email) {
+                window.location.href = '/login';
+                return;
+            }
+
+            document.getElementById('codeDisplay').textContent = code;
+
+            const canvas = document.getElementById('qrCanvas');
+            if (typeof QRCode !== 'undefined') {
+                QRCode.toCanvas(canvas, code, {
+                    width: 200,
+                    margin: 8,
+                    color: { dark: '#FF1493', light: '#ffffff' }
+                }, function (error) {
+                    if (error) console.error('QR code generation error:', error);
+                });
+            }
+
+            const countdownEl = document.getElementById('countdown');
+            const countdownInterval = setInterval(() => {
+                remaining--;
+                if (remaining <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownEl.textContent = 'Code expired! Please sign up again.';
+                    countdownEl.classList.add('expired');
+                    document.getElementById('verifyBtn').disabled = true;
+                    return;
+                }
+                const mins = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+                countdownEl.textContent = `Expires in ${mins}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+
+            document.getElementById('verifySessionForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const errorMsg = document.getElementById('errorMsg');
+                const btn = document.getElementById('verifyBtn');
+                const inputCode = document.getElementById('sessionCodeInput').value;
+
+                errorMsg.classList.add('hidden');
+                btn.disabled = true;
+                btn.textContent = 'Verifying...';
+
+                try {
+                    const res = await fetch('/api/verify-session-code', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email, code: inputCode })
+                    });
+
+                    const data = await res.json();
+
+                    if (data.success) {
+                        clearInterval(countdownInterval);
+                        localStorage.setItem('zenpy_token', data.token);
+                        localStorage.setItem('zenpy_user', JSON.stringify(data.user));
+                        window.location.href = '/dashboard';
+                    } else {
+                        errorMsg.textContent = data.message;
+                        errorMsg.classList.remove('hidden');
+                        btn.disabled = false;
+                        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Verify & Enter ZenPy';
+                    }
+                } catch (err) {
+                    errorMsg.textContent = 'Connection error. Please try again.';
+                    errorMsg.classList.remove('hidden');
+                    btn.disabled = false;
+                    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Verify & Enter ZenPy';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

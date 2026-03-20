@@ -1,0 +1,44 @@
+[
+  {
+    "email": "chetangaud20@yahoo.com",
+    "username": "wruzi",
+    "image": "chetangaud20_yahoo_com_1774007890849.jpg",
+    "bio": "",
+    "joined": "2026-03-20T11:57:25.250Z",
+    "xp": 1693,
+    "level": 7,
+    "zen": 420,
+    "streak": 0,
+    "longestStreak": 0,
+    "totalActiveMinutes": 0,
+    "inventory": {
+      "owned": [],
+      "equipped": {
+        "nameStyle": null,
+        "frame": null,
+        "title": "Newbie",
+        "effect": null,
+        "chatExtra": null,
+        "chatColor": null,
+        "chatBackground": null,
+        "profile_card": null,
+        "banner": null
+      }
+    },
+    "achievements": [
+      "first_steps"
+    ],
+    "lastActive": "2026-03-20T11:57:25.291Z",
+    "github": "",
+    "instagram": "",
+    "twitter": "",
+    "chatMessageCount": 0,
+    "provider": "github",
+    "providerId": "234759436",
+    "profileSetupCompleted": true,
+    "onboardingCompletedAt": "2026-03-20T11:58:40.401Z",
+    "termsAccepted": true,
+    "termsAcceptedAt": "2026-03-20T11:58:40.401Z",
+    "lastQuizDate": "2026-03-20"
+  }
+]

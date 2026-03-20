@@ -56,3 +56,13 @@ Questions are categorized into logical phases (e.g., "Phase 0: Basics"). This en
 ---
 
 *Thank you for your interest in ZenPy! We're excited to build a platform that turns the daunting task of learning to code into an enjoyable, rewarding adventure.*
+
+---
+
+## 🆕 Recent Updates (Mar 20, 2026)
+
+- **Onboarding modal + Terms enforcement:** New dashboard visitors now encounter a modal that blocks interaction until they pick a username, upload an avatar, and accept the Terms & Conditions, with the full policy reachable at `/terms` and via the sidebar link.
+- **Onboarding state APIs:** The auth/user routes now track `profileSetupCompleted`/`termsAccepted`, and a dedicated `/api/user/complete-onboarding` endpoint lets the modal finish the flow after verifying the avatar upload and checkbox state.
+- **Database tooling:** Added `scripts/resetDatabase.js` (plus helpers) so data stores (users, progress, chat, bans, activity logs) can be reset locally without touching Git-tracked files, keeping the repo clean.
+- **Login/signup guards:** The auth cards now call `/api/user` before redirecting, ensuring the GitHub sign-in view remains visible until the token truly validates and preventing premature dashboard loads.
+- **New static content & assets:** Terms, Rules, Docs, and Banned pages were introduced alongside the avatar/shop media, new banner/card simulation runtimes, and refreshed dashboard/shop UI to showcase today’s feature set.

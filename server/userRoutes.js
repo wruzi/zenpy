@@ -6,7 +6,71 @@ const authMiddleware = require('./middleware/auth');
 const banCheck = require('./middleware/banCheck');
 
 module.exports = function(app) {
-    const { readJSON, writeJSON } = app.locals;
+    const { readJSON, writeJSON, getItemCssClass } = app.locals;
+    const DEFAULT_AVATARS = new Set(['default-avatar.png', 'Popcat Cartoon.jpg', 'Popcat%20Cartoon.jpg']);
+
+    function ensureInventoryShape(user) {
+        if (!user.inventory || typeof user.inventory !== 'object') {
+            user.inventory = {};
+        }
+
+        if (!Array.isArray(user.inventory.owned)) {
+            user.inventory.owned = [];
+        }
+
+        if (!user.inventory.equipped || typeof user.inventory.equipped !== 'object') {
+            user.inventory.equipped = {};
+        }
+
+        const equipped = user.inventory.equipped;
+        if (!Object.prototype.hasOwnProperty.call(equipped, 'nameStyle')) equipped.nameStyle = null;
+        if (!Object.prototype.hasOwnProperty.call(equipped, 'frame')) equipped.frame = null;
+        if (!Object.prototype.hasOwnProperty.call(equipped, 'title')) equipped.title = 'Newbie';
+        if (!Object.prototype.hasOwnProperty.call(equipped, 'effect')) equipped.effect = null;
+        if (!Object.prototype.hasOwnProperty.call(equipped, 'chatExtra')) equipped.chatExtra = null;
+        if (!Object.prototype.hasOwnProperty.call(equipped, 'chatColor')) equipped.chatColor = null;
+        if (!Object.prototype.hasOwnProperty.call(equipped, 'chatBackground')) equipped.chatBackground = null;
+        if (!Object.prototype.hasOwnProperty.call(equipped, 'profile_card')) equipped.profile_card = null;
+        if (!Object.prototype.hasOwnProperty.call(equipped, 'banner')) equipped.banner = null;
+    }
+
+    function ensureOnboardingShape(user) {
+        if (!Object.prototype.hasOwnProperty.call(user, 'profileSetupCompleted')) {
+            user.profileSetupCompleted = true;
+        }
+        if (!Object.prototype.hasOwnProperty.call(user, 'onboardingCompletedAt')) {
+            user.onboardingCompletedAt = user.profileSetupCompleted ? (user.joined || new Date().toISOString()) : null;
+        }
+        if (!Object.prototype.hasOwnProperty.call(user, 'termsAccepted')) {
+            user.termsAccepted = !!user.profileSetupCompleted;
+        }
+        if (!Object.prototype.hasOwnProperty.call(user, 'termsAcceptedAt')) {
+            user.termsAcceptedAt = user.termsAccepted ? (user.joined || new Date().toISOString()) : null;
+        }
+    }
+
+    function hasCustomAvatar(user) {
+        return !!(user.image && !DEFAULT_AVATARS.has(user.image));
+    }
+
+    function buildNameStyleClass(equipped = {}) {
+        return [
+            getItemCssClass(equipped.nameStyle),
+            getItemCssClass(equipped.effect)
+        ].filter(Boolean).join(' ') || null;
+    }
+
+    function buildCssMap(user) {
+        return {
+            nameStyle: buildNameStyleClass(user.inventory?.equipped || {}),
+            frame: getItemCssClass(user.inventory?.equipped?.frame) || null,
+            profileCard: getItemCssClass(user.inventory?.equipped?.profile_card) || null,
+            chatStyle: getItemCssClass(user.inventory?.equipped?.chatExtra) || null,
+            chatColor: getItemCssClass(user.inventory?.equipped?.chatColor) || null,
+            chatBackground: getItemCssClass(user.inventory?.equipped?.chatBackground) || null,
+            banner: getItemCssClass(user.inventory?.equipped?.banner) || null
+        };
+    }
 
     // ---- GET USER DATA ----
     app.get('/api/user/:email', authMiddleware, (req, res) => {
@@ -18,8 +82,16 @@ module.exports = function(app) {
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found.' });
         }
+        
+        // Enrich user with mapped CSS classes so frontend can just apply them
+        const enrichedUser = { ...user };
+        ensureInventoryShape(enrichedUser);
+        ensureOnboardingShape(enrichedUser);
+        if (enrichedUser.inventory && enrichedUser.inventory.equipped) {
+            enrichedUser.cssMap = buildCssMap(enrichedUser);
+        }
 
-        res.json({ success: true, user, progress: userProgress });
+        res.json({ success: true, user: enrichedUser, progress: userProgress });
     });
 
     // ---- GET CURRENT USER (from token) ----
@@ -33,7 +105,15 @@ module.exports = function(app) {
             return res.status(404).json({ success: false, message: 'User not found.' });
         }
 
-        res.json({ success: true, user, progress: userProgress });
+        // Enrich user with mapped CSS classes
+        const enrichedUser = { ...user };
+        ensureInventoryShape(enrichedUser);
+        ensureOnboardingShape(enrichedUser);
+        if (enrichedUser.inventory && enrichedUser.inventory.equipped) {
+            enrichedUser.cssMap = buildCssMap(enrichedUser);
+        }
+
+        res.json({ success: true, user: enrichedUser, progress: userProgress });
     });
 
     // ---- DAILY QUIZ ----
@@ -207,6 +287,8 @@ module.exports = function(app) {
         if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
         if (!item) return res.status(404).json({ success: false, message: 'Item not found.' });
 
+        ensureInventoryShape(user);
+
         // Check if already owned
         if (user.inventory.owned.includes(itemId)) {
             return res.status(400).json({ success: false, message: 'You already own this item.' });
@@ -261,22 +343,52 @@ module.exports = function(app) {
     app.post('/api/shop/equip', authMiddleware, (req, res) => {
         const { itemId, slot } = req.body;
         const users = readJSON('users.json');
+        const shopItems = readJSON('shop_items.json');
         const user = users.find(u => u.email === req.user.email);
 
         if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+
+        ensureInventoryShape(user);
 
         // Check if owned (allow null to unequip)
         if (itemId && !user.inventory.owned.includes(itemId)) {
             return res.status(400).json({ success: false, message: 'You don\'t own this item.' });
         }
 
-        // Valid slots: nameStyle, frame, title, effect, chatExtra
-        const validSlots = ['nameStyle', 'frame', 'title', 'effect', 'chatExtra'];
+        // Valid slots: nameStyle, frame, title, effect, chatExtra, chatColor, chatBackground, profile_card, banner
+        const validSlots = ['nameStyle', 'frame', 'title', 'effect', 'chatExtra', 'chatColor', 'chatBackground', 'profile_card', 'banner'];
         if (!validSlots.includes(slot)) {
             return res.status(400).json({ success: false, message: 'Invalid slot.' });
         }
 
-        user.inventory.equipped[slot] = itemId;
+        const expectedCategoryBySlot = {
+            nameStyle: 'name_style',
+            frame: 'avatar_frame',
+            effect: 'effect',
+            title: 'name_accessory',
+            chatExtra: 'chat_extra',
+            chatColor: 'chat_color',
+            chatBackground: 'chat_background',
+            profile_card: 'profile_card',
+            banner: 'profile_banner'
+        };
+
+        if (itemId) {
+            const item = shopItems.find(i => i.id === itemId);
+            if (!item) return res.status(404).json({ success: false, message: 'Item not found.' });
+
+            if (item.category !== expectedCategoryBySlot[slot]) {
+                return res.status(400).json({ success: false, message: 'Item does not match slot type.' });
+            }
+
+            if (slot === 'title') {
+                user.inventory.equipped[slot] = item.name;
+            } else {
+                user.inventory.equipped[slot] = itemId;
+            }
+        } else {
+            user.inventory.equipped[slot] = slot === 'title' ? 'Newbie' : null;
+        }
         writeJSON('users.json', users);
 
         res.json({ success: true, equipped: user.inventory.equipped });
@@ -304,6 +416,48 @@ module.exports = function(app) {
 
         writeJSON('users.json', users);
         res.json({ success: true, message: 'Profile updated.', user });
+    });
+
+    // ---- COMPLETE FIRST-LOGIN ONBOARDING ----
+    app.post('/api/user/complete-onboarding', authMiddleware, (req, res) => {
+        const { username, github, instagram, twitter, termsAccepted } = req.body;
+        const users = readJSON('users.json');
+        const user = users.find(u => u.email === req.user.email);
+
+        if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+
+        ensureOnboardingShape(user);
+
+        const cleanUsername = String(username || '').trim();
+        if (cleanUsername.length < 3 || cleanUsername.length > 24) {
+            return res.status(400).json({ success: false, message: 'Username must be 3-24 characters.' });
+        }
+
+        if (users.some(u => u.email !== user.email && (u.username || '').toLowerCase() === cleanUsername.toLowerCase())) {
+            return res.status(400).json({ success: false, message: 'Username already taken.' });
+        }
+
+        if (!termsAccepted) {
+            return res.status(400).json({ success: false, message: 'You must accept Terms & Conditions.' });
+        }
+
+        if (!hasCustomAvatar(user)) {
+            return res.status(400).json({ success: false, message: 'Please upload an avatar before continuing.' });
+        }
+
+        user.username = cleanUsername;
+        if (github !== undefined) user.github = String(github || '').trim();
+        if (instagram !== undefined) user.instagram = String(instagram || '').trim();
+        if (twitter !== undefined) user.twitter = String(twitter || '').trim();
+
+        const nowIso = new Date().toISOString();
+        user.profileSetupCompleted = true;
+        user.onboardingCompletedAt = nowIso;
+        user.termsAccepted = true;
+        user.termsAcceptedAt = nowIso;
+
+        writeJSON('users.json', users);
+        res.json({ success: true, message: 'Profile setup completed.', user });
     });
 
     // ---- SHOP: GET ITEMS ----
@@ -370,7 +524,8 @@ module.exports = function(app) {
         const users = readJSON('users.json');
         const progress = readJSON('progress.json');
         const banned = readJSON('banned.json');
-        const chatMessages = readJSON('chat_messages.json');
+        const chatMessagesRaw = readJSON('global_chat_messages.json');
+        const chatMessages = Array.isArray(chatMessagesRaw) ? chatMessagesRaw : [];
 
         res.json({
             success: true,

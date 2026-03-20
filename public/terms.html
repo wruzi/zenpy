@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions — ZenPy</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <style>
+        .terms-content {
+            max-width: 920px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .terms-content h3 {
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .terms-content p,
+        .terms-content li {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-profile">
+                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/avatars/Popcat%20Cartoon.jpg" alt="avatar"></div>
+                <div class="sidebar-username" id="sidebarUsername">—</div>
+                <div class="sidebar-title" id="sidebarTitle">Newbie</div>
+                <div class="sidebar-stats">
+                    <div class="stat"><div class="stat-value" id="sidebarLevel">1</div><div class="stat-label">LVL</div></div>
+                    <div class="stat"><div class="stat-value" id="sidebarZen">0</div><div class="stat-label">Zen</div></div>
+                    <div class="stat"><div class="stat-value" id="sidebarStreak">0</div><div class="stat-label">Streak</div></div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/dashboard"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>Dashboard</a>
+                <a href="/practice"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>Practice</a>
+                <a href="/profile"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Profile</a>
+                <a href="/leaderboard"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2m12 6h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 22h6m-3-4v4m-4-8a4 4 0 004 4 4 4 0 004-4V3H8v11z"/></svg></span>Leaderboard</a>
+                <a href="/shop"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>Shop</a>
+                <a href="/chat"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>Chat</a>
+                <a href="/community"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>Community</a>
+                <a href="/docs"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span>Python Docs</a>
+                <a href="/terms" class="active"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Terms & Conditions</a>
+                <a href="/rules"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>Rules</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout();return false;" class="btn btn-ghost btn-sm w-full">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="main-header">
+                <h2>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Terms & Conditions
+                </h2>
+            </div>
+
+            <div class="card terms-content">
+                <p>Effective Date: March 20, 2026</p>
+
+                <h3>1. Account & Conduct</h3>
+                <ul>
+                    <li>You must use accurate account information and keep your account secure.</li>
+                    <li>Harassment, hate speech, abuse, cheating tools, and impersonation are prohibited.</li>
+                    <li>We may suspend or ban accounts that violate platform rules.</li>
+                </ul>
+
+                <h3>2. Learning Content</h3>
+                <ul>
+                    <li>ZenPy is for educational use and does not guarantee exam/job outcomes.</li>
+                    <li>Content may be updated, corrected, or reorganized at any time.</li>
+                </ul>
+
+                <h3>3. User Content</h3>
+                <ul>
+                    <li>You are responsible for profile text, links, and chat/community posts.</li>
+                    <li>Do not upload illegal, harmful, explicit, or copyrighted content without rights.</li>
+                </ul>
+
+                <h3>4. Privacy & Data</h3>
+                <ul>
+                    <li>We store account and progress data to run platform features.</li>
+                    <li>Uploaded avatars and social links are visible to other users in relevant views.</li>
+                </ul>
+
+                <h3>5. Virtual Economy</h3>
+                <ul>
+                    <li>Zen coins and virtual items are non-transferable and have no cash value.</li>
+                    <li>Purchases of virtual items are final unless explicitly stated otherwise.</li>
+                </ul>
+
+                <h3>6. Availability</h3>
+                <ul>
+                    <li>We may modify, pause, or discontinue features at any time.</li>
+                    <li>We are not liable for downtime, data loss, or third-party service issues.</li>
+                </ul>
+
+                <h3>7. Updates to Terms</h3>
+                <ul>
+                    <li>Terms may change over time; continued use means acceptance of updated terms.</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+    <script src="/js/icons.js"></script>
+    <script src="/js/utils.js"></script>
+    <script>
+        if (!requireAuth()) { /* redirected */ }
+        setupSidebar();
+    </script>
+</body>
+</html>

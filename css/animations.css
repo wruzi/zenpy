@@ -78,3 +78,5 @@
 .animate-fadeIn { animation: fadeIn 0.4s ease; }
 .animate-fadeInUp { animation: fadeInUp 0.4s ease; }
 .animate-scaleIn { animation: scaleIn 0.3s ease; }
+/* Profile-card palette classes are defined in theme.css to keep class mapping centralized. */
+

@@ -15,11 +15,18 @@ async function loadLeaderboard() {
 }
 
 async function fetchLeaderboard(type) {
+    const tableContainer = document.querySelector('.table-container');
+    tableContainer?.classList.add('table-switching');
+
     const data = await apiCall(`/api/leaderboard/${type}`);
     if (!data?.success) return;
 
     updateTableHeaders(type);
     renderTable(data.leaderboard, type);
+
+    requestAnimationFrame(() => {
+        tableContainer?.classList.remove('table-switching');
+    });
 }
 
 function switchTab(type) {
@@ -46,6 +53,43 @@ const rankIcons = {
     3: '<svg width="20" height="20" viewBox="0 0 24 24" fill="#CD7F32" stroke="#CD7F32" stroke-width="1"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="#0a0a12" font-size="12" font-weight="bold" font-family="JetBrains Mono">3</text></svg>'
 };
 
+function getSpotlightMetric(entry, type) {
+    switch (type) {
+        case 'progression':
+            return `Q${entry.currentQuestion} • ${entry.questionsCompleted} solved`;
+        case 'speed':
+            return `${entry.avgTime}s avg • ${entry.completed} solved`;
+        case 'xp':
+            return `${formatNumber(entry.xp)} XP • Lv.${entry.level}`;
+        case 'zen':
+            return `${formatNumber(entry.zen)} Zen • ${entry.items} items`;
+        default:
+            return 'Leaderboard entry';
+    }
+}
+
+function attachLeaderboardInteractions(tbody) {
+    tbody.querySelectorAll('.leader-row').forEach((row, index) => {
+        row.style.animationDelay = `${Math.min(index, 14) * 0.035}s`;
+    });
+
+    tbody.onclick = (event) => {
+        const row = event.target.closest('.leader-row');
+        if (!row) return;
+
+        tbody.querySelectorAll('.leader-row.spotlight').forEach(r => {
+            if (r !== row) r.classList.remove('spotlight');
+        });
+
+        row.classList.toggle('spotlight');
+        if (!row.classList.contains('spotlight')) return;
+
+        const username = decodeURIComponent(row.dataset.username || '');
+        const metric = decodeURIComponent(row.dataset.metric || '');
+        showToast(`${username}: ${metric}`, 'info');
+    };
+}
+
 function renderTable(leaderboard, type) {
     const tbody = document.getElementById('tableBody');
     
@@ -56,15 +100,21 @@ function renderTable(leaderboard, type) {
 
     tbody.innerHTML = leaderboard.map(entry => {
         const isMe = currentUser && entry.username === currentUser.username;
+        const rankClass = entry.rank === 1 ? 'rank-1' : entry.rank === 2 ? 'rank-2' : entry.rank === 3 ? 'rank-3' : '';
+        const spotlightMetric = getSpotlightMetric(entry, type);
         const rankDisplay = rankIcons[entry.rank] || `<span style="font-weight:700;opacity:0.6;">#${entry.rank}</span>`;
         const nameClass = entry.nameStyle || '';
-        const avatarUrl = entry.image || '/assets/images/default-avatar.png';
+        const frameClass = entry.frame || '';
+        let avatarUrl = entry.image || '/assets/avatars/Popcat%20Cartoon.jpg';
+        if (!avatarUrl.startsWith('http') && !avatarUrl.startsWith('/')) {
+            avatarUrl = `/assets/avatars/${avatarUrl}`;
+        }
 
         // Avatar + username cell
         const userCell = `
             <td>
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <img src="${avatarUrl}" alt="" style="width:28px;height:28px;border:1px solid var(--border);object-fit:cover;flex-shrink:0;" onerror="this.src='/assets/images/default-avatar.png'">
+                    <img src="${avatarUrl}" alt="" class="${frameClass}" style="width:28px;height:28px;object-fit:cover;flex-shrink:0;" onerror="this.src='/assets/avatars/Popcat%20Cartoon.jpg'">
                     <span class="${nameClass}">${escapeHTML(entry.username)}</span>
                     ${entry.title && entry.title !== 'Newbie' ? `<span class="text-muted text-sm">${entry.title}</span>` : ''}
                 </div>
@@ -96,11 +146,13 @@ function renderTable(leaderboard, type) {
                 break;
         }
 
-        return `<tr class="${isMe ? 'highlight' : ''}">
+        return `<tr class="leader-row ${rankClass} ${isMe ? 'highlight' : ''}" data-username="${encodeURIComponent(entry.username)}" data-metric="${encodeURIComponent(spotlightMetric)}">
             <td style="font-size:1.2rem;">${rankDisplay}</td>
             ${cols}
         </tr>`;
     }).join('');
+
+    attachLeaderboardInteractions(tbody);
 }
 
 document.addEventListener('DOMContentLoaded', loadLeaderboard);

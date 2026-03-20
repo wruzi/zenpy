@@ -1,18 +1,820 @@
 [
-  {"id":"silver_name","name":"Silver Name","description":"Your username glows with a subtle silver shimmer.","category":"name_style","rarity":"common","price":200,"cssClass":"silver-name","requirement":null},
-  {"id":"gold_name","name":"Gold Name","description":"A rich golden username with soft shimmer animation.","category":"name_style","rarity":"rare","price":500,"cssClass":"gold-name","requirement":{"type":"questions","value":10}},
-  {"id":"rainbow_name","name":"Rainbow Name","description":"Your username cycles through vibrant rainbow colors.","category":"name_style","rarity":"epic","price":1500,"cssClass":"rainbow-name","requirement":{"type":"questions","value":30}},
-  {"id":"fire_effect","name":"Flame Name","description":"Your username burns with cycling fire colors.","category":"effect","rarity":"rare","price":800,"cssClass":"fire-name","requirement":{"type":"questions","value":15}},
-  {"id":"cyberpunk_glow","name":"Cyberpunk Glow","description":"Cyan neon glow with random micro-flicker effect.","category":"effect","rarity":"epic","price":2000,"cssClass":"cyberpunk-name","requirement":{"type":"questions","value":40}},
-  {"id":"glitch_effect","name":"Glitch Effect","description":"Digital glitch displacement with RGB split on your name.","category":"effect","rarity":"legendary","price":3500,"cssClass":"glitch-name","requirement":{"type":"questions","value":60}},
-  {"id":"matrix_rain","name":"Matrix Code","description":"Green terminal-style name, inspired by the Matrix.","category":"effect","rarity":"rare","price":700,"cssClass":"matrix-name","requirement":{"type":"xp","value":1000}},
-  {"id":"sparkle_effect","name":"Sparkle Trail","description":"Tiny sparkle particles float around your golden name.","category":"effect","rarity":"epic","price":2500,"cssClass":"sparkle-name","requirement":{"type":"questions","value":50}},
-  {"id":"trail_effect","name":"Motion Trail","description":"Your name leaves a pink trailing shadow effect.","category":"effect","rarity":"common","price":300,"cssClass":"trail-name","requirement":null},
-  {"id":"neon_frame","name":"Neon Frame","description":"A sharp blue neon double-border around your avatar.","category":"avatar_frame","rarity":"rare","price":600,"cssClass":"neon-frame","requirement":{"type":"questions","value":10}},
-  {"id":"pixel_frame","name":"Pixel Frame","description":"Retro 8-bit pixel border around your avatar.","category":"avatar_frame","rarity":"common","price":350,"cssClass":"pixel-frame","requirement":null},
-  {"id":"crown","name":"Crown Frame","description":"A golden crown sits atop your avatar. Royalty.","category":"avatar_frame","rarity":"legendary","price":5000,"cssClass":"crown-frame","requirement":{"type":"questions","value":80}},
-  {"id":"vip_border","name":"VIP Border","description":"Exclusive star-highlighted border for dedicated coders.","category":"avatar_frame","rarity":"epic","price":1800,"cssClass":"vip-border","requirement":{"type":"streak","value":14}},
-  {"id":"custom_title","name":"Custom Title","description":"Set a custom title that appears under your name.","category":"name_accessory","rarity":"rare","price":1000,"cssClass":"custom-title","requirement":{"type":"xp","value":2000}},
-  {"id":"animated_avatar","name":"Pulse Avatar","description":"Your avatar gently pulses with a breathing animation.","category":"avatar_frame","rarity":"epic","price":1200,"cssClass":"animated-avatar","requirement":{"type":"questions","value":25}},
-  {"id":"emoji_pack","name":"Premium Emojis","description":"Unlock exclusive emoji reactions in the chat.","category":"chat_extra","rarity":"common","price":400,"cssClass":"emoji-pack","requirement":null}
+  {
+    "id": "silver_name",
+    "name": "Silver Name",
+    "description": "Your username glows with a subtle silver shimmer.",
+    "category": "name_style",
+    "rarity": "common",
+    "price": 200,
+    "cssClass": "silver-name",
+    "requirement": null
+  },
+  {
+    "id": "gold_name",
+    "name": "Gold Name",
+    "description": "A rich golden username with soft shimmer animation.",
+    "category": "name_style",
+    "rarity": "rare",
+    "price": 500,
+    "cssClass": "gold-name",
+    "requirement": {
+      "type": "questions",
+      "value": 10
+    }
+  },
+  {
+    "id": "rainbow_name",
+    "name": "Rainbow Name",
+    "description": "Your username cycles through vibrant rainbow colors.",
+    "category": "name_style",
+    "rarity": "epic",
+    "price": 1500,
+    "cssClass": "rainbow-name",
+    "requirement": {
+      "type": "questions",
+      "value": 30
+    }
+  },
+  {
+    "id": "fire_effect",
+    "name": "Flame Name",
+    "description": "Your username burns with cycling fire colors.",
+    "category": "effect",
+    "rarity": "rare",
+    "price": 800,
+    "cssClass": "fire-name",
+    "requirement": {
+      "type": "questions",
+      "value": 15
+    }
+  },
+  {
+    "id": "cyberpunk_glow",
+    "name": "Cyberpunk Glow",
+    "description": "Cyan neon glow with random micro-flicker effect.",
+    "category": "effect",
+    "rarity": "epic",
+    "price": 2000,
+    "cssClass": "cyberpunk-name",
+    "requirement": {
+      "type": "questions",
+      "value": 40
+    }
+  },
+  {
+    "id": "glitch_effect",
+    "name": "Glitch Effect",
+    "description": "Digital glitch displacement with RGB split on your name.",
+    "category": "effect",
+    "rarity": "legendary",
+    "price": 3500,
+    "cssClass": "glitch-name",
+    "requirement": {
+      "type": "questions",
+      "value": 60
+    }
+  },
+  {
+    "id": "matrix_rain",
+    "name": "Matrix Code",
+    "description": "Green terminal-style name, inspired by the Matrix.",
+    "category": "effect",
+    "rarity": "rare",
+    "price": 700,
+    "cssClass": "matrix-name",
+    "requirement": {
+      "type": "xp",
+      "value": 1000
+    }
+  },
+  {
+    "id": "sparkle_effect",
+    "name": "Sparkle Trail",
+    "description": "Tiny sparkle particles float around your golden name.",
+    "category": "effect",
+    "rarity": "epic",
+    "price": 2500,
+    "cssClass": "sparkle-name",
+    "requirement": {
+      "type": "questions",
+      "value": 50
+    }
+  },
+  {
+    "id": "trail_effect",
+    "name": "Motion Trail",
+    "description": "Your name leaves a pink trailing shadow effect.",
+    "category": "effect",
+    "rarity": "common",
+    "price": 300,
+    "cssClass": "trail-name",
+    "requirement": null
+  },
+  {
+    "id": "neon_frame",
+    "name": "Neon Frame",
+    "description": "A sharp blue neon double-border around your avatar.",
+    "category": "avatar_frame",
+    "rarity": "rare",
+    "price": 600,
+    "cssClass": "neon-frame",
+    "requirement": {
+      "type": "questions",
+      "value": 10
+    }
+  },
+  {
+    "id": "pixel_frame",
+    "name": "Pixel Frame",
+    "description": "Retro 8-bit pixel border around your avatar.",
+    "category": "avatar_frame",
+    "rarity": "common",
+    "price": 350,
+    "cssClass": "pixel-frame",
+    "requirement": null
+  },
+  {
+    "id": "crown",
+    "name": "Crown Frame",
+    "description": "A golden crown sits atop your avatar. Royalty.",
+    "category": "avatar_frame",
+    "rarity": "legendary",
+    "price": 5000,
+    "cssClass": "crown-frame",
+    "requirement": {
+      "type": "questions",
+      "value": 80
+    }
+  },
+  {
+    "id": "vip_border",
+    "name": "VIP Border",
+    "description": "Exclusive star-highlighted border for dedicated coders.",
+    "category": "avatar_frame",
+    "rarity": "epic",
+    "price": 1800,
+    "cssClass": "vip-border",
+    "requirement": {
+      "type": "streak",
+      "value": 14
+    }
+  },
+  {
+    "id": "custom_title",
+    "name": "Holo Rank Title",
+    "description": "Unlock a premium title tag shown on leaderboard, chat and community.",
+    "category": "name_accessory",
+    "rarity": "epic",
+    "price": 2600,
+    "cssClass": "custom-title",
+    "requirement": {
+      "type": "questions",
+      "value": 45
+    }
+  },
+  {
+    "id": "animated_avatar",
+    "name": "Pulse Avatar",
+    "description": "Your avatar gently pulses with a breathing animation.",
+    "category": "avatar_frame",
+    "rarity": "epic",
+    "price": 1200,
+    "cssClass": "animated-avatar",
+    "requirement": {
+      "type": "questions",
+      "value": 25
+    }
+  },
+  {
+    "id": "frame_prism",
+    "name": "Prism Halo",
+    "description": "A rotating multicolor halo around your avatar frame.",
+    "category": "avatar_frame",
+    "rarity": "epic",
+    "price": 2600,
+    "cssClass": "prism-frame",
+    "requirement": {
+      "type": "questions",
+      "value": 48
+    }
+  },
+  {
+    "id": "frame_shadow",
+    "name": "Shadow Flux",
+    "description": "Dark aura border with subtle pulse and glow.",
+    "category": "avatar_frame",
+    "rarity": "rare",
+    "price": 1700,
+    "cssClass": "shadow-frame",
+    "requirement": {
+      "type": "xp",
+      "value": 2600
+    }
+  },
+  {
+    "id": "frame_holo",
+    "name": "Holo Grid",
+    "description": "Holographic edge shimmer for profile and chat avatars.",
+    "category": "avatar_frame",
+    "rarity": "legendary",
+    "price": 4200,
+    "cssClass": "holo-frame",
+    "requirement": {
+      "type": "streak",
+      "value": 18
+    }
+  },
+  {
+    "id": "frame_arcane",
+    "name": "Arcane Ring",
+    "description": "Prestige arcane ring animation with premium glow.",
+    "category": "avatar_frame",
+    "rarity": "legendary",
+    "price": 5600,
+    "cssClass": "arcane-frame",
+    "requirement": {
+      "type": "questions",
+      "value": 92
+    }
+  },
+  {
+    "id": "emoji_pack",
+    "name": "Neon Chat Skin",
+    "description": "Animated neon chat bubble style visible in global chat.",
+    "category": "chat_extra",
+    "rarity": "rare",
+    "price": 1700,
+    "cssClass": "chat-neon",
+    "requirement": {
+      "type": "questions",
+      "value": 25
+    }
+  },
+  {
+    "id": "chat_terminal",
+    "name": "Terminal Chat",
+    "description": "Hacker terminal style chat panel with scanline glow.",
+    "category": "chat_extra",
+    "rarity": "epic",
+    "price": 2800,
+    "cssClass": "chat-terminal",
+    "requirement": {
+      "type": "xp",
+      "value": 4000
+    }
+  },
+  {
+    "id": "chat_royal",
+    "name": "Royal Chat",
+    "description": "Premium royal gradient bubble with subtle shimmer.",
+    "category": "chat_extra",
+    "rarity": "legendary",
+    "price": 4300,
+    "cssClass": "chat-royal",
+    "requirement": {
+      "type": "streak",
+      "value": 16
+    }
+  },
+  {
+    "id": "chat_color_ice",
+    "name": "Ice Chat Text",
+    "description": "Applies cool cyan text color to your chat messages globally.",
+    "category": "chat_color",
+    "rarity": "common",
+    "price": 600,
+    "cssClass": "chat-text-ice",
+    "requirement": null
+  },
+  {
+    "id": "chat_color_mint",
+    "name": "Mint Chat Text",
+    "description": "Applies mint green text color to your chat messages globally.",
+    "category": "chat_color",
+    "rarity": "rare",
+    "price": 1000,
+    "cssClass": "chat-text-mint",
+    "requirement": {
+      "type": "questions",
+      "value": 20
+    }
+  },
+  {
+    "id": "chat_color_gold",
+    "name": "Gold Chat Text",
+    "description": "Applies premium gold text color to your chat messages globally.",
+    "category": "chat_color",
+    "rarity": "epic",
+    "price": 1800,
+    "cssClass": "chat-text-gold",
+    "requirement": {
+      "type": "xp",
+      "value": 3500
+    }
+  },
+  {
+    "id": "chat_color_rose",
+    "name": "Rose Chat Text",
+    "description": "Applies soft rose text color to your chat messages globally.",
+    "category": "chat_color",
+    "rarity": "epic",
+    "price": 1900,
+    "cssClass": "chat-text-rose",
+    "requirement": {
+      "type": "streak",
+      "value": 8
+    }
+  },
+  {
+    "id": "chat_bg_midnight",
+    "name": "Midnight Chat BG",
+    "description": "Applies a deep midnight blue background to your chat bubble.",
+    "category": "chat_background",
+    "rarity": "common",
+    "price": 650,
+    "cssClass": "chat-bg-midnight",
+    "requirement": null
+  },
+  {
+    "id": "chat_bg_matrix",
+    "name": "Matrix Chat BG",
+    "description": "Applies a matrix green background to your chat bubble.",
+    "category": "chat_background",
+    "rarity": "rare",
+    "price": 1100,
+    "cssClass": "chat-bg-matrix",
+    "requirement": {
+      "type": "questions",
+      "value": 22
+    }
+  },
+  {
+    "id": "chat_bg_plum",
+    "name": "Plum Chat BG",
+    "description": "Applies a dark plum background to your chat bubble.",
+    "category": "chat_background",
+    "rarity": "epic",
+    "price": 1750,
+    "cssClass": "chat-bg-plum",
+    "requirement": {
+      "type": "xp",
+      "value": 3200
+    }
+  },
+  {
+    "id": "chat_bg_ember",
+    "name": "Ember Chat BG",
+    "description": "Applies a warm ember background to your chat bubble.",
+    "category": "chat_background",
+    "rarity": "epic",
+    "price": 1800,
+    "cssClass": "chat-bg-ember",
+    "requirement": {
+      "type": "streak",
+      "value": 10
+    }
+  },
+  {
+    "id": "title_architect",
+    "name": "Code Architect",
+    "description": "Elite title badge for advanced builders.",
+    "category": "name_accessory",
+    "rarity": "rare",
+    "price": 1900,
+    "cssClass": "title-architect",
+    "requirement": {
+      "type": "xp",
+      "value": 3000
+    }
+  },
+  {
+    "id": "title_legend",
+    "name": "Zen Legend",
+    "description": "Top-tier title tag to show your mastery.",
+    "category": "name_accessory",
+    "rarity": "legendary",
+    "price": 5200,
+    "cssClass": "title-legend",
+    "requirement": {
+      "type": "questions",
+      "value": 90
+    }
+  },
+  {
+    "id": "banner_nebula",
+    "name": "Nebula Banner",
+    "description": "Animated cosmic banner behind your profile identity.",
+    "category": "profile_banner",
+    "rarity": "epic",
+    "price": 3200,
+    "cssClass": "banner-nebula",
+    "requirement": {
+      "type": "questions",
+      "value": 55
+    }
+  },
+  {
+    "id": "banner_aether",
+    "name": "Aether Flow",
+    "description": "High-end aurora style profile banner with motion waves.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 4800,
+    "cssClass": "banner-aether",
+    "requirement": {
+      "type": "xp",
+      "value": 7000
+    }
+  },
+  {
+    "id": "banner_quantum",
+    "name": "Quantum Rift",
+    "description": "Prestige banner with pulse and spectral sweep animation.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 6200,
+    "cssClass": "banner-quantum",
+    "requirement": {
+      "type": "streak",
+      "value": 21
+    }
+  },
+  {
+    "id": "banner_video_premium",
+    "name": "OPM Video Banner",
+    "description": "OPM animated video banner from the shop asset. Super flashy and badass.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 8000,
+    "cssClass": "banner-video-premium",
+    "requirement": {
+      "type": "questions",
+      "value": 75
+    }
+  },
+  {
+    "id": "banner_video_022",
+    "name": "022 Motion Banner",
+    "description": "Animated GIF banner with premium motion style. Full-fit rectangle display.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 8200,
+    "cssClass": "banner-video-022",
+    "requirement": {
+      "type": "questions",
+      "value": 78
+    }
+  },
+  {
+    "id": "banner_video_sakuna",
+    "name": "Sakuna Rage Banner",
+    "description": "High-intensity animated premium banner. Same fixed rectangle and full-fit style.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 8600,
+    "cssClass": "banner-video-sakuna",
+    "requirement": {
+      "type": "questions",
+      "value": 82
+    }
+  },
+  {
+    "id": "banner_image_fahh",
+    "name": "FAHH Image Banner",
+    "description": "Premium static image banner for your profile card top area.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 7800,
+    "cssClass": "banner-image-fahh",
+    "requirement": {
+      "type": "questions",
+      "value": 70
+    }
+  },
+  {
+    "id": "banner_image_idiot",
+    "name": "Idiot Image Banner",
+    "description": "Premium image banner style with full-width impact.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 7600,
+    "cssClass": "banner-image-idiot",
+    "requirement": {
+      "type": "questions",
+      "value": 68
+    }
+  },
+  {
+    "id": "banner_image_core",
+    "name": "Core Image Banner",
+    "description": "Premium image-based profile banner from your uploaded art.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 7900,
+    "cssClass": "banner-image-core",
+    "requirement": {
+      "type": "questions",
+      "value": 72
+    }
+  },
+  {
+    "id": "banner_image_kitigawa",
+    "name": "Kitigawa Image Banner",
+    "description": "Premium portrait image banner with clean full-width presentation.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 8100,
+    "cssClass": "banner-image-kitigawa",
+    "requirement": {
+      "type": "questions",
+      "value": 74
+    }
+  },
+  {
+    "id": "banner_color_inferno",
+    "name": "Inferno Color Banner",
+    "description": "Normal color banner with hot orange-red gradient sweep.",
+    "category": "profile_banner",
+    "rarity": "rare",
+    "price": 1700,
+    "cssClass": "banner-color-inferno",
+    "requirement": null
+  },
+  {
+    "id": "banner_color_ocean",
+    "name": "Ocean Color Banner",
+    "description": "Normal color banner with cool blue-cyan gradient.",
+    "category": "profile_banner",
+    "rarity": "rare",
+    "price": 1700,
+    "cssClass": "banner-color-ocean",
+    "requirement": null
+  },
+  {
+    "id": "banner_color_forest",
+    "name": "Forest Color Banner",
+    "description": "Normal color banner with emerald-green gradient flow.",
+    "category": "profile_banner",
+    "rarity": "rare",
+    "price": 1700,
+    "cssClass": "banner-color-forest",
+    "requirement": null
+  },
+  {
+    "id": "banner_color_violet",
+    "name": "Violet Color Banner",
+    "description": "Normal color banner with deep purple-magenta gradient.",
+    "category": "profile_banner",
+    "rarity": "rare",
+    "price": 1700,
+    "cssClass": "banner-color-violet",
+    "requirement": null
+  },
+  {
+    "id": "banner_equation_sim",
+    "name": "Equation Flux Banner",
+    "description": "JS simulated equation stream and floating symbols over a neon field.",
+    "category": "profile_banner",
+    "rarity": "epic",
+    "price": 3600,
+    "cssClass": "banner-equation-sim",
+    "requirement": {
+      "type": "questions",
+      "value": 50
+    }
+  },
+  {
+    "id": "banner_physics_sim",
+    "name": "Physics Drift Banner",
+    "description": "JS simulated particles and vector arcs for a physics-lab vibe.",
+    "category": "profile_banner",
+    "rarity": "epic",
+    "price": 3800,
+    "cssClass": "banner-physics-sim",
+    "requirement": {
+      "type": "questions",
+      "value": 54
+    }
+  },
+  {
+    "id": "banner_physics_orbital",
+    "name": "Orbital Mechanics",
+    "description": "Satellite-style orbital traces with rotating trajectories and dynamic particles.",
+    "category": "profile_banner",
+    "rarity": "epic",
+    "price": 4200,
+    "cssClass": "banner-physics-sim physics-theme-orbital",
+    "requirement": {
+      "type": "questions",
+      "value": 58
+    }
+  },
+  {
+    "id": "banner_physics_collider",
+    "name": "Collider Core",
+    "description": "High-energy collider lanes with crossing beams and collision pulse effects.",
+    "category": "profile_banner",
+    "rarity": "epic",
+    "price": 4400,
+    "cssClass": "banner-physics-sim physics-theme-collider",
+    "requirement": {
+      "type": "questions",
+      "value": 62
+    }
+  },
+  {
+    "id": "banner_physics_ionstorm",
+    "name": "Ion Storm",
+    "description": "Charged plasma turbulence with crackling storm vectors and electric flow.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 5600,
+    "cssClass": "banner-physics-sim physics-theme-ionstorm",
+    "requirement": {
+      "type": "xp",
+      "value": 7800
+    }
+  },
+  {
+    "id": "banner_physics_gravity_well",
+    "name": "Gravity Well",
+    "description": "A dense spacetime sink with ring compression and singularity pull visuals.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 5900,
+    "cssClass": "banner-physics-sim physics-theme-gravity",
+    "requirement": {
+      "type": "streak",
+      "value": 16
+    }
+  },
+  {
+    "id": "banner_physics_reactor",
+    "name": "Fusion Reactor",
+    "description": "Contained reactor chamber with pulsing core field and stabilized arc trails.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 6100,
+    "cssClass": "banner-physics-sim physics-theme-reactor",
+    "requirement": {
+      "type": "questions",
+      "value": 72
+    }
+  },
+  {
+    "id": "banner_physics_wormhole_lens",
+    "name": "Wormhole Lens",
+    "description": "Ultra-rare spacetime lens with vortex rings and depth-bending particle drift.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 7400,
+    "cssClass": "banner-physics-sim physics-theme-wormhole",
+    "requirement": {
+      "type": "questions",
+      "value": 84
+    }
+  },
+  {
+    "id": "banner_physics_magnetar_field",
+    "name": "Magnetar Field",
+    "description": "Ultra-rare magnetic storm signature with polar arcs and dense field lines.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 7700,
+    "cssClass": "banner-physics-sim physics-theme-magnetar",
+    "requirement": {
+      "type": "xp",
+      "value": 9800
+    }
+  },
+  {
+    "id": "banner_physics_photon_lattice",
+    "name": "Photon Lattice",
+    "description": "Ultra-rare photon matrix with synchronized beam lattice and pulse optics.",
+    "category": "profile_banner",
+    "rarity": "legendary",
+    "price": 7900,
+    "cssClass": "banner-physics-sim physics-theme-photon",
+    "requirement": {
+      "type": "streak",
+      "value": 24
+    }
+  },
+  {
+    "id": "card_synthwave",
+    "name": "Synthwave Profile",
+    "description": "Retro 80s neon profile card",
+    "category": "profile_card",
+    "rarity": "epic",
+    "price": 1500,
+    "cssClass": "card-synthwave",
+    "requirement": {
+      "type": "xp",
+      "value": 3000
+    }
+  },
+  {
+    "id": "card_hacker",
+    "name": "Hacker Terminal",
+    "description": "Green matrix code profile background",
+    "category": "profile_card",
+    "rarity": "rare",
+    "price": 1000,
+    "cssClass": "card-hacker",
+    "requirement": {
+      "type": "questions",
+      "value": 40
+    }
+  },
+  {
+    "id": "card_ruby",
+    "name": "Ruby Aura",
+    "description": "Deep red pulsing aura for profile card",
+    "category": "profile_card",
+    "rarity": "legendary",
+    "price": 3000,
+    "cssClass": "card-ruby",
+    "requirement": {
+      "type": "streak",
+      "value": 14
+    }
+  },
+  {
+    "id": "card_aurora",
+    "name": "Aurora Flux",
+    "description": "Blue-green neon card with aurora vibe",
+    "category": "profile_card",
+    "rarity": "epic",
+    "price": 2600,
+    "cssClass": "card-aurora",
+    "requirement": {
+      "type": "questions",
+      "value": 55
+    }
+  },
+  {
+    "id": "card_void",
+    "name": "Void Rift",
+    "description": "Dark purple animated card for elite coders",
+    "category": "profile_card",
+    "rarity": "legendary",
+    "price": 4200,
+    "cssClass": "card-void",
+    "requirement": {
+      "type": "xp",
+      "value": 5000
+    }
+  },
+  {
+    "id": "card_solar",
+    "name": "Solar Forge",
+    "description": "Warm golden card with intense forged style",
+    "category": "profile_card",
+    "rarity": "rare",
+    "price": 1400,
+    "cssClass": "card-solar",
+    "requirement": {
+      "type": "streak",
+      "value": 7
+    }
+  },
+  {
+    "id": "card_neon",
+    "name": "Neon Pulse",
+    "description": "A reactive neon profile card with animated pulse",
+    "category": "profile_card",
+    "rarity": "epic",
+    "price": 2200,
+    "cssClass": "card-neon",
+    "requirement": {
+      "type": "questions",
+      "value": 35
+    }
+  },
+  {
+    "id": "card_phantom",
+    "name": "Phantom Spectrum",
+    "description": "Mysterious gradient shift and flicker overlay",
+    "category": "profile_card",
+    "rarity": "legendary",
+    "price": 3800,
+    "cssClass": "card-phantom",
+    "requirement": {
+      "type": "xp",
+      "value": 6500
+    }
+  },
+  {
+    "id": "card_orion",
+    "name": "Orion Nebula",
+    "description": "Space-themed interactive profile card with starfield shimmer",
+    "category": "profile_card",
+    "rarity": "epic",
+    "price": 2900,
+    "cssClass": "card-orion",
+    "requirement": {
+      "type": "questions",
+      "value": 70
+    }
+  }
 ]

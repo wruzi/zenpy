@@ -52,7 +52,8 @@ async function fetchUnread() {
 }
 
 function getAvatarUrl(user) {
-    if (!user.image || user.image === 'default-avatar.png') return '/assets/images/default-avatar.png';
+    if (!user.image || user.image === 'default-avatar.png') return '/assets/avatars/Popcat%20Cartoon.jpg';
+    if (user.image.startsWith('http')) return user.image;
     return `/assets/avatars/${user.image}`;
 }
 
@@ -66,21 +67,29 @@ function renderUsers(users) {
 
     grid.innerHTML = users.map(u => {
         const avatarUrl = getAvatarUrl(u);
+        const nameClass = u.nameStyle || '';
+        const frameClass = u.frame || '';
+        const cardClass = u.profileCard || '';
+        const bannerClass = u.banner || 'banner-default';
+        const titleText = u.title && u.title !== 'Newbie' ? `<div style="font-size:0.7rem;color:var(--accent);margin-top:2px;font-weight:bold;">${escapeHTML(u.title)}</div>` : '';
         const socialLinks = [];
         if (u.github) socialLinks.push(`<a href="${escapeHTML(u.github)}" target="_blank" title="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg></a>`);
         if (u.instagram) socialLinks.push(`<a href="${escapeHTML(u.instagram)}" target="_blank" title="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg></a>`);
         if (u.twitter) socialLinks.push(`<a href="${escapeHTML(u.twitter)}" target="_blank" title="X / Twitter"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l11.73 16H20L8.27 4H4z"/><path d="M4 20l6.77-8.5"/><path d="M20 4l-6.77 8.5"/></svg></a>`);
 
         return `
-            <div class="user-card">
-                <div class="user-card-header">
-                    <div class="user-card-avatar"><img src="${avatarUrl}" alt="" onerror="this.src='/assets/images/default-avatar.png'"></div>
+            <div class="user-card ${cardClass}" style="position: relative;">
+                <div class="profile-banner ${bannerClass}"></div>
+                ${u.inventory?.owned?.includes('animated_avatar') ? `<div class="card-bg-effect glitch-name" style="position:absolute; inset:0; opacity:0.03; pointer-events:none; z-index:0;"></div>` : ''}
+                <div class="user-card-header" style="position:relative; z-index:1;">
+                    <div class="user-card-avatar ${frameClass}"><img src="${avatarUrl}" alt="" onerror="this.src='/assets/avatars/Popcat%20Cartoon.jpg'"></div>
                     <div>
-                        <div class="user-card-name" style="cursor:pointer;" onclick="viewProfile('${u.email}')">${escapeHTML(u.username)}</div>
+                        <div class="user-card-name ${nameClass}" style="cursor:pointer;" onclick="viewProfile('${u.email}')">${escapeHTML(u.username)}</div>
+                        ${titleText}
                         <div style="font-size:0.72rem;color:var(--text-muted);">Lv.${u.level} — Q${u.currentQuestion}</div>
                     </div>
                 </div>
-                <div class="user-card-bio">${u.bio ? escapeHTML(u.bio) : '<span style="opacity:0.3">No bio yet</span>'}</div>
+                <div class="user-card-bio" style="position:relative; z-index:1;">${u.bio ? escapeHTML(u.bio) : '<span style="opacity:0.3">No bio yet</span>'}</div>
                 <div class="user-card-stats">
                     <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${formatNumber(u.xp)} XP</span>
                     <span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2"><path d="M12 22c-4.97 0-9-2.69-9-6s2-6.5 4-9c0 3.5 2 5 4 6.5 2-1.5 4-3 4-6.5 2 2.5 4 5 4 9s-4.03 6-7 6z"/></svg> ${u.streak}d</span>
@@ -212,16 +221,22 @@ async function viewProfile(email) {
     const u = data.user;
     const avatarUrl = getAvatarUrl(u);
     const modal = document.getElementById('profileModal');
+    const nameClass = u.nameStyle || '';
+    const frameClass = u.frame || '';
+    const cardClass = u.profileCard || '';
+    const bannerClass = u.banner || 'banner-default';
 
     const socialLinks = [];
     if (u.github) socialLinks.push(`<a href="${escapeHTML(u.github)}" target="_blank" style="color:var(--text-muted);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg> GitHub</a>`);
     if (u.instagram) socialLinks.push(`<a href="${escapeHTML(u.instagram)}" target="_blank" style="color:var(--text-muted);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg> Instagram</a>`);
     if (u.twitter) socialLinks.push(`<a href="${escapeHTML(u.twitter)}" target="_blank" style="color:var(--text-muted);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l11.73 16H20L8.27 4H4z"/><path d="M4 20l6.77-8.5"/><path d="M20 4l-6.77 8.5"/></svg> X</a>`);
 
+    modal.className = `profile-modal ${cardClass}`;
     modal.innerHTML = `
+        <div class="profile-banner profile-modal-banner ${bannerClass}"></div>
         <div style="text-align:center;">
-            <div class="profile-modal-avatar"><img src="${avatarUrl}" alt="" onerror="this.src='/assets/images/default-avatar.png'"></div>
-            <h3 style="font-size:1.1rem;margin-bottom:2px;">${escapeHTML(u.username)}</h3>
+            <div class="profile-modal-avatar ${frameClass}"><img src="${avatarUrl}" alt="" onerror="this.src='/assets/avatars/Popcat%20Cartoon.jpg'"></div>
+            <h3 class="${nameClass}" style="font-size:1.1rem;margin-bottom:2px;">${escapeHTML(u.username)}</h3>
             <p class="text-muted text-sm">${u.inventory?.equipped?.title || 'Newbie'}</p>
             ${u.bio ? `<p style="font-size:0.85rem;color:var(--text-secondary);margin:8px 0;">${escapeHTML(u.bio)}</p>` : ''}
         </div>

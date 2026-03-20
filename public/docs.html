@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Docs — ZenPy</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <style>
+        .docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+        .docs-card {
+            border: 1px solid var(--border);
+            background: linear-gradient(165deg, rgba(14, 20, 34, 0.92), rgba(8, 12, 22, 0.92));
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: var(--shadow);
+        }
+        .docs-card h4 {
+            font-size: 0.84rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .docs-card p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px; }
+        .docs-card pre {
+            margin: 0;
+            border: 1px solid var(--border);
+            background: rgba(5, 10, 18, 0.85);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 0.76rem;
+            line-height: 1.7;
+            color: #b9ffd6;
+            overflow-x: auto;
+        }
+        .docs-intro {
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: linear-gradient(120deg, rgba(30, 144, 255, 0.14), rgba(255, 20, 147, 0.1));
+            margin-bottom: 14px;
+        }
+        .docs-index {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        .docs-index span {
+            padding: 4px 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-profile">
+                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/avatars/Popcat%20Cartoon.jpg" alt=""></div>
+                <div class="sidebar-username" id="sidebarUsername">—</div>
+                <div class="sidebar-title" id="sidebarTitle">Newbie</div>
+                <div class="sidebar-stats">
+                    <div class="stat"><div class="stat-value" id="sidebarLevel">1</div><div class="stat-label">LVL</div></div>
+                    <div class="stat"><div class="stat-value" id="sidebarZen">0</div><div class="stat-label">Zen</div></div>
+                    <div class="stat"><div class="stat-value" id="sidebarStreak">0</div><div class="stat-label">Streak</div></div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/dashboard"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>Dashboard</a>
+                <a href="/practice"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>Practice</a>
+                <a href="/profile"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Profile</a>
+                <a href="/leaderboard"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2m12 6h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 22h6m-3-4v4m-4-8a4 4 0 004 4 4 4 0 004-4V3H8v11z"/></svg></span>Leaderboard</a>
+                <a href="/shop"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>Shop</a>
+                <a href="/chat"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>Chat</a>
+                <a href="/community"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>Community</a>
+                <a href="/docs" class="active"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span>Python Docs</a>
+                <a href="/rules"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>Rules</a>
+            </nav>
+            <div class="sidebar-footer"><a href="#" onclick="logout();return false;" class="btn btn-ghost btn-sm w-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a></div>
+        </aside>
+
+        <main class="main-content">
+            <div class="main-header">
+                <h2>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Python Documentation
+                </h2>
+                <span class="badge">Comprehensive Reference</span>
+            </div>
+
+            <div class="docs-intro">
+                Covers Python fundamentals, data structures, OOP, errors, files, modules, async, typing, and practical examples for ZenPy learners.
+            </div>
+
+            <div class="docs-index">
+                <span>Syntax</span><span>Types</span><span>Control Flow</span><span>Functions</span><span>OOP</span><span>Collections</span><span>Exceptions</span><span>Files</span><span>Modules</span><span>Decorators</span><span>Async</span><span>Typing</span>
+            </div>
+
+            <div class="docs-grid">
+                <section class="docs-card">
+                    <h4>Variables & Types</h4>
+                    <p>Python is dynamically typed. Use readable names and avoid single-letter variables in production code.</p>
+                    <pre>name = "ZenPy"
+age = 21
+pi = 3.14159
+active = True
+skills = ["loops", "functions"]
+profile = {"level": 4, "xp": 1250}</pre>
+                </section>
+
+                <section class="docs-card">
+                    <h4>Control Flow</h4>
+                    <p>Use indentation consistently. Prefer clear branches over deeply nested conditions.</p>
+                    <pre>if xp >= 1000:
+    rank = "Pro"
+elif xp >= 300:
+    rank = "Intermediate"
+else:
+    rank = "Beginner"
+
+for index in range(1, 6):
+    print(index)</pre>
+                </section>
+
+                <section class="docs-card">
+                    <h4>Functions</h4>
+                    <p>Use docstrings and type hints for maintainability.</p>
+                    <pre>def solve_score(correct: int, speed_bonus: int = 0) -> int:
+    """Return XP score for a solved problem."""
+    base = 25 * correct
+    return base + speed_bonus
+
+print(solve_score(4, speed_bonus=10))</pre>
+                </section>
+
+                <section class="docs-card">
+                    <h4>Comprehensions</h4>
+                    <p>Comprehensions are concise and fast for mapping/filtering collections.</p>
+                    <pre>numbers = [1, 2, 3, 4, 5, 6]
+squares = [number ** 2 for number in numbers]
+fast = [time for time in [14, 22, 31, 18] if time &lt; 20]</pre>
+                </section>
+
+                <section class="docs-card">
+                    <h4>Classes (OOP)</h4>
+                    <p>Use classes when behavior and state should live together.</p>
+                    <pre>class User:
+    def __init__(self, username: str, level: int = 1):
+        self.username = username
+        self.level = level
+
+    def level_up(self) -> None:
+        self.level += 1
+
+u = User("coder")
+u.level_up()</pre>
+                </section>
+
+                <section class="docs-card">
+                    <h4>Collections</h4>
+                    <p>Pick the right type: list (order), set (unique), dict (key-value), tuple (immutable).</p>
+                    <pre>tags = {"python", "algorithms", "python"}
+# {'python', 'algorithms'}
+
+counts = {"easy": 12, "medium": 7}
+counts["hard"] = counts.get("hard", 0) + 1</pre>
+                </section>
+
+                <section class="docs-card">
+                    <h4>Exceptions</h4>
+                    <p>Catch expected errors and keep exception blocks specific.</p>
+                    <pre>try:
+    value = int("42")
+except ValueError as error:
+    print("Invalid number", error)
+else:
+    print("OK", value)
+finally:
+    print("Done")</pre>
+                </section>
+
+                <section class="docs-card">
+                    <h4>File Handling</h4>
+                    <p>Use context managers (`with`) so files are always closed safely.</p>
+                    <pre>with open("notes.txt", "w", encoding="utf-8") as file:
+    file.write("Practice daily\n")
+
+with open("notes.txt", "r", encoding="utf-8") as file:
+    content = file.read()</pre>
+                </section>
+
+                <section class="docs-card">
+                    <h4>Modules & Packages</h4>
+                    <p>Split code by responsibility and import only what you need.</p>
+                    <pre>import math
+from datetime import datetime
+
+radius = 5
+area = math.pi * radius ** 2
+print(datetime.now(), area)</pre>
+                </section>
+
+                <section class="docs-card">
+                    <h4>Decorators</h4>
+                    <p>Decorators wrap functions for logging, auth checks, caching, and timing.</p>
+                    <pre>def logger(fn):
+    def wrapped(*args, **kwargs):
+        print("Calling", fn.__name__)
+        return fn(*args, **kwargs)
+    return wrapped
+
+@logger
+def greet(name):
+    return f"Hi {name}"</pre>
+                </section>
+
+                <section class="docs-card">
+                    <h4>Async / Await</h4>
+                    <p>Use `asyncio` for I/O-bound tasks (network, file, APIs).</p>
+                    <pre>import asyncio
+
+async def fetch_mock():
+    await asyncio.sleep(1)
+    return "done"
+
+result = asyncio.run(fetch_mock())</pre>
+                </section>
+
+                <section class="docs-card">
+                    <h4>Type Hints & Dataclasses</h4>
+                    <p>Type hints improve readability and editor support.</p>
+                    <pre>from dataclasses import dataclass
+
+@dataclass
+class Progress:
+    question: int
+    xp: int
+
+record = Progress(question=12, xp=430)</pre>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+    <script src="/js/icons.js"></script>
+    <script src="/js/utils.js"></script>
+    <script>
+        if (!requireAuth()) { /* redirected */ }
+        document.addEventListener('DOMContentLoaded', setupSidebar);
+    </script>
+</body>
+</html>

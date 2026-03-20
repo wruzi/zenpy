@@ -2,6 +2,22 @@
 // ZenPy - Utility Functions
 // ============================================
 
+// Intercept OAuth Tokens from URL globally before any logic runs
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const urlToken = params.get('token');
+    const urlUser = params.get('user');
+    
+    if (urlToken) {
+        localStorage.setItem('zenpy_token', urlToken);
+        if (urlUser) {
+            localStorage.setItem('zenpy_user', decodeURIComponent(urlUser));
+        }
+        // Clean URL so the token doesn't stay in the address bar
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+})();
+
 // --- Token Management ---
 function getToken() {
     return localStorage.getItem('zenpy_token');
@@ -132,18 +148,31 @@ async function setupSidebar() {
             if (el('sidebarStreak')) el('sidebarStreak').textContent = u.streak;
 
             // Apply avatar image
-            if (u.image && u.image !== 'default-avatar.png' && el('sidebarAvatar')) {
+            if (u.image && el('sidebarAvatar')) {
                 const img = el('sidebarAvatar').querySelector('img');
-                if (img) img.src = `/assets/avatars/${u.image}`;
+                if (img) {
+                    if (u.image === 'default-avatar.png') {
+                        img.src = '/assets/avatars/Popcat%20Cartoon.jpg';
+                    } else if (u.image.startsWith('http')) {
+                        img.src = u.image;
+                    } else {
+                        img.src = `/assets/avatars/${u.image}`;
+                    }
+                    img.onerror = function() {
+                        this.src = '/assets/avatars/Popcat%20Cartoon.jpg';
+                    };
+                }
             }
 
             // Apply name style
-            if (u.inventory?.equipped?.nameStyle && el('sidebarUsername')) {
-                el('sidebarUsername').classList.add(u.inventory.equipped.nameStyle);
+            if (u.cssMap?.nameStyle && el('sidebarUsername')) {
+                el('sidebarUsername').className = `sidebar-username ${u.cssMap.nameStyle}`;
             }
             // Apply frame
-            if (u.inventory?.equipped?.frame && el('sidebarAvatar')) {
-                el('sidebarAvatar').classList.add(u.inventory.equipped.frame);
+            if (u.cssMap?.frame && el('sidebarAvatar')) {
+                const parts = el('sidebarAvatar').className.split(' ').filter(c => !c.includes('-frame') && !c.includes('-border') && c !== 'animated-avatar');
+                parts.push(u.cssMap.frame);
+                el('sidebarAvatar').className = parts.join(' ');
             }
 
             return { user: u, progress: data.progress };

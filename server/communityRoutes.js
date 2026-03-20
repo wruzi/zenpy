@@ -5,7 +5,14 @@
 const authMiddleware = require('./middleware/auth');
 
 module.exports = function(app) {
-    const { readJSON, writeJSON } = app.locals;
+    const { readJSON, writeJSON, getItemCssClass } = app.locals;
+
+    function getNameStyleClass(user) {
+        return [
+            getItemCssClass(user.inventory?.equipped?.nameStyle),
+            getItemCssClass(user.inventory?.equipped?.effect)
+        ].filter(Boolean).join(' ') || null;
+    }
 
     // ---- GET ALL COMMUNITY USERS ----
     app.get('/api/community/users', authMiddleware, (req, res) => {
@@ -42,6 +49,12 @@ module.exports = function(app) {
                 following: followingCount,
                 isFollowing: myFollowing.includes(u.email),
                 isMe: u.email === req.user.email,
+                nameStyle: getNameStyleClass(u),
+                frame: getItemCssClass(u.inventory?.equipped?.frame) || null,
+                profileCard: getItemCssClass(u.inventory?.equipped?.profile_card) || null,
+                banner: getItemCssClass(u.inventory?.equipped?.banner) || null,
+                chatStyle: getItemCssClass(u.inventory?.equipped?.chatExtra) || null,
+                title: u.inventory?.equipped?.title || 'Newbie',
                 inventory: u.inventory
             };
         });
@@ -85,6 +98,12 @@ module.exports = function(app) {
                 following: followingCount,
                 isFollowing,
                 isMe: u.email === req.user.email,
+                nameStyle: getNameStyleClass(u),
+                frame: getItemCssClass(u.inventory?.equipped?.frame) || null,
+                profileCard: getItemCssClass(u.inventory?.equipped?.profile_card) || null,
+                banner: getItemCssClass(u.inventory?.equipped?.banner) || null,
+                chatStyle: getItemCssClass(u.inventory?.equipped?.chatExtra) || null,
+                title: u.inventory?.equipped?.title || 'Newbie',
                 inventory: u.inventory
             }
         });

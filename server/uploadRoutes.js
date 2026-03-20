@@ -62,7 +62,7 @@ module.exports = function(app) {
             }
 
             // Delete old avatar if not default
-            if (user.image && user.image !== 'default-avatar.png') {
+            if (user.image && user.image !== 'default-avatar.png' && user.image !== 'Popcat Cartoon.jpg' && user.image !== 'Popcat%20Cartoon.jpg' && !user.image.startsWith('http')) {
                 const oldPath = path.join(__dirname, '..', 'assets', 'avatars', user.image);
                 if (fs.existsSync(oldPath)) {
                     try { fs.unlinkSync(oldPath); } catch (e) { /* ignore */ }

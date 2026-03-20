@@ -24,7 +24,6 @@ async function initChat() {
 // --- Socket Events ---
 socket.on('auth_success', (data) => {
     chatUserName = data.username;
-    addSystemMessage(`Welcome to the chat, ${data.username}! 🎉`);
 });
 
 socket.on('auth_error', (msg) => {
@@ -68,27 +67,84 @@ socket.on('report_received', (data) => {
 // --- Render Message ---
 function renderMessage(msg) {
     const div = document.createElement('div');
-    div.className = `chat-msg ${msg.isVip ? 'vip-border' : ''}`;
-    
+    const isSelf = msg.username === chatUserName;
+    div.className = `chat-msg ${msg.isVip ? 'vip-border' : ''} ${isSelf ? 'me' : 'other'}`;
+    const bubbleClass = [msg.chatBackground, msg.chatColor].filter(Boolean).join(' ');
+
     // Parse mentions
     let messageText = escapeHTML(msg.message);
     messageText = messageText.replace(/@(\w+)/g, '<span class="mention">@$1</span>');
 
+    // Handle avatar
+    let avatarUrl = msg.image || '/assets/avatars/Popcat%20Cartoon.jpg';
+    if (avatarUrl === 'default-avatar.png' || avatarUrl === '/assets/images/default-avatar.png') {
+        avatarUrl = '/assets/avatars/Popcat%20Cartoon.jpg';
+    } else if (!avatarUrl.startsWith('http') && !avatarUrl.startsWith('/')) {
+        avatarUrl = `/assets/avatars/${avatarUrl}`;
+    }
+
     div.innerHTML = `
         <div class="msg-avatar ${msg.frame || ''}">
-            <img src="/assets/images/default-avatar.png" alt="" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23333%22 width=%22100%22 height=%22100%22/><text x=%2250%25%22 y=%2255%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23FF1493%22>🧑‍💻</text></svg>'">
+            <img src="${avatarUrl}" alt="" onerror="this.src='/assets/avatars/Popcat%20Cartoon.jpg'">
         </div>
-        <div class="msg-content">
+        <div class="msg-content ${msg.chatStyle || ''}">
             <div class="msg-header">
-                <span class="msg-username ${msg.nameStyle || ''}">${escapeHTML(msg.username)}</span>
-                ${msg.title ? `<span class="msg-title">${escapeHTML(msg.title)}</span>` : ''}
-                <span class="msg-time">${formatTimestamp(msg.timestamp)}</span>
+                <div class="msg-meta">
+                    <span class="msg-username mention-target ${msg.nameStyle || ''}" data-username="${encodeURIComponent(msg.username)}">${escapeHTML(msg.username)}</span>
+                    ${msg.title ? `<span class="msg-title">${escapeHTML(msg.title)}</span>` : ''}
+                    <span class="msg-time">${formatTimestamp(msg.timestamp)}</span>
+                </div>
+                <button class="msg-copy-btn" type="button" title="Copy message">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                </button>
             </div>
-            <div class="msg-text">${messageText}</div>
+            <div class="msg-text ${bubbleClass}">${messageText}</div>
         </div>
     `;
     chatMessages.appendChild(div);
 }
+
+function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+}
+
+chatMessages.addEventListener('click', async (event) => {
+    const mentionTarget = event.target.closest('.mention-target');
+    if (mentionTarget) {
+        const username = decodeURIComponent(mentionTarget.dataset.username || '');
+        if (username) {
+            const prefix = chatInput.value && !chatInput.value.endsWith(' ') ? ' ' : '';
+            chatInput.value = `${chatInput.value}${prefix}@${username} `;
+            chatInput.focus();
+        }
+        return;
+    }
+
+    const copyButton = event.target.closest('.msg-copy-btn');
+    if (!copyButton) return;
+
+    const msgText = copyButton.closest('.msg-content')?.querySelector('.msg-text')?.textContent?.trim();
+    if (!msgText) return;
+
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(msgText);
+        } else {
+            fallbackCopy(msgText);
+        }
+        showToast('Message copied', 'success');
+    } catch (error) {
+        fallbackCopy(msgText);
+        showToast('Message copied', 'success');
+    }
+});
 
 function addSystemMessage(text) {
     const div = document.createElement('div');

@@ -28,7 +28,7 @@
     <div class="app-layout">
         <aside class="sidebar">
             <div class="sidebar-profile">
-                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/images/default-avatar.png" alt=""></div>
+                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/avatars/Popcat%20Cartoon.jpg" alt=""></div>
                 <div class="sidebar-username" id="sidebarUsername">—</div>
                 <div class="sidebar-title" id="sidebarTitle">Newbie</div>
                 <div class="sidebar-stats">
@@ -45,6 +45,8 @@
                 <a href="/shop"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>Shop</a>
                 <a href="/chat"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>Chat</a>
                 <a href="/community"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>Community</a>
+                <a href="/docs"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span>Python Docs</a>
+                <a href="/rules"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>Rules</a>
             </nav>
             <div class="sidebar-footer"><a href="#" onclick="logout();return false;" class="btn btn-ghost btn-sm w-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a></div>
         </aside>
@@ -62,7 +64,7 @@
                 <div>
                     <div class="card profile-avatar-section mb-3">
                         <div class="profile-avatar" id="profileAvatar">
-                            <img src="/assets/images/default-avatar.png" alt="" id="avatarImg">
+                            <img src="/assets/avatars/Popcat%20Cartoon.jpg" alt="" id="avatarImg">
                             <label for="avatarUpload" class="avatar-upload-btn">
                                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
                                 Upload
@@ -137,6 +139,7 @@
     <div id="toastContainer" class="toast-container"></div>
     <script src="/js/icons.js"></script>
     <script src="/js/utils.js"></script>
+    <script src="/js/card-sim.js"></script>
 
     <script>
         if (!requireAuth()) { /* redirected */ }
@@ -165,6 +168,33 @@
             { name: 'Phase 9: Mini Transformer', range: [91, 100] }
         ];
 
+        function applyEquippedProfileCard(user) {
+            const profileCardClass = user?.cssMap?.profileCard || '';
+            const card = document.querySelector('.profile-avatar-section.card');
+            const hasSimClass = profileCardClass.split(' ').some(className => className.startsWith('card-sim-'));
+
+            if (!card) return;
+
+            [...card.classList].forEach(className => {
+                if ((className.startsWith('card-') && className !== 'card-title') || className === 'card-sim-ambient') {
+                    card.classList.remove(className);
+                }
+            });
+
+            profileCardClass
+                .split(' ')
+                .filter(Boolean)
+                .forEach(className => card.classList.add(className));
+
+            if (!hasSimClass) {
+                card.querySelectorAll('.card-sim-canvas').forEach(canvas => canvas.remove());
+            }
+
+            if (window.ZenPyCardSim?.scan) {
+                window.ZenPyCardSim.scan(card);
+            }
+        }
+
         async function loadProfile() {
             const data = await setupSidebar();
             if (!data) return;
@@ -184,8 +214,10 @@
             document.getElementById('editTwitter').value = user.twitter || '';
             if (progress?.averageTime) document.getElementById('profileAvgTime').textContent = Math.round(progress.averageTime) + 's';
 
+            applyEquippedProfileCard(user);
+
             // Avatar
-            if (user.image && user.image !== 'default-avatar.png') {
+            if (user.image && user.image !== 'Popcat%20Cartoon.jpg') {
                 document.getElementById('avatarImg').src = `/assets/avatars/${user.image}`;
             }
 

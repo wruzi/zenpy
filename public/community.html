@@ -8,20 +8,69 @@
     <link rel="stylesheet" href="/css/theme.css">
     <link rel="stylesheet" href="/css/animations.css">
     <style>
-        .community-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-        .user-card { padding: 16px; border: 1px solid var(--border); transition: transform 0.2s; }
-        .user-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+        .community-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .user-card {
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            background: linear-gradient(165deg, rgba(16, 24, 40, 0.88), rgba(9, 14, 24, 0.88));
+            position: relative;
+        }
+        .profile-banner {
+            width: calc(100% + 32px); height: 100px; margin: -16px -16px 12px;
+            border-bottom: 1px solid var(--border);
+            background: #090c14;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .profile-modal-banner {
+            width: 100%;
+            height: 128px;
+            margin: 0 0 10px;
+            border-radius: 0;
+            border: 1px solid var(--border);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .user-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
         .user-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .user-card-avatar { width: 48px; height: 48px; border: 2px solid var(--accent); overflow: hidden; flex-shrink: 0; }
+        .user-card-avatar {
+            width: 52px;
+            height: 52px;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
         .user-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .user-card-name { font-weight: 700; font-size: 0.95rem; }
-        .user-card-bio { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 10px; min-height: 18px; }
-        .user-card-stats { display: flex; gap: 12px; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; }
+        .user-card-bio {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            min-height: 42px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            background: rgba(7, 12, 20, 0.55);
+        }
+        .user-card-stats {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
         .user-card-stats span { display: flex; align-items: center; gap: 4px; }
         .user-card-links { display: flex; gap: 8px; margin-bottom: 10px; }
         .user-card-links a { color: var(--text-muted); transition: color 0.2s; }
         .user-card-links a:hover { color: var(--accent); }
-        .user-card-actions { display: flex; gap: 8px; }
+        .user-card-actions { display: flex; gap: 8px; margin-top: 10px; }
         .follow-stats { display: flex; gap: 4px; font-size: 0.75rem; color: var(--text-muted); }
         /* DM Modal */
         .dm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; display: none; justify-content: center; align-items: center; }
@@ -49,7 +98,7 @@
     <div class="app-layout">
         <aside class="sidebar">
             <div class="sidebar-profile">
-                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/images/default-avatar.png" alt=""></div>
+                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/avatars/Popcat%20Cartoon.jpg" alt=""></div>
                 <div class="sidebar-username" id="sidebarUsername">—</div>
                 <div class="sidebar-title" id="sidebarTitle">Newbie</div>
                 <div class="sidebar-stats">
@@ -66,6 +115,8 @@
                 <a href="/shop"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>Shop</a>
                 <a href="/chat"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>Chat</a>
                 <a href="/community" class="active"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>Community</a>
+                <a href="/docs"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span>Python Docs</a>
+                <a href="/rules"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>Rules</a>
             </nav>
             <div class="sidebar-footer"><a href="#" onclick="logout();return false;" class="btn btn-ghost btn-sm w-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a></div>
         </aside>
@@ -98,7 +149,7 @@
                 <button class="btn btn-ghost btn-sm" onclick="closeDM()" style="padding:4px;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
-                <div class="dm-header-avatar" id="dmAvatar"><img src="/assets/images/default-avatar.png" alt=""></div>
+                <div class="dm-header-avatar" id="dmAvatar"><img src="/assets/avatars/Popcat%20Cartoon.jpg" alt=""></div>
                 <strong id="dmUsername" style="font-size:0.9rem;">—</strong>
             </div>
             <div class="dm-messages" id="dmMessages">
@@ -121,6 +172,8 @@
     <div id="toastContainer" class="toast-container"></div>
     <script src="/js/icons.js"></script>
     <script src="/js/utils.js"></script>
+    <script src="/js/banner-sim.js"></script>
+    <script src="/js/card-sim.js"></script>
 
     <script src="/js/community.js"></script>
 </body>

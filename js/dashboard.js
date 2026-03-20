@@ -5,6 +5,9 @@
 if (!requireAuth()) { /* redirected */ }
 
 let dashboardData = null;
+let onboardingAvatarUploaded = false;
+let onboardingTermsVisited = false;
+let onboardingHandlersBound = false;
 
 async function loadDashboard() {
     const data = await setupSidebar();
@@ -63,9 +66,183 @@ async function loadDashboard() {
 
     // Quick Facts
     renderQuickFacts(user, progress);
+    renderAdvancedAnalytics(user, progress);
 
     // Load Daily Quiz
     loadDailyQuiz();
+
+    initializeOnboarding(user);
+}
+
+function isDefaultAvatar(image) {
+    return !image || image === 'default-avatar.png' || image === 'Popcat Cartoon.jpg' || image === 'Popcat%20Cartoon.jpg';
+}
+
+function initializeOnboarding(user) {
+    if (!user || user.profileSetupCompleted !== false) return;
+
+    const overlay = document.getElementById('onboardingOverlay');
+    if (!overlay) return;
+
+    const usernameInput = document.getElementById('onboardUsername');
+    const githubInput = document.getElementById('onboardGithub');
+    const instagramInput = document.getElementById('onboardInstagram');
+    const twitterInput = document.getElementById('onboardTwitter');
+    const avatarStatus = document.getElementById('onboardAvatarStatus');
+
+    if (usernameInput) usernameInput.value = user.username || '';
+    if (githubInput) githubInput.value = user.github && user.github !== 'linked' ? user.github : '';
+    if (instagramInput) instagramInput.value = user.instagram || '';
+    if (twitterInput) twitterInput.value = user.twitter || '';
+
+    onboardingAvatarUploaded = !isDefaultAvatar(user.image) && !String(user.image || '').startsWith('http');
+    onboardingTermsVisited = false;
+
+    if (avatarStatus) {
+        avatarStatus.textContent = onboardingAvatarUploaded
+            ? 'Avatar already uploaded.'
+            : 'Upload an avatar to continue.';
+        avatarStatus.style.color = onboardingAvatarUploaded ? 'var(--success)' : 'var(--text-muted)';
+    }
+
+    document.body.classList.add('onboarding-active');
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+
+    bindOnboardingHandlers();
+}
+
+function bindOnboardingHandlers() {
+    if (onboardingHandlersBound) return;
+
+    const avatarInput = document.getElementById('onboardAvatar');
+    const submitButton = document.getElementById('onboardSubmit');
+    const termsLink = document.getElementById('onboardingTermsLink');
+
+    if (avatarInput) {
+        avatarInput.addEventListener('change', () => {
+            uploadOnboardingAvatar(avatarInput.files?.[0]);
+        });
+    }
+
+    if (termsLink) {
+        termsLink.addEventListener('click', () => {
+            onboardingTermsVisited = true;
+        });
+    }
+
+    if (submitButton) {
+        submitButton.addEventListener('click', completeOnboarding);
+    }
+
+    onboardingHandlersBound = true;
+}
+
+async function uploadOnboardingAvatar(file) {
+    const avatarStatus = document.getElementById('onboardAvatarStatus');
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+        showToast('Avatar must be 2MB or smaller.', 'error');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    if (avatarStatus) {
+        avatarStatus.textContent = 'Uploading avatar...';
+        avatarStatus.style.color = 'var(--info)';
+    }
+
+    try {
+        const res = await fetch('/api/upload/avatar', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + getToken() },
+            body: formData
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+            showToast(data.message || 'Avatar upload failed.', 'error');
+            if (avatarStatus) {
+                avatarStatus.textContent = 'Upload failed. Try again.';
+                avatarStatus.style.color = 'var(--error)';
+            }
+            return;
+        }
+
+        onboardingAvatarUploaded = true;
+        showToast('Avatar uploaded.', 'success');
+
+        if (avatarStatus) {
+            avatarStatus.textContent = 'Avatar uploaded successfully.';
+            avatarStatus.style.color = 'var(--success)';
+        }
+    } catch (error) {
+        showToast('Network error while uploading avatar.', 'error');
+        if (avatarStatus) {
+            avatarStatus.textContent = 'Upload failed. Try again.';
+            avatarStatus.style.color = 'var(--error)';
+        }
+    }
+}
+
+async function completeOnboarding() {
+    const usernameInput = document.getElementById('onboardUsername');
+    const githubInput = document.getElementById('onboardGithub');
+    const instagramInput = document.getElementById('onboardInstagram');
+    const twitterInput = document.getElementById('onboardTwitter');
+    const termsCheckbox = document.getElementById('onboardTermsCheck');
+    const submitButton = document.getElementById('onboardSubmit');
+
+    const username = String(usernameInput?.value || '').trim();
+    if (username.length < 3 || username.length > 24) {
+        showToast('Username must be 3-24 characters.', 'error');
+        return;
+    }
+
+    if (!onboardingAvatarUploaded) {
+        showToast('Please upload your avatar first.', 'error');
+        return;
+    }
+
+    if (!onboardingTermsVisited) {
+        showToast('Please open and read Terms & Conditions first.', 'error');
+        return;
+    }
+
+    if (!termsCheckbox?.checked) {
+        showToast('Please confirm Terms & Conditions.', 'error');
+        return;
+    }
+
+    if (submitButton) submitButton.disabled = true;
+
+    try {
+        const res = await apiCall('/api/user/complete-onboarding', {
+            method: 'POST',
+            body: JSON.stringify({
+                username,
+                github: githubInput?.value || '',
+                instagram: instagramInput?.value || '',
+                twitter: twitterInput?.value || '',
+                termsAccepted: true
+            })
+        });
+
+        if (!res?.success) {
+            showToast(res?.message || 'Could not complete setup.', 'error');
+            if (submitButton) submitButton.disabled = false;
+            return;
+        }
+
+        showToast('Profile setup completed. Welcome!', 'success');
+        window.location.reload();
+    } catch (error) {
+        showToast('Network error while completing setup.', 'error');
+        if (submitButton) submitButton.disabled = false;
+    }
 }
 
 function renderDashboardAchievements(achievements) {
@@ -120,8 +297,9 @@ function renderQuickFacts(user, progress) {
 
     const solved = (progress?.currentQuestion - 1) || 0;
     const avgTime = progress?.averageTime ? Math.round(progress.averageTime) : 0;
-    const fastest = progress?.questionTimes?.length > 0 ? Math.min(...progress.questionTimes) : 0;
-    const totalTime = progress?.questionTimes?.reduce((a, b) => a + b, 0) || 0;
+    const times = (progress?.questionTimes || []).map(qt => Number(qt.time) || 0).filter(Boolean);
+    const fastest = times.length > 0 ? Math.min(...times) : 0;
+    const totalTime = times.reduce((sum, value) => sum + value, 0);
 
     factsEl.innerHTML = `
         <div class="d-flex align-center gap-1 mb-1" style="padding:8px;border:1px solid var(--border);">
@@ -143,6 +321,69 @@ function renderQuickFacts(user, progress) {
         <div class="d-flex align-center gap-1 mb-1" style="padding:8px;border:1px solid var(--border);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             <span class="text-sm">XP per question: <strong>${solved > 0 ? Math.round(user.xp / solved) : 0}</strong> avg</span>
+        </div>
+    `;
+}
+
+function renderAdvancedAnalytics(user, progress) {
+    const analyticsEl = document.getElementById('advancedAnalytics');
+    const insightsEl = document.getElementById('learningInsights');
+    if (!analyticsEl || !insightsEl) return;
+
+    const questionTimes = progress?.questionTimes || [];
+    const solved = (progress?.currentQuestion - 1) || 0;
+    const times = questionTimes.map(entry => Number(entry.time) || 0).filter(Boolean);
+    const attempts = questionTimes.map(entry => Number(entry.attempts) || 1);
+
+    const avg = times.length ? (times.reduce((sum, t) => sum + t, 0) / times.length) : 0;
+    const variance = times.length
+        ? (times.reduce((sum, t) => sum + ((t - avg) ** 2), 0) / times.length)
+        : 0;
+    const stdDev = Math.sqrt(variance);
+
+    const fastCount = times.filter(t => t <= 45).length;
+    const mediumCount = times.filter(t => t > 45 && t <= 120).length;
+    const deepCount = times.filter(t => t > 120).length;
+
+    const perfectAttempts = attempts.filter(a => a === 1).length;
+    const perfectRate = attempts.length ? Math.round((perfectAttempts / attempts.length) * 100) : 0;
+    const consistencyScore = avg ? Math.max(0, Math.min(100, Math.round(100 - ((stdDev / avg) * 100)))) : 0;
+
+    const joinedDate = user?.joined ? new Date(user.joined) : new Date();
+    const daysOnPlatform = Math.max(1, Math.ceil((Date.now() - joinedDate.getTime()) / (1000 * 60 * 60 * 24)));
+    const solveVelocity = solved / daysOnPlatform;
+    const projectedDaysToFinish = solveVelocity > 0 ? Math.ceil((100 - solved) / solveVelocity) : null;
+    const streakMomentum = Math.min(100, (user.streak || 0) * 8);
+
+    analyticsEl.innerHTML = `
+        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
+            <span class="text-sm">Consistency Score: <strong>${consistencyScore}%</strong></span>
+        </div>
+        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
+            <span class="text-sm">Perfect Attempt Rate: <strong>${perfectRate}%</strong></span>
+        </div>
+        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
+            <span class="text-sm">Solve Velocity: <strong>${solveVelocity.toFixed(2)} q/day</strong></span>
+        </div>
+        <div style="padding:9px;border:1px solid var(--border);">
+            <div class="text-sm mb-1">Pace Breakdown</div>
+            <div class="text-sm text-muted">Fast (≤45s): ${fastCount} | Mid: ${mediumCount} | Deep: ${deepCount}</div>
+        </div>
+    `;
+
+    insightsEl.innerHTML = `
+        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
+            <span class="text-sm">Streak Momentum: <strong>${streakMomentum}%</strong></span>
+        </div>
+        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
+            <span class="text-sm">Days on platform: <strong>${daysOnPlatform}</strong></span>
+        </div>
+        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
+            <span class="text-sm">Projected completion: <strong>${projectedDaysToFinish ? projectedDaysToFinish + ' days' : 'Need more solves'}</strong></span>
+        </div>
+        <div style="padding:9px;border:1px solid var(--border);">
+            <div class="text-sm mb-1">Focus Suggestion</div>
+            <div class="text-sm text-muted">${deepCount > fastCount ? 'Work on speed drills for easier questions to improve timing consistency.' : 'Great pace balance — push streak and attempt higher difficulty sets.'}</div>
         </div>
     `;
 }
@@ -184,7 +425,10 @@ async function submitQuizAnswer(index, btnElement) {
     buttons.forEach(b => b.disabled = true);
     
     try {
-        const res = await apiCall('/api/daily-quiz', 'POST', { answerIndex: index });
+        const res = await apiCall('/api/daily-quiz', {
+            method: 'POST',
+            body: JSON.stringify({ answerIndex: index })
+        });
         if (res?.success) {
             // Highlight the selected button
             if (res.isCorrect) {

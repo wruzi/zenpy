@@ -17,11 +17,25 @@ function filterProfanity(message) {
     return filtered;
 }
 
-module.exports = function(io, readJSON, writeJSON) {
+module.exports = function(io, readJSON, writeJSON, getItemCssClass) {
+    const GLOBAL_CHAT_FILE = 'global_chat_messages.json';
+
     // Track online users and rate limiting
     const onlineUsers = new Map(); // socketId -> { username, email }
     const messageTimestamps = new Map(); // email -> [timestamps]
     const chatReports = [];
+
+    function loadChatMessages() {
+        const data = readJSON(GLOBAL_CHAT_FILE);
+        if (Array.isArray(data)) return data;
+        if (data && Array.isArray(data.messages)) return data.messages;
+        return [];
+    }
+
+    function saveChatMessages(messages) {
+        const normalized = Array.isArray(messages) ? messages : [];
+        writeJSON(GLOBAL_CHAT_FILE, normalized);
+    }
 
     io.on('connection', (socket) => {
         let currentUser = null;
@@ -34,29 +48,32 @@ module.exports = function(io, readJSON, writeJSON) {
                 const user = users.find(u => u.email === decoded.email);
 
                 if (user) {
+                    const combinedNameStyle = [
+                        getItemCssClass(user.inventory?.equipped?.nameStyle),
+                        getItemCssClass(user.inventory?.equipped?.effect)
+                    ].filter(Boolean).join(' ') || null;
+
                     currentUser = {
                         email: user.email,
                         username: user.username,
-                        nameStyle: user.inventory?.equipped?.nameStyle || null,
-                        frame: user.inventory?.equipped?.frame || null,
+                        image: user.image,
+                        nameStyle: combinedNameStyle,
+                        frame: getItemCssClass(user.inventory?.equipped?.frame) || null,
+                        banner: getItemCssClass(user.inventory?.equipped?.banner) || null,
+                        chatStyle: getItemCssClass(user.inventory?.equipped?.chatExtra) || null,
+                        chatColor: getItemCssClass(user.inventory?.equipped?.chatColor) || null,
+                        chatBackground: getItemCssClass(user.inventory?.equipped?.chatBackground) || null,
                         title: user.inventory?.equipped?.title || 'Newbie',
                         isVip: user.inventory?.owned?.includes('vip_border') || false
                     };
                     onlineUsers.set(socket.id, currentUser);
 
                     // Send chat history
-                    const chatMessages = readJSON('chat_messages.json');
+                    const chatMessages = loadChatMessages();
                     socket.emit('chat_history', chatMessages.slice(-50));
                     
                     // Broadcast online count
                     io.emit('online_count', onlineUsers.size);
-                    
-                    // System message for join
-                    io.emit('system_message', {
-                        type: 'join',
-                        message: `${user.username} joined the chat!`,
-                        timestamp: Date.now()
-                    });
 
                     socket.emit('auth_success', { username: user.username });
                 }
@@ -107,17 +124,22 @@ module.exports = function(io, readJSON, writeJSON) {
                 username: currentUser.username,
                 message: message,
                 timestamp: now,
+                image: currentUser.image,
                 nameStyle: currentUser.nameStyle,
                 frame: currentUser.frame,
+                banner: currentUser.banner,
+                chatStyle: currentUser.chatStyle,
+                chatColor: currentUser.chatColor,
+                chatBackground: currentUser.chatBackground,
                 title: currentUser.title,
                 isVip: currentUser.isVip
             };
 
             // Save to buffer
-            const chatMessages = readJSON('chat_messages.json');
+            const chatMessages = loadChatMessages();
             chatMessages.push(msg);
             if (chatMessages.length > 100) chatMessages.shift();
-            writeJSON('chat_messages.json', chatMessages);
+            saveChatMessages(chatMessages);
 
             // Update user's chat message count
             const users = readJSON('users.json');

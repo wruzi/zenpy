@@ -1,15 +1,46 @@
 /* ============================================
    ZenPy - Theme Styles
-   Shop items, name styles, frames, effects
-   No gradients · Hard shadows · Square corners
+   Shop item classes rendered across app
    ============================================ */
 
-/* --- Name Styles --- */
-.name-silver { color: #C0C0C0; text-shadow: 2px 2px 0px rgba(192,192,192,0.3); }
-.name-gold { color: #FFD700; text-shadow: 2px 2px 0px rgba(255,215,0,0.3); }
-.name-rainbow { animation: rainbow-shift 3s steps(6) infinite; }
-.name-neon { color: #FF1493; text-shadow: 2px 2px 0px rgba(255,20,147,0.5); }
-.name-flame { color: #FF6B35; text-shadow: 2px 2px 0px rgba(255,107,53,0.3); }
+/* --- Name + Effect Classes (from shop_items.cssClass) --- */
+.silver-name { color: #C0C0C0; text-shadow: 2px 2px 0px rgba(192,192,192,0.3); }
+.gold-name { color: #FFD700; text-shadow: 2px 2px 0px rgba(255,215,0,0.35); animation: pulse-soft 2s infinite; }
+.rainbow-name { animation: rainbow-shift 3s linear infinite; }
+
+.fire-name {
+    color: #FF6B35;
+    text-shadow: 0 0 2px #FF6B35, 2px 2px 0px rgba(255,107,53,0.35);
+    animation: fire-flicker 1.2s steps(3) infinite;
+}
+
+.cyberpunk-name {
+    color: #00FFFF;
+    text-shadow: -1px 0 #FF1493, 1px 0 #1E90FF;
+    letter-spacing: 0.06em;
+    animation: cyber-flicker 1.8s steps(2) infinite;
+}
+
+.glitch-name {
+    color: #FF1493;
+    text-shadow: -1px 0 #00FFFF, 1px 0 #FF4444;
+    animation: glitch-jump 2s steps(2) infinite;
+}
+
+.matrix-name {
+    color: #00FF41;
+    text-shadow: 2px 2px 0px rgba(0,255,65,0.22);
+}
+
+.sparkle-name {
+    color: #FFD700;
+    text-shadow: 2px 2px 0px rgba(255,215,0,0.35), 0 0 6px rgba(255,215,0,0.25);
+}
+
+.trail-name {
+    color: #FF1493;
+    text-shadow: 1px 0 #FF149360, 2px 0 #FF149330, 3px 0 #FF149310;
+}
 
 @keyframes rainbow-shift {
     0% { color: #FF1493; }
@@ -21,26 +52,973 @@
     100% { color: #FF1493; }
 }
 
-/* --- Avatar Frames --- */
-.frame-neon { border: 3px solid #FF1493 !important; box-shadow: 4px 4px 0px rgba(255,20,147,0.4); }
-.frame-gold { border: 3px solid #FFD700 !important; box-shadow: 4px 4px 0px rgba(255,215,0,0.3); }
-.frame-royal { border: 3px solid #9400D3 !important; box-shadow: 4px 4px 0px rgba(148,0,211,0.3); }
-.frame-animated { border: 3px solid var(--accent) !important; animation: frame-pulse 2s ease infinite; }
-
-@keyframes frame-pulse {
-    0%, 100% { border-color: var(--accent); }
-    50% { border-color: var(--warning); }
+@keyframes cyber-flicker {
+    0%, 100% { opacity: 1; }
+    48% { opacity: 0.9; }
+    50% { opacity: 0.55; }
+    52% { opacity: 1; }
 }
 
-/* --- Effects --- */
-.effect-crown::before { content: '♔'; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 16px; color: #FFD700; }
-.effect-fire { position: relative; }
-.effect-fire::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 3px; background: #FF6B35; }
-.effect-sparkles { position: relative; }
-.effect-sparkles::after { content: '✦'; position: absolute; top: -4px; right: -12px; font-size: 10px; color: var(--warning); animation: blink 1s ease infinite; }
+@keyframes glitch-jump {
+    0%, 90%, 100% { transform: translate(0, 0); }
+    92% { transform: translate(-1px, 0); }
+    94% { transform: translate(1px, 0); }
+    96% { transform: translate(0, -1px); }
+}
 
-/* --- Chat VIP --- */
-.vip-border { border-left: 3px solid var(--warning) !important; padding-left: 12px; }
+@keyframes fire-flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.82; }
+}
+
+/* --- Avatar Frame Classes (from shop_items.cssClass) --- */
+.msg-avatar.neon-frame,
+.user-card-avatar.neon-frame,
+.sidebar-avatar.neon-frame,
+.profile-avatar.neon-frame,
+.profile-modal-avatar.neon-frame,
+.profile-preview-avatar img.neon-frame,
+img.neon-frame {
+    border: 2px solid #1E90FF !important;
+    box-shadow: 3px 3px 0px rgba(30,144,255,0.3);
+}
+
+.msg-avatar.pixel-frame,
+.user-card-avatar.pixel-frame,
+.sidebar-avatar.pixel-frame,
+.profile-avatar.pixel-frame,
+.profile-modal-avatar.pixel-frame,
+.profile-preview-avatar img.pixel-frame,
+img.pixel-frame {
+    border: 2px dashed #00FF88 !important;
+    box-shadow: 3px 3px 0px rgba(0,255,136,0.25);
+}
+
+.msg-avatar.crown-frame,
+.user-card-avatar.crown-frame,
+.sidebar-avatar.crown-frame,
+.profile-avatar.crown-frame,
+.profile-modal-avatar.crown-frame,
+.profile-preview-avatar img.crown-frame,
+img.crown-frame {
+    border: 2px solid #FFD700 !important;
+    box-shadow: 3px 3px 0px rgba(255,215,0,0.3);
+}
+
+.msg-avatar.animated-avatar,
+.user-card-avatar.animated-avatar,
+.sidebar-avatar.animated-avatar,
+.profile-avatar.animated-avatar,
+.profile-modal-avatar.animated-avatar,
+.profile-preview-avatar img.animated-avatar,
+img.animated-avatar {
+    border: 2px solid #9400D3 !important;
+    animation: pulse-soft 1.8s ease-in-out infinite;
+}
+
+.msg-avatar.prism-frame,
+.user-card-avatar.prism-frame,
+.sidebar-avatar.prism-frame,
+.profile-avatar.prism-frame,
+.profile-modal-avatar.prism-frame,
+.profile-preview-avatar img.prism-frame,
+img.prism-frame {
+    border: 2px solid #7ef3ff !important;
+    box-shadow: 0 0 10px rgba(126,243,255,0.4);
+    animation: prism-spin 5s linear infinite;
+}
+
+.msg-avatar.shadow-frame,
+.user-card-avatar.shadow-frame,
+.sidebar-avatar.shadow-frame,
+.profile-avatar.shadow-frame,
+.profile-modal-avatar.shadow-frame,
+.profile-preview-avatar img.shadow-frame,
+img.shadow-frame {
+    border: 2px solid #9a7cff !important;
+    box-shadow: 0 0 14px rgba(120, 87, 255, 0.35);
+    animation: shadow-pulse 2.6s ease-in-out infinite;
+}
+
+.msg-avatar.holo-frame,
+.user-card-avatar.holo-frame,
+.sidebar-avatar.holo-frame,
+.profile-avatar.holo-frame,
+.profile-modal-avatar.holo-frame,
+.profile-preview-avatar img.holo-frame,
+img.holo-frame {
+    border: 2px solid #00ffd5 !important;
+    box-shadow: 0 0 12px rgba(0,255,213,0.26), inset 0 0 0 1px rgba(126,243,255,0.25);
+    animation: holo-flicker 1.8s steps(2) infinite;
+}
+
+.msg-avatar.arcane-frame,
+.user-card-avatar.arcane-frame,
+.sidebar-avatar.arcane-frame,
+.profile-avatar.arcane-frame,
+.profile-modal-avatar.arcane-frame,
+.profile-preview-avatar img.arcane-frame,
+img.arcane-frame {
+    border: 2px solid #ff66ff !important;
+    box-shadow: 0 0 14px rgba(255,102,255,0.38);
+    animation: arcane-glow 2.2s ease-in-out infinite;
+}
+
+@keyframes prism-spin {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes shadow-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+}
+
+@keyframes holo-flicker {
+    0%, 100% { opacity: 1; }
+    48% { opacity: 0.82; }
+    52% { opacity: 1; }
+}
+
+@keyframes arcane-glow {
+    0%, 100% { box-shadow: 0 0 14px rgba(255,102,255,0.38); }
+    50% { box-shadow: 0 0 20px rgba(255,102,255,0.58); }
+}
+
+.chat-msg.vip-border { border-left: 3px solid var(--warning) !important; padding-left: 12px; }
+
+.msg-avatar.vip-border,
+.user-card-avatar.vip-border,
+.sidebar-avatar.vip-border,
+.profile-avatar.vip-border,
+.profile-modal-avatar.vip-border,
+.profile-preview-avatar img.vip-border,
+img.vip-border {
+    border: 2px solid #FFD700 !important;
+    box-shadow: 3px 3px 0px rgba(255,215,0,0.3);
+}
+
+/* --- Profile Card Classes (community + modal) --- */
+.user-card.card-synthwave,
+.profile-modal.card-synthwave,
+.profile-preview-card.card-synthwave {
+    background: linear-gradient(135deg, #1a0b2e 0%, #2b0c38 50%, #151a3a 100%) !important;
+    border-color: #ff00ff !important;
+    box-shadow: 4px 4px 0px rgba(255, 0, 255, 0.22) !important;
+}
+
+.user-card.card-hacker,
+.profile-modal.card-hacker,
+.profile-preview-card.card-hacker {
+    background: #0d1a10 !important;
+    border-color: #00ff41 !important;
+    box-shadow: 4px 4px 0px rgba(0, 255, 65, 0.22) !important;
+}
+
+.user-card.card-ruby,
+.profile-modal.card-ruby,
+.profile-preview-card.card-ruby {
+    background: #2a0808 !important;
+    border-color: #ff003c !important;
+    box-shadow: 4px 4px 0px rgba(255, 0, 60, 0.3) !important;
+    animation: pulse-soft 3s infinite;
+}
+
+.user-card.card-aurora,
+.profile-modal.card-aurora,
+.profile-preview-card.card-aurora {
+    background: linear-gradient(135deg, #0a2131 0%, #14384f 45%, #123022 100%) !important;
+    border-color: #1E90FF !important;
+    box-shadow: 4px 4px 0px rgba(30, 144, 255, 0.28) !important;
+}
+
+.user-card.card-void,
+.profile-modal.card-void,
+.profile-preview-card.card-void {
+    background: #140a1f !important;
+    border-color: #9400D3 !important;
+    box-shadow: 4px 4px 0px rgba(148, 0, 211, 0.32) !important;
+    animation: pulse-soft 2.2s infinite;
+}
+
+.user-card.card-solar,
+.profile-modal.card-solar,
+.profile-preview-card.card-solar {
+    background: linear-gradient(135deg, #2a1802 0%, #3a2208 50%, #251309 100%) !important;
+    border-color: #FFD700 !important;
+    box-shadow: 4px 4px 0px rgba(255, 215, 0, 0.26) !important;
+}
+
+.user-card.card-neon,
+.profile-modal.card-neon,
+.profile-preview-card.card-neon {
+    background: linear-gradient(135deg, #0f0f2e 0%, #17182b 50%, #2f0050 100%) !important;
+    border-color: #00ffef !important;
+    box-shadow: 0 0 16px rgba(0, 255, 239, 0.5), 4px 4px 0px rgba(0, 255, 239, 0.22) !important;
+    animation: neon-pulse 2.5s ease-in-out infinite;
+}
+
+.user-card.card-phantom,
+.profile-modal.card-phantom,
+.profile-preview-card.card-phantom {
+    background: linear-gradient(135deg, #120e1d 0%, #1a122f 55%, #0c1024 100%) !important;
+    border-color: #8f5fff !important;
+    box-shadow: 0 0 12px rgba(143, 95, 255, 0.25), 4px 4px 0px rgba(143, 95, 255, 0.18) !important;
+    animation: phantom-flicker 2.8s infinite;
+}
+
+.user-card.card-orion,
+.profile-modal.card-orion,
+.profile-preview-card.card-orion {
+    background: radial-gradient(circle at 30% 20%, #0f306d 0%, #07111d 60%, #030308 100%) !important;
+    border-color: #42a0ff !important;
+    box-shadow: 0 0 20px rgba(66, 160, 255, 0.28), 4px 4px 0px rgba(66, 160, 255, 0.22) !important;
+    animation: orion-stars 5s linear infinite;
+}
+
+.user-card.card-planetarium,
+.profile-modal.card-planetarium,
+.card.card-planetarium,
+.profile-preview-card.card-planetarium {
+    background: #050d1d !important;
+    border-color: #69b8ff !important;
+    box-shadow: 0 0 14px rgba(105, 184, 255, 0.26), 4px 4px 0px rgba(105, 184, 255, 0.16) !important;
+}
+
+.user-card.card-flowerfield,
+.profile-modal.card-flowerfield,
+.card.card-flowerfield,
+.profile-preview-card.card-flowerfield {
+    background: #1a0f1c !important;
+    border-color: #ff8fcc !important;
+    box-shadow: 0 0 14px rgba(255, 143, 204, 0.22), 4px 4px 0px rgba(255, 143, 204, 0.14) !important;
+}
+
+.user-card.card-crystal-bloom,
+.profile-modal.card-crystal-bloom,
+.card.card-crystal-bloom,
+.profile-preview-card.card-crystal-bloom {
+    background: #0b1321 !important;
+    border-color: #8feeff !important;
+    box-shadow: 0 0 14px rgba(143, 238, 255, 0.22), 4px 4px 0px rgba(143, 238, 255, 0.14) !important;
+}
+
+.user-card.card-lotus-garden,
+.profile-modal.card-lotus-garden,
+.card.card-lotus-garden,
+.profile-preview-card.card-lotus-garden {
+    background: #0f1c12 !important;
+    border-color: #9fffb1 !important;
+    box-shadow: 0 0 14px rgba(159, 255, 177, 0.2), 4px 4px 0px rgba(159, 255, 177, 0.14) !important;
+}
+
+.user-card[class*="card-sim-"],
+.profile-modal[class*="card-sim-"],
+.card[class*="card-sim-"],
+.profile-preview-card[class*="card-sim-"] {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.user-card[class*="card-sim-"] > *,
+.profile-modal[class*="card-sim-"] > *,
+.card[class*="card-sim-"] > *,
+.profile-preview-card[class*="card-sim-"] > * {
+    position: relative;
+    z-index: 1;
+}
+
+.card-sim-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.42;
+}
+
+@keyframes neon-pulse {
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(0,255,239,0.35)); }
+    50% { filter: drop-shadow(0 0 14px rgba(0,255,239,0.5)); }
+}
+
+@keyframes phantom-flicker {
+    0%, 100% { opacity: 1; }
+    45% { opacity: 0.85; }
+    48% { opacity: 0.95; }
+    55% { opacity: 0.8; }
+}
+
+@keyframes orion-stars {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+.profile-banner,
+.leader-banner,
+.msg-banner,
+.preview-banner {
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    min-height: 128px;
+    height: 128px;
+    border-radius: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.profile-banner.banner-nebula,
+.leader-banner.banner-nebula,
+.msg-banner.banner-nebula,
+.preview-banner.banner-nebula {
+    background: linear-gradient(120deg, #24123e, #2b2a8f, #3f59c7, #24123e);
+    background-size: 250% 250%;
+    animation: banner-wave 7s ease infinite;
+}
+
+.profile-banner.banner-aether,
+.leader-banner.banner-aether,
+.msg-banner.banner-aether,
+.preview-banner.banner-aether {
+    background: linear-gradient(120deg, #00332a, #0f5f62, #2c9879, #00332a);
+    background-size: 250% 250%;
+    animation: banner-wave 6s ease infinite;
+}
+
+.profile-banner.banner-quantum,
+.leader-banner.banner-quantum,
+.msg-banner.banner-quantum,
+.preview-banner.banner-quantum {
+    background: linear-gradient(130deg, #30005f, #6d2cff, #ff3fe7, #30005f);
+    background-size: 300% 300%;
+    animation: banner-wave 5s linear infinite;
+}
+
+.profile-banner.banner-video-premium,
+.leader-banner.banner-video-premium,
+.msg-banner.banner-video-premium,
+.preview-banner.banner-video-premium {
+    background: #06080f;
+    background-image: url('/assets/shop/premium_video_banner.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: inset 0 0 0 2px rgba(255, 106, 0, 0.55);
+    animation: premium-banner-glow 2.8s ease-in-out infinite;
+}
+
+.profile-banner.banner-video-022,
+.leader-banner.banner-video-022,
+.msg-banner.banner-video-022,
+.preview-banner.banner-video-022 {
+    background: #06080f;
+    background-image: url('/assets/shop/022.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: inset 0 0 0 2px rgba(102, 216, 255, 0.55);
+    animation: premium-banner-glow 2.8s ease-in-out infinite;
+}
+
+.profile-banner.banner-video-sakuna,
+.leader-banner.banner-video-sakuna,
+.msg-banner.banner-video-sakuna,
+.preview-banner.banner-video-sakuna {
+    background: #06080f;
+    background-image: url('/assets/shop/sakuna.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: inset 0 0 0 2px rgba(255, 64, 102, 0.55);
+    animation: premium-banner-glow 2.8s ease-in-out infinite;
+}
+
+.profile-banner.banner-image-fahh,
+.leader-banner.banner-image-fahh,
+.msg-banner.banner-image-fahh,
+.preview-banner.banner-image-fahh {
+    background: #06080f;
+    background-image: url('/assets/shop/FAHH.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.profile-banner.banner-image-idiot,
+.leader-banner.banner-image-idiot,
+.msg-banner.banner-image-idiot,
+.preview-banner.banner-image-idiot {
+    background: #06080f;
+    background-image: url('/assets/shop/idiot.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.profile-banner.banner-image-core,
+.leader-banner.banner-image-core,
+.msg-banner.banner-image-core,
+.preview-banner.banner-image-core {
+    background: #06080f;
+    background-image: url('/assets/shop/image.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.profile-banner.banner-image-kitigawa,
+.leader-banner.banner-image-kitigawa,
+.msg-banner.banner-image-kitigawa,
+.preview-banner.banner-image-kitigawa {
+    background: #06080f;
+    background-image: url('/assets/shop/kitigawa.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.profile-banner.banner-color-inferno,
+.leader-banner.banner-color-inferno,
+.msg-banner.banner-color-inferno,
+.preview-banner.banner-color-inferno {
+    background: linear-gradient(120deg, #411107, #8e2d0a, #ff6a00, #3a0d05);
+    background-size: 220% 220%;
+    animation: banner-wave 6.5s ease infinite;
+}
+
+.profile-banner.banner-color-ocean,
+.leader-banner.banner-color-ocean,
+.msg-banner.banner-color-ocean,
+.preview-banner.banner-color-ocean {
+    background: linear-gradient(120deg, #05243f, #0f5ea0, #34a8ff, #0d1a35);
+    background-size: 220% 220%;
+    animation: banner-wave 6.5s ease infinite;
+}
+
+.profile-banner.banner-color-forest,
+.leader-banner.banner-color-forest,
+.msg-banner.banner-color-forest,
+.preview-banner.banner-color-forest {
+    background: linear-gradient(120deg, #062314, #0f5a31, #28cc72, #082012);
+    background-size: 220% 220%;
+    animation: banner-wave 6.5s ease infinite;
+}
+
+.profile-banner.banner-color-violet,
+.leader-banner.banner-color-violet,
+.msg-banner.banner-color-violet,
+.preview-banner.banner-color-violet {
+    background: linear-gradient(120deg, #1d093a, #5520a3, #9b6dff, #250c46);
+    background-size: 220% 220%;
+    animation: banner-wave 6.5s ease infinite;
+}
+
+.profile-banner.banner-equation-sim,
+.leader-banner.banner-equation-sim,
+.msg-banner.banner-equation-sim,
+.preview-banner.banner-equation-sim {
+    background: linear-gradient(120deg, #041a29, #0b2f45, #10384f, #061423);
+    background-size: 220% 220%;
+    animation: banner-wave 5.5s ease infinite;
+}
+
+.profile-banner.banner-physics-sim,
+.leader-banner.banner-physics-sim,
+.msg-banner.banner-physics-sim,
+.preview-banner.banner-physics-sim {
+    background: linear-gradient(120deg, #071d18, #0d3f33, #0f5644, #061913);
+    background-size: 220% 220%;
+    animation: banner-wave 5.2s ease infinite;
+}
+
+.profile-banner.banner-physics-sim.physics-theme-orbital,
+.leader-banner.banner-physics-sim.physics-theme-orbital,
+.msg-banner.banner-physics-sim.physics-theme-orbital,
+.preview-banner.banner-physics-sim.physics-theme-orbital {
+    --physics-accent: #66c7ff;
+    --physics-soft: rgba(102, 199, 255, 0.28);
+    background: #07162b;
+    animation: none;
+    border-color: rgba(102, 199, 255, 0.45);
+    box-shadow: inset 0 0 0 1px rgba(102, 199, 255, 0.14), 0 0 10px rgba(102, 199, 255, 0.2);
+}
+
+.profile-banner.banner-physics-sim.physics-theme-collider,
+.leader-banner.banner-physics-sim.physics-theme-collider,
+.msg-banner.banner-physics-sim.physics-theme-collider,
+.preview-banner.banner-physics-sim.physics-theme-collider {
+    --physics-accent: #7affc3;
+    --physics-soft: rgba(122, 255, 195, 0.3);
+    background: #071e1b;
+    animation: none;
+    border-color: rgba(122, 255, 195, 0.42);
+    box-shadow: inset 0 0 0 1px rgba(122, 255, 195, 0.14), 0 0 10px rgba(122, 255, 195, 0.2);
+}
+
+.profile-banner.banner-physics-sim.physics-theme-ionstorm,
+.leader-banner.banner-physics-sim.physics-theme-ionstorm,
+.msg-banner.banner-physics-sim.physics-theme-ionstorm,
+.preview-banner.banner-physics-sim.physics-theme-ionstorm {
+    --physics-accent: #9fd9ff;
+    --physics-soft: rgba(159, 217, 255, 0.26);
+    background: #0a1420;
+    animation: none;
+    border-color: rgba(159, 217, 255, 0.46);
+    box-shadow: inset 0 0 0 1px rgba(159, 217, 255, 0.15), 0 0 14px rgba(159, 217, 255, 0.22);
+}
+
+.profile-banner.banner-physics-sim.physics-theme-gravity,
+.leader-banner.banner-physics-sim.physics-theme-gravity,
+.msg-banner.banner-physics-sim.physics-theme-gravity,
+.preview-banner.banner-physics-sim.physics-theme-gravity {
+    --physics-accent: #c5b0ff;
+    --physics-soft: rgba(197, 176, 255, 0.24);
+    background: #141022;
+    animation: none;
+    border-color: rgba(197, 176, 255, 0.42);
+    box-shadow: inset 0 0 0 1px rgba(197, 176, 255, 0.15), 0 0 12px rgba(197, 176, 255, 0.21);
+}
+
+.profile-banner.banner-physics-sim.physics-theme-reactor,
+.leader-banner.banner-physics-sim.physics-theme-reactor,
+.msg-banner.banner-physics-sim.physics-theme-reactor,
+.preview-banner.banner-physics-sim.physics-theme-reactor {
+    --physics-accent: #ffd86a;
+    --physics-soft: rgba(255, 216, 106, 0.24);
+    background: #22190a;
+    animation: none;
+    border-color: rgba(255, 216, 106, 0.45);
+    box-shadow: inset 0 0 0 1px rgba(255, 216, 106, 0.16), 0 0 14px rgba(255, 216, 106, 0.22);
+}
+
+.profile-banner.banner-physics-sim.physics-theme-wormhole,
+.leader-banner.banner-physics-sim.physics-theme-wormhole,
+.msg-banner.banner-physics-sim.physics-theme-wormhole,
+.preview-banner.banner-physics-sim.physics-theme-wormhole {
+    --physics-accent: #9fd0ff;
+    --physics-soft: rgba(159, 208, 255, 0.25);
+    background: #060f1f;
+    animation: none;
+    border-color: rgba(159, 208, 255, 0.48);
+    box-shadow: inset 0 0 0 1px rgba(159, 208, 255, 0.15), 0 0 16px rgba(159, 208, 255, 0.25);
+}
+
+.profile-banner.banner-physics-sim.physics-theme-magnetar,
+.leader-banner.banner-physics-sim.physics-theme-magnetar,
+.msg-banner.banner-physics-sim.physics-theme-magnetar,
+.preview-banner.banner-physics-sim.physics-theme-magnetar {
+    --physics-accent: #ff6aa8;
+    --physics-soft: rgba(255, 106, 168, 0.24);
+    background: #1a0b15;
+    animation: none;
+    border-color: rgba(255, 106, 168, 0.5);
+    box-shadow: inset 0 0 0 1px rgba(255, 106, 168, 0.15), 0 0 16px rgba(255, 106, 168, 0.24);
+}
+
+.profile-banner.banner-physics-sim.physics-theme-photon,
+.leader-banner.banner-physics-sim.physics-theme-photon,
+.msg-banner.banner-physics-sim.physics-theme-photon,
+.preview-banner.banner-physics-sim.physics-theme-photon {
+    --physics-accent: #7affe3;
+    --physics-soft: rgba(122, 255, 227, 0.24);
+    background: #071713;
+    animation: none;
+    border-color: rgba(122, 255, 227, 0.5);
+    box-shadow: inset 0 0 0 1px rgba(122, 255, 227, 0.15), 0 0 16px rgba(122, 255, 227, 0.24);
+}
+
+.profile-banner.banner-physics-sim.physics-theme-orbital::before,
+.leader-banner.banner-physics-sim.physics-theme-orbital::before,
+.msg-banner.banner-physics-sim.physics-theme-orbital::before,
+.preview-banner.banner-physics-sim.physics-theme-orbital::before,
+.profile-banner.banner-physics-sim.physics-theme-collider::before,
+.leader-banner.banner-physics-sim.physics-theme-collider::before,
+.msg-banner.banner-physics-sim.physics-theme-collider::before,
+.preview-banner.banner-physics-sim.physics-theme-collider::before,
+.profile-banner.banner-physics-sim.physics-theme-ionstorm::before,
+.leader-banner.banner-physics-sim.physics-theme-ionstorm::before,
+.msg-banner.banner-physics-sim.physics-theme-ionstorm::before,
+.preview-banner.banner-physics-sim.physics-theme-ionstorm::before,
+.profile-banner.banner-physics-sim.physics-theme-gravity::before,
+.leader-banner.banner-physics-sim.physics-theme-gravity::before,
+.msg-banner.banner-physics-sim.physics-theme-gravity::before,
+.preview-banner.banner-physics-sim.physics-theme-gravity::before,
+.profile-banner.banner-physics-sim.physics-theme-reactor::before,
+.leader-banner.banner-physics-sim.physics-theme-reactor::before,
+.msg-banner.banner-physics-sim.physics-theme-reactor::before,
+.preview-banner.banner-physics-sim.physics-theme-reactor::before,
+.profile-banner.banner-physics-sim.physics-theme-wormhole::before,
+.leader-banner.banner-physics-sim.physics-theme-wormhole::before,
+.msg-banner.banner-physics-sim.physics-theme-wormhole::before,
+.preview-banner.banner-physics-sim.physics-theme-wormhole::before,
+.profile-banner.banner-physics-sim.physics-theme-magnetar::before,
+.leader-banner.banner-physics-sim.physics-theme-magnetar::before,
+.msg-banner.banner-physics-sim.physics-theme-magnetar::before,
+.preview-banner.banner-physics-sim.physics-theme-magnetar::before,
+.profile-banner.banner-physics-sim.physics-theme-photon::before,
+.leader-banner.banner-physics-sim.physics-theme-photon::before,
+.msg-banner.banner-physics-sim.physics-theme-photon::before,
+.preview-banner.banner-physics-sim.physics-theme-photon::before {
+    content: '';
+    position: absolute;
+    left: 6%;
+    top: 18%;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--physics-soft);
+    border-radius: 50%;
+    box-shadow: 0 0 0 14px rgba(0, 0, 0, 0), 0 0 0 28px rgba(0, 0, 0, 0);
+    animation: physics-ring-sweep 8s linear infinite;
+    pointer-events: none;
+}
+
+.profile-banner.banner-physics-sim.physics-theme-orbital::after,
+.leader-banner.banner-physics-sim.physics-theme-orbital::after,
+.msg-banner.banner-physics-sim.physics-theme-orbital::after,
+.preview-banner.banner-physics-sim.physics-theme-orbital::after,
+.profile-banner.banner-physics-sim.physics-theme-collider::after,
+.leader-banner.banner-physics-sim.physics-theme-collider::after,
+.msg-banner.banner-physics-sim.physics-theme-collider::after,
+.preview-banner.banner-physics-sim.physics-theme-collider::after,
+.profile-banner.banner-physics-sim.physics-theme-ionstorm::after,
+.leader-banner.banner-physics-sim.physics-theme-ionstorm::after,
+.msg-banner.banner-physics-sim.physics-theme-ionstorm::after,
+.preview-banner.banner-physics-sim.physics-theme-ionstorm::after,
+.profile-banner.banner-physics-sim.physics-theme-gravity::after,
+.leader-banner.banner-physics-sim.physics-theme-gravity::after,
+.msg-banner.banner-physics-sim.physics-theme-gravity::after,
+.preview-banner.banner-physics-sim.physics-theme-gravity::after,
+.profile-banner.banner-physics-sim.physics-theme-reactor::after,
+.leader-banner.banner-physics-sim.physics-theme-reactor::after,
+.msg-banner.banner-physics-sim.physics-theme-reactor::after,
+.preview-banner.banner-physics-sim.physics-theme-reactor::after,
+.profile-banner.banner-physics-sim.physics-theme-wormhole::after,
+.leader-banner.banner-physics-sim.physics-theme-wormhole::after,
+.msg-banner.banner-physics-sim.physics-theme-wormhole::after,
+.preview-banner.banner-physics-sim.physics-theme-wormhole::after,
+.profile-banner.banner-physics-sim.physics-theme-magnetar::after,
+.leader-banner.banner-physics-sim.physics-theme-magnetar::after,
+.msg-banner.banner-physics-sim.physics-theme-magnetar::after,
+.preview-banner.banner-physics-sim.physics-theme-magnetar::after,
+.profile-banner.banner-physics-sim.physics-theme-photon::after,
+.leader-banner.banner-physics-sim.physics-theme-photon::after,
+.msg-banner.banner-physics-sim.physics-theme-photon::after,
+.preview-banner.banner-physics-sim.physics-theme-photon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--physics-soft);
+    transform-origin: center;
+    animation: physics-line-pulse 2.8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.profile-banner.banner-physics-sim.physics-theme-orbital::before,
+.leader-banner.banner-physics-sim.physics-theme-orbital::before,
+.msg-banner.banner-physics-sim.physics-theme-orbital::before,
+.preview-banner.banner-physics-sim.physics-theme-orbital::before {
+    left: 52%;
+    top: 50%;
+    width: 54px;
+    height: 54px;
+    transform: translate(-50%, -50%);
+    border-style: dashed;
+    animation: orbital-spin 10s linear infinite;
+}
+
+.profile-banner.banner-physics-sim.physics-theme-collider::before,
+.leader-banner.banner-physics-sim.physics-theme-collider::before,
+.msg-banner.banner-physics-sim.physics-theme-collider::before,
+.preview-banner.banner-physics-sim.physics-theme-collider::before {
+    left: 50%;
+    top: 14%;
+    width: 14px;
+    height: 72%;
+    transform: translateX(-50%);
+    border-radius: 3px;
+    animation: collider-scan 2.4s ease-in-out infinite;
+}
+
+.profile-banner.banner-physics-sim.physics-theme-collider::after,
+.leader-banner.banner-physics-sim.physics-theme-collider::after,
+.msg-banner.banner-physics-sim.physics-theme-collider::after,
+.preview-banner.banner-physics-sim.physics-theme-collider::after {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    right: auto;
+    width: 1px;
+    height: auto;
+    transform: translateX(-50%);
+}
+
+.profile-banner.banner-physics-sim.physics-theme-ionstorm::before,
+.leader-banner.banner-physics-sim.physics-theme-ionstorm::before,
+.msg-banner.banner-physics-sim.physics-theme-ionstorm::before,
+.preview-banner.banner-physics-sim.physics-theme-ionstorm::before {
+    left: 34%;
+    top: 10%;
+    width: 10px;
+    height: 72%;
+    border-radius: 2px;
+    transform: skewX(-18deg);
+    animation: ion-zap 1.4s steps(2) infinite;
+}
+
+.profile-banner.banner-physics-sim.physics-theme-gravity::before,
+.leader-banner.banner-physics-sim.physics-theme-gravity::before,
+.msg-banner.banner-physics-sim.physics-theme-gravity::before,
+.preview-banner.banner-physics-sim.physics-theme-gravity::before {
+    left: 50%;
+    top: 50%;
+    width: 62px;
+    height: 62px;
+    transform: translate(-50%, -50%);
+    border-width: 1px;
+    box-shadow: 0 0 0 10px rgba(197, 176, 255, 0.14), 0 0 0 22px rgba(197, 176, 255, 0.08);
+    animation: gravity-breathe 3.4s ease-in-out infinite;
+}
+
+.profile-banner.banner-physics-sim.physics-theme-reactor::before,
+.leader-banner.banner-physics-sim.physics-theme-reactor::before,
+.msg-banner.banner-physics-sim.physics-theme-reactor::before,
+.preview-banner.banner-physics-sim.physics-theme-reactor::before {
+    left: 50%;
+    top: 50%;
+    width: 40px;
+    height: 40px;
+    transform: translate(-50%, -50%);
+    border-radius: 0;
+    clip-path: polygon(25% 7%, 75% 7%, 100% 50%, 75% 93%, 25% 93%, 0 50%);
+    animation: reactor-spin 6s linear infinite;
+}
+
+.profile-banner.banner-physics-sim.physics-theme-wormhole::before,
+.leader-banner.banner-physics-sim.physics-theme-wormhole::before,
+.msg-banner.banner-physics-sim.physics-theme-wormhole::before,
+.preview-banner.banner-physics-sim.physics-theme-wormhole::before {
+    left: 50%;
+    top: 50%;
+    width: 70px;
+    height: 40px;
+    transform: translate(-50%, -50%);
+    border-style: dashed;
+    animation: wormhole-spin 5.5s linear infinite;
+}
+
+.profile-banner.banner-physics-sim.physics-theme-magnetar::before,
+.leader-banner.banner-physics-sim.physics-theme-magnetar::before,
+.msg-banner.banner-physics-sim.physics-theme-magnetar::before,
+.preview-banner.banner-physics-sim.physics-theme-magnetar::before {
+    left: 14%;
+    top: 50%;
+    width: 72%;
+    height: 8px;
+    transform: translateY(-50%);
+    border-radius: 999px;
+    animation: magnetar-pulse 2.2s ease-in-out infinite;
+}
+
+.profile-banner.banner-physics-sim.physics-theme-photon::before,
+.leader-banner.banner-physics-sim.physics-theme-photon::before,
+.msg-banner.banner-physics-sim.physics-theme-photon::before,
+.preview-banner.banner-physics-sim.physics-theme-photon::before {
+    left: 50%;
+    top: 50%;
+    width: 18px;
+    height: 18px;
+    transform: translate(-50%, -50%) rotate(45deg);
+    border-radius: 2px;
+    box-shadow: -32px 0 0 -2px rgba(122, 255, 227, 0.28), 32px 0 0 -2px rgba(122, 255, 227, 0.28), 0 -24px 0 -2px rgba(122, 255, 227, 0.24), 0 24px 0 -2px rgba(122, 255, 227, 0.24);
+    animation: photon-glint 2.6s ease-in-out infinite;
+}
+
+.profile-banner.banner-physics-sim.physics-theme-photon::after,
+.leader-banner.banner-physics-sim.physics-theme-photon::after,
+.msg-banner.banner-physics-sim.physics-theme-photon::after,
+.preview-banner.banner-physics-sim.physics-theme-photon::after {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    right: auto;
+    width: 1px;
+    height: auto;
+    transform: translateX(-50%);
+}
+
+@keyframes orbital-spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); opacity: 0.35; }
+    50% { opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) rotate(360deg); opacity: 0.35; }
+}
+
+@keyframes collider-scan {
+    0%, 100% { transform: translateX(-50%) scaleY(0.8); opacity: 0.3; }
+    50% { transform: translateX(-50%) scaleY(1.05); opacity: 0.75; }
+}
+
+@keyframes ion-zap {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 0.95; }
+}
+
+@keyframes gravity-breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.35; }
+    50% { transform: translate(-50%, -50%) scale(1.08); opacity: 0.78; }
+}
+
+@keyframes reactor-spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes wormhole-spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg) scaleX(0.9); }
+    50% { transform: translate(-50%, -50%) rotate(180deg) scaleX(1.1); }
+    100% { transform: translate(-50%, -50%) rotate(360deg) scaleX(0.9); }
+}
+
+@keyframes magnetar-pulse {
+    0%, 100% { opacity: 0.28; transform: translateY(-50%) scaleX(0.9); }
+    50% { opacity: 0.82; transform: translateY(-50%) scaleX(1.05); }
+}
+
+@keyframes photon-glint {
+    0%, 100% { opacity: 0.35; transform: translate(-50%, -50%) rotate(45deg) scale(0.9); }
+    50% { opacity: 0.92; transform: translate(-50%, -50%) rotate(45deg) scale(1.08); }
+}
+
+@keyframes physics-ring-sweep {
+    0% { transform: translateX(0) scale(0.85); opacity: 0.3; }
+    50% { transform: translateX(240px) scale(1.2); opacity: 0.8; }
+    100% { transform: translateX(480px) scale(0.9); opacity: 0.25; }
+}
+
+@keyframes physics-line-pulse {
+    0%, 100% { opacity: 0.25; transform: scaleX(0.75); }
+    50% { opacity: 0.85; transform: scaleX(1); }
+}
+
+.banner-sim-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.profile-banner.banner-default,
+.leader-banner.banner-default,
+.msg-banner.banner-default,
+.preview-banner.banner-default {
+    background: linear-gradient(135deg, #1b1c24, #141a24); 
+    background-size: cover;
+    background-position: center;
+}
+
+@keyframes premium-banner-glow {
+    0%, 100% { box-shadow: inset 0 0 0 2px rgba(255, 106, 0, 0.55), 0 0 18px rgba(255, 106, 0, 0.45); }
+    50% { box-shadow: inset 0 0 0 2px rgba(255, 106, 0, 0.8), 0 0 26px rgba(255, 106, 0, 0.75); }
+}
+
+@keyframes banner-wave {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.msg-content.chat-neon,
+.preview-chat-bubble.chat-neon {
+    border: 1px solid #00ffff;
+    box-shadow: 0 0 8px rgba(0,255,255,0.28);
+    background: linear-gradient(135deg, rgba(0,255,255,0.08), rgba(255,20,147,0.08));
+}
+
+.msg-content.chat-terminal,
+.preview-chat-bubble.chat-terminal {
+    border: 1px solid #00ff41;
+    box-shadow: inset 0 0 0 1px rgba(0,255,65,0.15);
+    background: repeating-linear-gradient(
+        180deg,
+        rgba(0, 30, 6, 0.95) 0px,
+        rgba(0, 30, 6, 0.95) 2px,
+        rgba(0, 42, 9, 0.95) 3px,
+        rgba(0, 42, 9, 0.95) 4px
+    );
+}
+
+.msg-content.chat-royal,
+.preview-chat-bubble.chat-royal {
+    border: 1px solid #ffd700;
+    box-shadow: 0 0 10px rgba(255,215,0,0.2);
+    background: linear-gradient(135deg, rgba(88, 51, 10, 0.85), rgba(35, 18, 2, 0.85));
+}
+
+.msg-text.chat-text-ice,
+.preview-chat-text.chat-text-ice {
+    color: #7ef3ff !important;
+}
+
+.msg-text.chat-text-mint,
+.preview-chat-text.chat-text-mint {
+    color: #52ffb7 !important;
+}
+
+.msg-text.chat-text-gold,
+.preview-chat-text.chat-text-gold {
+    color: #ffd700 !important;
+}
+
+.msg-text.chat-text-rose,
+.preview-chat-text.chat-text-rose {
+    color: #ff86c8 !important;
+}
+
+.msg-text.chat-bg-midnight,
+.preview-chat-bubble.chat-bg-midnight {
+    background: #16263b !important;
+}
+
+.msg-text.chat-bg-matrix,
+.preview-chat-bubble.chat-bg-matrix {
+    background: #163424 !important;
+}
+
+.msg-text.chat-bg-plum,
+.preview-chat-bubble.chat-bg-plum {
+    background: #362243 !important;
+}
+
+.msg-text.chat-bg-ember,
+.preview-chat-bubble.chat-bg-ember {
+    background: #48251c !important;
+}
+
+.preview-title.custom-title {
+    border-color: #7ef3ff;
+    color: #7ef3ff;
+    text-shadow: 0 0 6px rgba(126,243,255,0.35);
+}
+
+.preview-title.title-architect {
+    border-color: #52ffb7;
+    color: #52ffb7;
+    text-shadow: 0 0 6px rgba(82,255,183,0.25);
+}
+
+.preview-title.title-legend {
+    border-color: #ffd700;
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255,215,0,0.35);
+}
 
 /* --- Rarity borders on shop cards --- */
 .rarity-common { border-color: #555; }

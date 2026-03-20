@@ -17,8 +17,9 @@
     "subjective": true,
     "testCases": [
       {
-        "type": "compile_only",
-        "description": "Code must compile and produce output"
+        "type": "line_count",
+        "expectedLines": 1,
+        "description": "Must output at least 1 line"
       }
     ]
   },

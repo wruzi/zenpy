@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Suspended - ZenPy</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .ban-container {
+            display: flex;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 0;
+            box-shadow: var(--shadow-lg);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) {
+            .ban-container {
+                flex-direction: row;
+            }
+        }
+
+        .rules-sidebar {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 40px 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 2px solid var(--border);
+        }
+
+        .rules-sidebar h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rules-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .rules-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .rules-list svg {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+        }
+
+        .ban-content {
+            padding: 40px;
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .ban-icon {
+            width: 80px;
+            height: 80px;
+            color: var(--error);
+            fill: currentColor;
+            margin-bottom: 20px;
+            animation: pulse-soft 2s infinite;
+        }
+
+        h1 {
+            color: var(--error);
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .ban-details {
+            background: rgba(255, 20, 147, 0.05);
+            border: 2px solid var(--border);
+            border-radius: 0;
+            padding: 20px;
+            width: 100%;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .detail-item {
+            margin-bottom: 15px;
+        }
+
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .timer-value {
+            font-family: monospace;
+            font-size: 1.3rem;
+            color: var(--warning);
+        }
+
+        .contact-btn {
+            background: var(--accent);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-accent);
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
+
+        .contact-btn:active {
+            transform: translateY(2px);
+            box-shadow: 2px 2px 0px rgba(255, 20, 147, 0.35);
+        }
+
+        .contact-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ban-container fade-in">
+        <div class="rules-sidebar">
+            <h2>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5zm0 2.22l7 3.89v5.39c0 4.39-2.82 8.44-7 9.42-4.18-.98-7-5.03-7-9.42V8.11l7-3.89zM11 16h2v2h-2zm0-9h2v7h-2z"/></svg>
+                ZenPy Rules
+            </h2>
+            <ul class="rules-list">
+                <li>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    <span>Respect others! No hate speech, harassment, or abusive language.</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    <span>Do not share malicious links, malware, or illegal content.</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    <span>Spamming, flooding chats, or advertising without permission is prohibited.</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    <span>No cheating or exploiting the platform's systems and leaderboards.</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="ban-content">
+            <svg class="ban-icon" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            <h1>Account Suspended</h1>
+            <p>Your access to ZenPy has been restricted due to a violation of our community guidelines.</p>
+
+            <div class="ban-details">
+                <div class="detail-item">
+                    <span class="detail-label">Reason for Suspension</span>
+                    <span class="detail-value" id="ban-reason">Loading...</span>
+                </div>
+                <div class="detail-item" id="timer-container" style="display: none;">
+                    <span class="detail-label">Time Remaining</span>
+                    <span class="detail-value timer-value" id="ban-timer">--:--:--</span>
+                </div>
+                <div class="detail-item" id="permanent-container" style="display: none;">
+                    <span class="detail-label">Duration</span>
+                    <span class="detail-value" style="color: var(--danger)">Permanent</span>
+                </div>
+            </div>
+
+            <p>If you believe this is a mistake, you can appeal your suspension.</p>
+            <a href="mailto:chetangaud20@yahoo.com?subject=ZenPy Account Ban Appeal" class="contact-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+                Contact Support
+            </a>
+            
+            <a href="/login.html" style="margin-top: 20px; display: inline-block; color: var(--text); opacity: 0.7; text-decoration: none; font-size: 0.9rem;">
+                Return to Login
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const reason = params.get('reason') || 'Violation of terms of service.';
+            const unbanDate = params.get('unbanDate');
+
+            document.getElementById('ban-reason').textContent = reason;
+
+            if (!unbanDate || unbanDate === 'Permanent' || unbanDate === 'null') {
+                document.getElementById('permanent-container').style.display = 'block';
+            } else {
+                document.getElementById('timer-container').style.display = 'block';
+                const targetTime = new Date(unbanDate).getTime();
+
+                function updateTimer() {
+                    const now = new Date().getTime();
+                    const distance = targetTime - now;
+
+                    if (distance < 0) {
+                        document.getElementById('ban-timer').textContent = "Ban Expired - You can log in";
+                        document.getElementById('ban-timer').style.color = "var(--success)";
+                        return;
+                    }
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    let timeStr = "";
+                    if (days > 0) timeStr += `${days}d `;
+                    timeStr += `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    document.getElementById('ban-timer').textContent = timeStr;
+                }
+
+                updateTimer();
+                setInterval(updateTimer, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

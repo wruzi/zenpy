@@ -301,7 +301,7 @@ async function submitCode() {
 
             // Handle different test types for subjective questions
             if (test.type === 'compile_only') {
-                // Just check if code compiles and produces any output
+                // Just check if code compiles/runs without runtime errors
                 try {
                     pyodide.runPython(`
 import sys
@@ -310,16 +310,13 @@ sys.stdout = StringIO()
 sys.stderr = StringIO()
 `);
                     await pyodide.runPythonAsync(code);
-                    const output = pyodide.runPython('sys.stdout.getvalue()');
-                    const hasOutput = output && output.trim().length > 0;
-                    results.push({ passed: hasOutput });
+                    results.push({ passed: true });
 
                     testResultsEl.innerHTML += `
-                        <div class="test-case ${hasOutput ? 'passed' : 'failed'}">
-                            <span class="test-icon">${hasOutput ? passIcon : failIcon}</span>
+                        <div class="test-case passed">
+                            <span class="test-icon">${passIcon}</span>
                             <div>
-                                <strong>Compile & Output</strong> ${hasOutput ? 'Passed' : 'No output produced'}
-                                ${!hasOutput ? '<div class="test-details">Your code must produce at least some output using print()</div>' : ''}
+                                <strong>Compile Check</strong> Passed
                             </div>
                         </div>`;
                 } catch (err) {

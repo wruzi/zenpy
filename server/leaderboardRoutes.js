@@ -6,10 +6,18 @@
 const authMiddleware = require('./middleware/auth');
 
 module.exports = function(app) {
-    const { readJSON } = app.locals;
+    const { readJSON, getItemCssClass } = app.locals;
+
+    function getNameStyleClass(user) {
+        return [
+            getItemCssClass(user.inventory?.equipped?.nameStyle),
+            getItemCssClass(user.inventory?.equipped?.effect)
+        ].filter(Boolean).join(' ') || null;
+    }
 
     function getAvatarPath(user) {
-        if (!user.image || user.image === 'default-avatar.png') return '/assets/images/default-avatar.png';
+        if (!user.image || user.image === 'default-avatar.png' || user.image === 'Popcat Cartoon.jpg' || user.image === 'Popcat%20Cartoon.jpg') return '/assets/avatars/Popcat%20Cartoon.jpg';
+        if (user.image.startsWith('http')) return user.image;
         return `/assets/avatars/${user.image}`;
     }
 
@@ -24,8 +32,9 @@ module.exports = function(app) {
             return {
                 username: user.username,
                 image: getAvatarPath(user),
-                nameStyle: user.inventory?.equipped?.nameStyle || null,
-                frame: user.inventory?.equipped?.frame || null,
+                nameStyle: getNameStyleClass(user),
+                frame: getItemCssClass(user.inventory?.equipped?.frame) || null,
+                banner: getItemCssClass(user.inventory?.equipped?.banner) || null,
                 title: user.inventory?.equipped?.title || 'Newbie',
                 currentQuestion: p.currentQuestion,
                 totalTime: p.totalTime,
@@ -57,8 +66,9 @@ module.exports = function(app) {
                 return {
                     username: user.username,
                     image: getAvatarPath(user),
-                    nameStyle: user.inventory?.equipped?.nameStyle || null,
-                    frame: user.inventory?.equipped?.frame || null,
+                    nameStyle: getNameStyleClass(user),
+                    frame: getItemCssClass(user.inventory?.equipped?.frame) || null,
+                    banner: getItemCssClass(user.inventory?.equipped?.banner) || null,
                     avgTime: Math.round(avgTime * 10) / 10,
                     completed: p.questionTimes.length
                 };
@@ -79,8 +89,9 @@ module.exports = function(app) {
             .map(u => ({
                 username: u.username,
                 image: getAvatarPath(u),
-                nameStyle: u.inventory?.equipped?.nameStyle || null,
-                frame: u.inventory?.equipped?.frame || null,
+                nameStyle: getNameStyleClass(u),
+                frame: getItemCssClass(u.inventory?.equipped?.frame) || null,
+                banner: getItemCssClass(u.inventory?.equipped?.banner) || null,
                 xp: u.xp,
                 level: u.level,
                 streak: u.streak
@@ -100,8 +111,9 @@ module.exports = function(app) {
             .map(u => ({
                 username: u.username,
                 image: getAvatarPath(u),
-                nameStyle: u.inventory?.equipped?.nameStyle || null,
-                frame: u.inventory?.equipped?.frame || null,
+                nameStyle: getNameStyleClass(u),
+                frame: getItemCssClass(u.inventory?.equipped?.frame) || null,
+                banner: getItemCssClass(u.inventory?.equipped?.banner) || null,
                 zen: u.zen,
                 items: u.inventory?.owned?.length || 0
             }))

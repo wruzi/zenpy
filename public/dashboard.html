@@ -8,6 +8,53 @@
     <link rel="stylesheet" href="/css/theme.css">
     <link rel="stylesheet" href="/css/animations.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body.onboarding-active .sidebar,
+        body.onboarding-active .main-content {
+            opacity: 0.2;
+            pointer-events: none;
+            user-select: none;
+        }
+        .onboarding-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.68);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 12000;
+            padding: 20px;
+        }
+        .onboarding-overlay.active {
+            display: flex;
+        }
+        .onboarding-modal {
+            width: min(680px, 100%);
+            max-height: 92vh;
+            overflow: auto;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-lg);
+            padding: 22px;
+        }
+        .onboarding-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .onboarding-full {
+            grid-column: 1 / -1;
+        }
+        .onboarding-note {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+        @media (max-width: 700px) {
+            .onboarding-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="app-layout">
@@ -15,7 +62,7 @@
         <aside class="sidebar">
             <div class="sidebar-profile">
                 <div class="sidebar-avatar" id="sidebarAvatar">
-                    <img src="/assets/images/default-avatar.png" alt="avatar">
+                    <img src="/assets/avatars/Popcat%20Cartoon.jpg" alt="avatar">
                 </div>
                 <div class="sidebar-username" id="sidebarUsername">—</div>
                 <div class="sidebar-title" id="sidebarTitle">Newbie</div>
@@ -53,6 +100,18 @@
                 <a href="/community">
                     <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
                     Community
+                </a>
+                <a href="/docs">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span>
+                    Python Docs
+                </a>
+                <a href="/terms">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+                    Terms & Conditions
+                </a>
+                <a href="/rules">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+                    Rules
                 </a>
             </nav>
             <div class="sidebar-footer">
@@ -204,86 +263,80 @@
                 </div>
             </div>
 
-            <!-- Python Quick Reference -->
-            <div class="card mb-3">
-                <div class="card-header">
-                    <span class="card-title">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                        Python Quick Reference
-                    </span>
-                    <span class="badge">DOCS</span>
+            <!-- Deep Analytics -->
+            <div class="grid-2 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 4-6"/></svg>
+                            Skill Analytics
+                        </span>
+                    </div>
+                    <div id="advancedAnalytics">
+                        <p class="text-muted text-sm">Loading analytics...</p>
+                    </div>
                 </div>
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;">
-                    <div style="padding:12px;border:1px solid var(--border);">
-                        <h4 style="font-size:0.78rem;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Variables & Types</h4>
-                        <pre style="font-size:0.75rem;color:var(--text-secondary);line-height:1.8;margin:0;">name = "ZenPy"       <span style="color:var(--text-muted)"># str</span>
-age = 25             <span style="color:var(--text-muted)"># int</span>
-pi = 3.14            <span style="color:var(--text-muted)"># float</span>
-active = True        <span style="color:var(--text-muted)"># bool</span>
-items = [1, 2, 3]    <span style="color:var(--text-muted)"># list</span>
-data = {"k": "v"}    <span style="color:var(--text-muted)"># dict</span></pre>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><path d="M12 2v20"/><path d="M18 8l-6-6-6 6"/></svg>
+                            Learning Insights
+                        </span>
                     </div>
-                    <div style="padding:12px;border:1px solid var(--border);">
-                        <h4 style="font-size:0.78rem;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Control Flow</h4>
-                        <pre style="font-size:0.75rem;color:var(--text-secondary);line-height:1.8;margin:0;">if x > 0:
-    print("positive")
-elif x == 0:
-    print("zero")
-else:
-    print("negative")
-
-for i in range(10):
-    print(i)</pre>
-                    </div>
-                    <div style="padding:12px;border:1px solid var(--border);">
-                        <h4 style="font-size:0.78rem;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Functions</h4>
-                        <pre style="font-size:0.75rem;color:var(--text-secondary);line-height:1.8;margin:0;">def greet(name):
-    """Greets a person."""
-    return f"Hello, {name}!"
-
-result = greet("Coder")
-print(result)</pre>
-                    </div>
-                    <div style="padding:12px;border:1px solid var(--border);">
-                        <h4 style="font-size:0.78rem;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">List Comprehension</h4>
-                        <pre style="font-size:0.75rem;color:var(--text-secondary);line-height:1.8;margin:0;">squares = [x**2 for x in range(10)]
-evens = [x for x in nums if x%2==0]
-pairs = [(a,b) for a in A
-                for b in B]</pre>
+                    <div id="learningInsights">
+                        <p class="text-muted text-sm">Building personalized insights...</p>
                     </div>
                 </div>
             </div>
-
-            <!-- Daily Python Tip -->
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><path d="M9 18h6m-5 4h4M12 2a7 7 0 00-3 13.33V17h6v-1.67A7 7 0 0012 2z"/></svg>
-                        Daily Python Tip
-                    </span>
-                </div>
-                <div id="dailyTip" style="font-size:0.88rem;line-height:1.7;color:var(--text-secondary);"></div>
-            </div>
-
-            <script>
-                // Daily tip rotation
-                const tips = [
-                    {title:"f-strings are powerful",code:'name = "World"\nprint(f"Hello, {name}!")  # Hello, World!\nprint(f"{2+2=}")  # 2+2=4'},
-                    {title:"Use enumerate() instead of range(len())",code:'fruits = ["apple", "banana"]\nfor i, fruit in enumerate(fruits):\n    print(f"{i}: {fruit}")'},
-                    {title:"Unpacking is Pythonic",code:'a, b, *rest = [1, 2, 3, 4, 5]\n# a=1, b=2, rest=[3,4,5]'},
-                    {title:"List comprehensions > loops",code:'# Instead of:\nresult = []\nfor x in range(10):\n    result.append(x**2)\n# Use:\nresult = [x**2 for x in range(10)]'},
-                    {title:"The walrus operator :=",code:'# Assign and test in one line\nif (n := len(data)) > 10:\n    print(f"List is too long: {n}")'},
-                    {title:"Use zip to iterate in parallel",code:'names = ["Alice", "Bob"]\nages = [25, 30]\nfor name, age in zip(names, ages):\n    print(f"{name} is {age}")'},
-                    {title:"Dictionary .get() with defaults",code:'d = {"a": 1}\nval = d.get("b", 0)  # Returns 0 if key missing\n# Better than d["b"] which raises KeyError'}
-                ];
-                const today = new Date().getDay();
-                const tip = tips[today % tips.length];
-                document.getElementById('dailyTip').innerHTML = `
-                    <h4 style="font-size:0.9rem;color:var(--text-primary);margin-bottom:8px;">${tip.title}</h4>
-                    <pre style="padding:12px;background:var(--bg-primary);border:1px solid var(--border);font-size:0.8rem;line-height:1.8;color:var(--success);overflow-x:auto;">${tip.code}</pre>
-                `;
-            </script>
         </main>
+    </div>
+
+    <div id="onboardingOverlay" class="onboarding-overlay" aria-hidden="true">
+        <div class="onboarding-modal">
+            <h3 style="margin-bottom:6px;">Setup your profile</h3>
+            <p class="text-muted text-sm mb-2">Complete this once to continue to your dashboard.</p>
+
+            <div class="onboarding-grid">
+                <div class="form-group">
+                    <label for="onboardUsername">Username *</label>
+                    <input id="onboardUsername" type="text" class="form-control" minlength="3" maxlength="24" placeholder="Choose username">
+                </div>
+
+                <div class="form-group">
+                    <label for="onboardAvatar">Avatar upload *</label>
+                    <input id="onboardAvatar" type="file" accept="image/*" class="form-control" style="padding:8px;">
+                    <div id="onboardAvatarStatus" class="onboarding-note mt-1">Upload an avatar to continue.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="onboardGithub">GitHub (optional)</label>
+                    <input id="onboardGithub" type="text" class="form-control" placeholder="https://github.com/username">
+                </div>
+
+                <div class="form-group">
+                    <label for="onboardInstagram">Instagram (optional)</label>
+                    <input id="onboardInstagram" type="text" class="form-control" placeholder="https://instagram.com/username">
+                </div>
+
+                <div class="form-group onboarding-full">
+                    <label for="onboardTwitter">X / Twitter (optional)</label>
+                    <input id="onboardTwitter" type="text" class="form-control" placeholder="https://x.com/username">
+                </div>
+
+                <div class="onboarding-full" style="border:1px solid var(--border); padding:10px;">
+                    <p class="text-sm" style="margin-bottom:8px;">Please read our <a id="onboardingTermsLink" href="/terms" target="_blank" rel="noopener noreferrer">Terms & Conditions</a>.</p>
+                    <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem;">
+                        <input id="onboardTermsCheck" type="checkbox">
+                        I understood Terms & Conditions
+                    </label>
+                </div>
+            </div>
+
+            <div class="d-flex justify-between align-center mt-2">
+                <span class="onboarding-note">Required: username, avatar upload, terms acceptance.</span>
+                <button id="onboardSubmit" class="btn btn-primary">Continue to Dashboard</button>
+            </div>
+        </div>
     </div>
 
     <div id="toastContainer" class="toast-container"></div>

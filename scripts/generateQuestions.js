@@ -5,7 +5,7 @@ const path = require('path');
 const questions = [
   // Phase 0: The Absolute Basics (1-10)
   // Questions 1-5 are subjective / user-choice: accept any valid code that compiles
-  {id:1,title:"Print Your Name",description:"Write a program that prints your name to the screen using `print()`.",difficulty:"beginner",category:"Phase 0: Basics",concepts:["print"],initialCode:"",hints:["Use the print() function with your name in quotes"],optimalTime:30,xpBase:10,subjective:true,testCases:[{type:"compile_only",description:"Code must compile and produce output"}]},
+  {id:1,title:"Print Your Name",description:"Write a program that prints your name to the screen using `print()`.",difficulty:"beginner",category:"Phase 0: Basics",concepts:["print"],initialCode:"",hints:["Use the print() function with your name in quotes"],optimalTime:30,xpBase:10,subjective:true,testCases:[{type:"line_count",expectedLines:1,description:"Must output at least 1 line"}]},
   {id:2,title:"Print Multiple Lines",description:"Print your name, your age, and your favorite color, each on a separate line, using three separate `print` statements.",difficulty:"beginner",category:"Phase 0: Basics",concepts:["print","multiple statements"],initialCode:"",hints:["Use three separate print() calls, one for each item"],optimalTime:45,xpBase:20,subjective:true,testCases:[{type:"line_count",expectedLines:3,description:"Must output exactly 3 lines"}]},
   {id:3,title:"Variables",description:"Create a variable called `name` and assign it your name. Then print `My name is` followed by the variable.",difficulty:"beginner",category:"Phase 0: Basics",concepts:["variables","string concatenation"],initialCode:"",hints:["Use = to assign a value", "Use print('My name is', name)"],optimalTime:45,xpBase:30,subjective:true,testCases:[{type:"output_contains",mustContain:"My name is",description:"Output must contain 'My name is'"}]},
   {id:4,title:"Simple Arithmetic",description:"Create two variables `a = 5` and `b = 3`. Print the result of `a + b`, `a - b`, `a * b`, and `a / b` each on separate lines.",difficulty:"beginner",category:"Phase 0: Basics",concepts:["arithmetic","variables"],initialCode:"",hints:["Use print() with arithmetic operators +, -, *, /"],optimalTime:60,xpBase:40,testCases:[{input:"",expectedOutput:"8\n2\n15\n1.6666666666666667",hidden:false}]},
@@ -133,7 +133,7 @@ advancedQuestions.forEach(q => {
     optimalTime: q.diff === 'advanced' ? 300 : 120,
     xpBase: q.id * 10,
     subjective: true,
-    testCases: [{type:"compile_only",description:"Code must compile and produce output"}]
+    testCases: [{type:"compile_only",description:"Code must compile successfully"}]
   });
 });
 

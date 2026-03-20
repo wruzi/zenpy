@@ -7,12 +7,54 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/theme.css">
     <link rel="stylesheet" href="/css/animations.css">
+    <style>
+        .table-container {
+            position: relative;
+            overflow: hidden;
+            transition: opacity .2s ease, transform .2s ease;
+        }
+        .table-container.table-switching {
+            opacity: .6;
+            transform: translateY(4px);
+        }
+        #tableBody .leader-row {
+            cursor: pointer;
+            opacity: 0;
+            animation: leader-enter .34s ease forwards;
+            transition: transform .16s ease, background .16s ease, box-shadow .16s ease;
+        }
+        #tableBody .leader-row:hover {
+            transform: translateX(6px);
+            background: var(--accent-dim);
+        }
+        #tableBody .leader-row.spotlight {
+            background: var(--accent-dim);
+            box-shadow: inset 3px 0 0 var(--accent);
+        }
+        #tableBody .leader-row.rank-1 td:first-child svg,
+        #tableBody .leader-row.rank-2 td:first-child svg,
+        #tableBody .leader-row.rank-3 td:first-child svg {
+            animation: rank-pulse 2.1s ease-in-out infinite;
+        }
+        #tableBody .leader-row.rank-1 { box-shadow: inset 2px 0 0 var(--warning); }
+        #tableBody .leader-row.rank-2 { box-shadow: inset 2px 0 0 var(--text-muted); }
+        #tableBody .leader-row.rank-3 { box-shadow: inset 2px 0 0 var(--border); }
+
+        @keyframes leader-enter {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes rank-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
 </head>
 <body>
     <div class="app-layout">
         <aside class="sidebar">
             <div class="sidebar-profile">
-                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/images/default-avatar.png" alt=""></div>
+                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/avatars/Popcat%20Cartoon.jpg" alt=""></div>
                 <div class="sidebar-username" id="sidebarUsername">—</div>
                 <div class="sidebar-title" id="sidebarTitle">Newbie</div>
                 <div class="sidebar-stats">
@@ -28,6 +70,8 @@
                 <a href="/leaderboard" class="active"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2m12 6h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 22h6m-3-4v4m-4-8a4 4 0 004 4 4 4 0 004-4V3H8v11z"/></svg></span>Leaderboard</a>
                 <a href="/shop"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>Shop</a>
                 <a href="/chat"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>Chat</a>
+                <a href="/docs"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span>Python Docs</a>
+                <a href="/rules"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>Rules</a>
             </nav>
             <div class="sidebar-footer"><a href="#" onclick="logout();return false;" class="btn btn-ghost btn-sm w-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a></div>
         </aside>

@@ -13,24 +13,99 @@
             width: 220px; background: var(--bg-secondary);
             border-right: 2px solid var(--border); display: flex; flex-direction: column; padding: 16px;
         }
-        .chat-main { flex: 1; display: flex; flex-direction: column; }
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: radial-gradient(circle at top right, rgba(30, 144, 255, 0.08), transparent 30%), var(--bg-primary);
+        }
         .chat-header {
             padding: 14px 20px; border-bottom: 2px solid var(--border); background: var(--bg-secondary);
             display: flex; justify-content: space-between; align-items: center;
         }
         .chat-header h3 { font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 16px 20px; }
-        .chat-msg { display: flex; gap: 10px; margin-bottom: 12px; padding: 8px; transition: var(--transition); }
-        .chat-msg:hover { background: var(--bg-hover); }
-        .msg-avatar { width: 36px; height: 36px; flex-shrink: 0; border: 1px solid var(--border); overflow: hidden; }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+            background: linear-gradient(180deg, rgba(14, 20, 34, 0.65), rgba(8, 12, 22, 0.65));
+        }
+        .chat-msg {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 0;
+            border-radius: 0;
+            background: transparent;
+            transition: var(--transition);
+            animation: msg-in 0.2s ease;
+        }
+        .chat-msg:hover { transform: translateY(-1px); }
+        .chat-msg.me,
+        .chat-msg.other { background: transparent; }
+        .msg-avatar {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: none;
+        }
         .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .msg-header { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
+        .msg-content { flex: 1; }
+        .msg-banner {
+            width: 100%; height: 10px; border: 1px solid var(--border);
+            margin-bottom: 6px; border-radius: 4px;
+            background: rgba(126,243,255,0.08);
+        }
+        .msg-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+        .msg-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .msg-username { font-weight: 700; font-size: 0.85rem; }
+        .msg-username.mention-target { cursor: pointer; transition: var(--transition); }
+        .msg-username.mention-target:hover { color: var(--accent); }
         .msg-title { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
         .msg-time { font-size: 0.72rem; color: var(--text-muted); }
-        .msg-text { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+        .msg-text {
+            font-size: 0.88rem;
+            color: #ffffff;
+            line-height: 1.5;
+            background: #050509;
+            border: none;
+            border-radius: 0;
+            padding: 7px 9px;
+            box-shadow: none;
+            text-shadow: none;
+            display: inline-block;
+            width: fit-content;
+            max-width: 100%;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .msg-copy-btn {
+            opacity: 0;
+            transform: translateY(2px);
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .chat-msg:hover .msg-copy-btn { opacity: 1; transform: translateY(0); }
+        .msg-copy-btn:hover { color: var(--accent); }
+        .msg-content.chat-neon,
+        .msg-content.chat-terminal,
+        .msg-content.chat-royal {
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
         .mention { color: var(--accent); font-weight: 600; }
-        .system-msg { justify-content: center; padding: 4px; }
+        .system-msg { justify-content: center; padding: 4px; border-radius: 8px; }
         .system-msg .msg-text { font-size: 0.78rem; color: var(--text-muted); font-style: italic; }
         .chat-input-area {
             padding: 12px 20px; border-top: 2px solid var(--border); background: var(--bg-secondary);
@@ -46,6 +121,7 @@
             display: none; position: absolute; bottom: 44px; right: 0;
             background: var(--bg-card); border: 2px solid var(--border); padding: 8px;
             box-shadow: var(--shadow-lg); width: 240px;
+            border-radius: 10px;
         }
         .emoji-dropdown.show { display: flex; flex-wrap: wrap; gap: 4px; }
         .emoji-btn {
@@ -55,6 +131,10 @@
         }
         .emoji-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
         #typingIndicator { font-size: 0.78rem; color: var(--text-muted); min-height: 18px; padding: 0 20px; }
+        @keyframes msg-in {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         @media (max-width: 768px) { .chat-sidebar { display: none; } }
     </style>
 </head>
@@ -65,6 +145,14 @@
             <a href="/dashboard" class="btn btn-ghost btn-sm mb-2">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                 Dashboard
+            </a>
+            <a href="/docs" class="btn btn-ghost btn-sm mb-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+                Python Docs
+            </a>
+            <a href="/rules" class="btn btn-ghost btn-sm mb-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                Rules & Guidelines
             </a>
             <h4 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:8px;">Global Chat</h4>
             <p class="text-sm text-muted" style="line-height:1.6;">

@@ -1,76 +1,269 @@
-# 🧘‍♂️ ZenPy
+# ZenPy
 
-> **⚠️ Status: Under Active Development**
->
-> *ZenPy is currently in its early stages of development and is not yet available for public deployment. Features, architectures, and design concepts are actively evolving.*
+ZenPy is a full-stack Python practice platform with gamification, social learning, and real-time chat.
 
----
+## Status
 
-## 🌟 About ZenPy
+This project is actively evolving. APIs, UI behavior, and data contracts may change.
 
-ZenPy is a comprehensive, full-stack learning platform designed to make practicing programming concepts engaging, interactive, and socially rewarding. Moving away from dry, text-based tutorials, ZenPy brings a modern, gamified approach to coding education. 
+## Core Features
 
-We believe that learning to code is a journey of continuous practice and community support. By combining interactive coding challenges, live community chat, dynamic leaderboards, and an integrated rewards system, ZenPy creates an ecosystem where learners can stay motivated and progressively improve their coding skills in a guided environment.
+- Guided Python question flow (250+ questions across multiple phases)
+- Client-side execution workflow (Pyodide-oriented validation model)
+- XP/level progression, Zen currency, achievements, streaks
+- Shop system with equippable cosmetics (name styles, frames, cards, banners, chat styles)
+- Auto-discovered premium GIF banners from assets
+- Community pages, follow/unfollow, profile modal, direct messages
+- Global real-time chat via Socket.IO
+- OTP-based signup + local auth + GitHub OAuth
+- Onboarding flow with username/social setup
+- Theme system with persisted preference (dark/light/nature/ocean/sunset)
 
----
+## Tech Stack
 
-## 🚀 How ZenPy Helps Learners
+- Backend: Node.js, Express, Socket.IO
+- Auth/Security: JWT, Passport (GitHub), bcrypt
+- Data store: JSON files in [data](data)
+- Frontend: HTML/CSS/Vanilla JS
+- Email OTP: Resend
 
-### 1. Hands-On Practice with Immediate Feedback
-Learners can tackle curated coding challenges ranging from basic syntax to advanced algorithms. With an integrated auto-grading system and built-in compiler support, students write code directly in the browser and receive instant feedback. 
+## Project Structure
 
-### 2. Gamified Learning Experience
-To keep motivation high, ZenPy incorporates deep gamification:
-- **XP & Levels:** Every completed challenge awards Experience Points (XP) geared towards leveling up.
-- **In-Game Economy & Shop:** Learners can spend earned points in the virtual shop to unlock custom avatars, themes, and profile badges.
-- **Leaderboards:** Friendly competition is nurtured through dynamic leaderboards, encouraging users to practice consistently to climb the ranks.
+- [server](server): Express server, route modules, chat socket server
+- [public](public): HTML pages
+- [js](js): frontend logic per page + shared utilities
+- [css](css): global/theme/animation styling
+- [data](data): JSON datastore (users, progress, chat, follows, etc.)
+- [assets](assets): avatars, shop media, images
+- [scripts](scripts): reset + question generation + validation tooling
 
-### 3. Community Collaboration and Mentorship
-Coding shouldn't be a solitary activity. ZenPy includes:
-- **Community Chat:** A live, global space to ask questions, share snippets, and discuss concepts.
-- **Direct Messaging:** One-on-one channels for personalized mentoring or pairing with peers.
-- **Profile Tracking:** Users can view each other's progress, building a sense of camaraderie.
+## Prerequisites
 
-### 4. Structured Curriculum Paths
-Questions are categorized into logical phases (e.g., "Phase 0: Basics"). This ensures learners are never overwhelmed, building a solid foundation before advancing to complex problems.
+- Node.js 18+
+- npm 9+
+- GitHub OAuth app credentials (optional, for GitHub login)
+- Resend API key + verified sender (optional, for OTP email flow)
 
----
+## Local Setup
 
-## ❓ Frequently Asked Questions (FAQs)
+1) Install dependencies
 
-### Q: Who is ZenPy for?
-**A:** ZenPy is designed for anyone looking to learn or practice programming in a structured and engaging way. Whether you are a complete beginner writing your first `print()` statement or an intermediate coder looking to refine your logic, the platform provides challenges scaled to your level.
+```bash
+npm install
+```
 
-### Q: Do I need any prior coding experience to get started?
-**A:** None at all! The platform features carefully crafted "Phase 0" challenges that walk you through the absolute basics. With helpful hints and descriptive problem statements, you can learn directly by doing.
+2) Create environment file
 
-### Q: How does the XP and Leveling system work?
-**A:** Every challenge has a designated base XP reward and an "optimal time" limit. By successfully solving the challenge (ensuring your code compiles and passes test cases), you earn XP. Gather enough XP, and your profile levels up, unlocking access to new shop items and community standing!
+Create `.env` in repo root with (as needed):
 
-### Q: Are there tools for teachers or mentors?
-**A:** Yes. ZenPy comes with dedicated Admin tools for managing question banks, reviewing user progress, and ensuring the community remains a safe, productive space via ban checks and moderation logs.
+```env
+PORT=3000
+JWT_SECRET=change_me
+GITHUB_CLIENT_ID=...
+GITHUB_CLIENT_SECRET=...
+RESEND_API_KEY=...
+RESEND_FROM_EMAIL=noreply@your-domain.com
+```
 
-### Q: Can I contribute or clone the project?
-**A:** As mentioned above, ZenPy is currently undergoing active, private-phase development. Community contributions and public deployment guidelines will be formally introduced once the core architecture reaches a stable release milestone.
+Notes:
+- `RESEND_FROM_EMAIL` must be a verified sender/domain in your Resend account.
+- OTP signup requires `RESEND_API_KEY` + `RESEND_FROM_EMAIL`.
 
----
+3) Run
 
-*Thank you for your interest in ZenPy! We're excited to build a platform that turns the daunting task of learning to code into an enjoyable, rewarding adventure.*
+```bash
+npm run dev
+```
 
----
+or
 
-## 🆕 Recent Updates (Mar 20, 2026)
+```bash
+npm start
+```
 
-- **Onboarding modal + Terms enforcement:** New dashboard visitors now encounter a modal that blocks interaction until they pick a username, upload an avatar, and accept the Terms & Conditions, with the full policy reachable at `/terms` and via the sidebar link.
-- **Onboarding state APIs:** The auth/user routes now track `profileSetupCompleted`/`termsAccepted`, and a dedicated `/api/user/complete-onboarding` endpoint lets the modal finish the flow after verifying the avatar upload and checkbox state.
-- **Database tooling:** Added `scripts/resetDatabase.js` (plus helpers) so data stores (users, progress, chat, bans, activity logs) can be reset locally without touching Git-tracked files, keeping the repo clean.
-- **Login/signup guards:** The auth cards now call `/api/user` before redirecting, ensuring the GitHub sign-in view remains visible until the token truly validates and preventing premature dashboard loads.
-- **New static content & assets:** Terms, Rules, Docs, and Banned pages were introduced alongside the avatar/shop media, new banner/card simulation runtimes, and refreshed dashboard/shop UI to showcase today’s feature set.
+App URL: `http://localhost:3000`
 
-## 🆕 Recent Updates (Mar 21, 2026)
+## NPM Scripts
 
-- **Local auth + OTP signup flow:** Added email/password login and OTP-based signup verification routes, while keeping GitHub OAuth available for existing users.
-- **Resend integration improvements:** Signup OTP emails now use Resend with stronger config handling and clearer provider error reporting to speed up debugging when sender/domain settings are invalid.
-- **OTP expiry policy update:** OTP validity has been standardized to a 10-minute window across storage and email messaging.
-- **JSON datastore synchronization:** Server bootstrap now ensures all required JSON files (including `questions.json` and `shop_items.json`) exist for consistent startup and test resets.
-- **Full user-data reset tooling in practice:** User records, progress, follows, DMs, global chat, activity, and ban records were cleaned for fresh testing, and leftover uploaded avatar artifacts were removed.
+- `npm start` → run server via [server/server.js](server/server.js)
+- `npm run dev` → run with nodemon for local development
+
+## Utility Scripts
+
+- Reset user/testing data:
+
+```bash
+node scripts/resetDatabase.js
+```
+
+Clears:
+- [data/users.json](data/users.json)
+- [data/progress.json](data/progress.json)
+- [data/global_chat_messages.json](data/global_chat_messages.json)
+- [data/direct_messages.json](data/direct_messages.json)
+- [data/follows.json](data/follows.json)
+- [data/activity_log.json](data/activity_log.json)
+- [data/banned.json](data/banned.json)
+
+- Generate base questions:
+
+```bash
+node scripts/generateQuestions.js
+```
+
+- Extend question bank:
+
+```bash
+node scripts/generateExtendedQuestions.js
+```
+
+- Validate questions with Pyodide harness:
+
+```bash
+node scripts/validatePyodideQuestions.mjs
+```
+
+## Authentication Model
+
+ZenPy supports:
+- Local auth (`/api/auth/login`)
+- OTP signup flow (`request-otp` → `verify-otp`)
+- GitHub OAuth (`/auth/github`)
+
+On successful auth, JWT is used for protected API access (`Authorization: Bearer <token>`).
+
+## API Overview
+
+### Auth
+
+- `POST /api/auth/signup/request-otp`
+- `POST /api/auth/signup/resend-otp`
+- `POST /api/auth/signup/verify-otp`
+- `POST /api/auth/login`
+- `GET /api/me`
+
+### User, Onboarding, Quiz
+
+- `GET /api/user`
+- `GET /api/user/:email`
+- `PUT /api/user`
+- `PUT /api/user/profile`
+- `POST /api/user/complete-onboarding`
+- `GET /api/user/progress/:email`
+- `GET /api/daily-quiz`
+- `POST /api/daily-quiz`
+
+### Questions
+
+- `GET /api/questions`
+- `GET /api/question/:id`
+- `POST /api/question/:id/submit`
+- `GET /api/question/:id/tests`
+
+### Shop / Economy
+
+- `GET /api/shop/items`
+- `POST /api/shop/buy`
+- `POST /api/shop/equip`
+- `POST /api/user/add-zen`
+
+### Community / Social
+
+- `GET /api/community/users`
+- `GET /api/community/user/:email`
+- `POST /api/follow`
+- `POST /api/unfollow`
+- `GET /api/followers/:email`
+- `GET /api/following/:email`
+
+### Direct Messages
+
+- `GET /api/dm/conversations`
+- `GET /api/dm/:email`
+- `POST /api/dm/send`
+- `GET /api/dm/unread`
+
+### Leaderboard
+
+- `GET /api/leaderboard/progression`
+- `GET /api/leaderboard/speed`
+- `GET /api/leaderboard/xp`
+- `GET /api/leaderboard/zen`
+
+### Moderation / Admin
+
+- `POST /api/ban`
+- `GET /api/check-ban`
+- `GET /api/users`
+- `GET /api/admin/stats`
+- `POST /api/admin/unban`
+
+### Upload
+
+- `POST /api/upload/avatar`
+	- Allowed avatar types: PNG, GIF, WEBP
+	- Max file size: 2MB
+
+## Socket.IO Events (Global Chat)
+
+Client emits:
+- `authenticate`
+- `send_message`
+- `typing`
+- `report_message`
+
+Server emits:
+- `chat_history`
+- `new_message`
+- `online_count`
+- `auth_success`
+- `auth_error`
+- `user_typing`
+- `report_received`
+- `system_message`
+
+## Data Model Notes
+
+The app persists state in JSON files under [data](data). Server bootstrapping ensures missing files are created.
+
+Important files:
+- [data/users.json](data/users.json): account profile, inventory, achievements, social links
+- [data/progress.json](data/progress.json): per-user question progress and times
+- [data/questions.json](data/questions.json): question bank and tests
+- [data/shop_items.json](data/shop_items.json): base shop catalog
+- [data/global_chat_messages.json](data/global_chat_messages.json): global chat history
+- [data/direct_messages.json](data/direct_messages.json): DM history
+- [data/follows.json](data/follows.json): follow graph
+
+## Media and Theme Notes
+
+- Default avatar is SVG-based: [assets/avatars/default-avatar.svg](assets/avatars/default-avatar.svg)
+- Existing JPEG assets have been removed from repo usage path
+- Theme preference persists in localStorage key `zenpy_theme`
+- Available themes: dark, light, nature, ocean, sunset
+
+## Troubleshooting
+
+- Login works but app redirects unexpectedly:
+	- Check `JWT_SECRET` consistency and token storage in browser localStorage.
+
+- OTP mail not sending:
+	- Verify `RESEND_API_KEY` and `RESEND_FROM_EMAIL`.
+	- Ensure sender domain is verified in Resend.
+
+- No users/data after reset:
+	- This is expected after running `node scripts/resetDatabase.js`.
+
+- GIF banners not appearing:
+	- Confirm files are under `assets/shop` with `.gif` extension.
+	- Auto-generated items are derived at runtime by server startup helpers.
+
+## Security / Production Notes
+
+- Replace fallback JWT secret for production.
+- Session cookie is currently `secure: false`; set secure cookies + HTTPS in production.
+- JSON file storage is suitable for development/testing; migrate to a database for production scale.
+
+## License
+
+MIT

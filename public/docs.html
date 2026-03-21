@@ -16,15 +16,16 @@
         }
         .docs-toc {
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 0;
             padding: 12px;
-            box-shadow: var(--shadow);
+            box-shadow: 4px 4px 0px var(--accent-dim);
             position: sticky;
             top: 14px;
+            align-self: start;
         }
         .docs-toc h4 {
             margin-bottom: 8px;
-            font-size: 0.82rem;
+            font-size: 1.15rem;
             color: var(--accent);
             text-transform: uppercase;
             letter-spacing: 0.08em;
@@ -35,7 +36,7 @@
             color: var(--text-secondary);
             padding: 6px 8px;
             border: 1px solid transparent;
-            border-radius: 8px;
+            border-radius: 0;
             text-decoration: none;
             margin-bottom: 4px;
         }
@@ -46,17 +47,17 @@
         .docs-content { display: grid; gap: 12px; }
         .docs-section {
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 0;
             padding: 14px;
-            box-shadow: var(--shadow);
+            box-shadow: 4px 4px 0px var(--accent-dim);
         }
         .docs-section h3 {
             margin-bottom: 8px;
-            font-size: 0.95rem;
+            font-size: 1.6rem; color: var(--accent);
             color: var(--accent);
         }
         .docs-section p {
-            font-size: 0.82rem;
+            font-size: 1.15rem;
             color: var(--text-secondary);
             line-height: 1.65;
             margin-bottom: 8px;
@@ -64,16 +65,16 @@
         .docs-section pre {
             margin: 0;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 0;
             padding: 10px;
-            font-size: 0.76rem;
+            font-size: 1.05rem;
             line-height: 1.7;
             overflow-x: auto;
         }
         .docs-intro {
             padding: 14px;
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 0;
             margin-bottom: 12px;
             color: var(--text-secondary);
             font-size: 0.83rem;
@@ -150,31 +151,31 @@
 level = 3
 xp = 720
 
-print(f"{username} | Lv{level} | XP {xp}")</pre>
+<span class="fn">print</span>(f"{username} | Lv{level} | XP {xp}")</pre>
                     </section>
 
                     <section id="control" class="docs-section">
                         <h3>Control Flow (Phase 1)</h3>
                         <p>Use if/elif/else for branching and loops for deterministic computation. Prefer linear logic over deep nesting.</p>
                         <pre>score = 78
-if score >= 90:
+<span class="keyword">if</span> score >= 90:
     rank = "A"
-elif score >= 70:
+el<span class="keyword">if</span> score >= 70:
     rank = "B"
-else:
+<span class="keyword">else</span>:
     rank = "C"
 
-for i in range(1, 4):
-    print(i, rank)</pre>
+<span class="keyword">for</span> i <span class="keyword">in</span> range(1, 4):
+    <span class="fn">print</span>(i, rank)</pre>
                     </section>
 
                     <section id="functions" class="docs-section">
                         <h3>Functions (Phase 2)</h3>
                         <p>Write small, testable functions. Return values instead of printing from every helper.</p>
-                        <pre>def ap_nth(a: int, d: int, n: int) -> int:
-    return a + (n - 1) * d
+                        <pre><span class="keyword">def</span> <span class="fn">ap_nth</span>(a: int, d: int, n: int) -> int:
+    <span class="keyword">return</span> a + (n - 1) * d
 
-print(ap_nth(2, 3, 5))</pre>
+<span class="fn">print</span>(ap_nth(2, 3, 5))</pre>
                     </section>
 
                     <section id="collections" class="docs-section">
@@ -182,25 +183,25 @@ print(ap_nth(2, 3, 5))</pre>
                         <p>Lists support ordered iteration; dictionaries power frequency counting and fast lookups for many interview-style tasks.</p>
                         <pre>text = "banana"
 freq = {}
-for ch in text:
+<span class="keyword">for</span> ch <span class="keyword">in</span> text:
     freq[ch] = freq.get(ch, 0) + 1
 
-print(freq["a"])</pre>
+<span class="fn">print</span>(freq["a"])</pre>
                     </section>
 
                     <section id="oop" class="docs-section">
                         <h3>OOP Basics (Phase 4)</h3>
                         <p>Use classes for cohesive state + behavior. Keep methods focused and side effects explicit.</p>
-                        <pre>class Counter:
-    def __init__(self):
+                        <pre><span class="keyword">class</span> <span class="fn">Counter</span>:
+    <span class="keyword">def</span> <span class="fn">__init__</span>(self):
         self.value = 0
 
-    def add(self, step=1):
+    <span class="keyword">def</span> <span class="fn">add</span>(self, step=1):
         self.value += step
 
 c = Counter()
 c.add(4)
-print(c.value)</pre>
+<span class="fn">print</span>(c.value)</pre>
                     </section>
 
                     <section id="io" class="docs-section">
@@ -210,7 +211,7 @@ print(c.value)</pre>
     file.write("ZenPy practice log\n")
 
 with open("result.txt", "r", encoding="utf-8") as file:
-    print(file.read().strip())</pre>
+    <span class="fn">print</span>(file.read().strip())</pre>
                     </section>
 
                     <section id="errors" class="docs-section">
@@ -220,9 +221,9 @@ with open("result.txt", "r", encoding="utf-8") as file:
 try:
     value = int(raw)
 except ValueError:
-    print("Invalid integer")
-else:
-    print(value)</pre>
+    <span class="fn">print</span>("Invalid integer")
+<span class="keyword">else</span>:
+    <span class="fn">print</span>(value)</pre>
                     </section>
 
                     <section id="stats" class="docs-section">
@@ -230,9 +231,9 @@ else:
                         <p>Many new questions rely on mean, variance, probability formulas, and safe float formatting.</p>
                         <pre>nums = [1, 2, 3, 4, 5]
 mean = sum(nums) / len(nums)
-var = sum((x - mean) ** 2 for x in nums) / len(nums)
-print(f"{mean:.2f}")
-print(f"{var:.4f}")</pre>
+var = sum((x - mean) ** 2 <span class="keyword">for</span> x <span class="keyword">in</span> nums) / len(nums)
+<span class="fn">print</span>(f"{mean:.2f}")
+<span class="fn">print</span>(f"{var:.4f}")</pre>
                     </section>
 
                     <section id="token" class="docs-section">
@@ -241,11 +242,11 @@ print(f"{var:.4f}")</pre>
                         <pre>sentence = "Build Better Models"
 tokens = sentence.lower().split()
 vocab = {}
-for token in tokens:
-    if token not in vocab:
+<span class="keyword">for</span> token <span class="keyword">in</span> tokens:
+    <span class="keyword">if</span> token not in vocab:
         vocab[token] = len(vocab)
-print(tokens)
-print(vocab)</pre>
+<span class="fn">print</span>(tokens)
+<span class="fn">print</span>(vocab)</pre>
                     </section>
 
                     <section id="sequence" class="docs-section">
@@ -253,10 +254,10 @@ print(vocab)</pre>
                         <p>Create context-target pairs by shifting windows. This pattern is the backbone of next-token prediction tasks.</p>
                         <pre>ids = [5, 6, 7, 8, 9]
 window = 3
-for i in range(len(ids) - window):
+<span class="keyword">for</span> i <span class="keyword">in</span> range(len(ids) - window):
     context = ids[i:i + window]
     target = ids[i + window]
-    print(context, "->", target)</pre>
+    <span class="fn">print</span>(context, "->", target)</pre>
                     </section>
 
                     <section id="attention" class="docs-section">
@@ -267,8 +268,8 @@ k = [4, 5, 6]
 dot = sum(a * b for a, b in zip(q, k))
 d = len(q)
 scaled = dot / (d ** 0.5)
-print(dot)
-print(f"{scaled:.4f}")</pre>
+<span class="fn">print</span>(dot)
+<span class="fn">print</span>(f"{scaled:.4f}")</pre>
                     </section>
 
                     <section id="tips" class="docs-section">
@@ -292,5 +293,10 @@ print(f"{scaled:.4f}")</pre>
         if (!requireAuth()) { /* redirected */ }
         document.addEventListener('DOMContentLoaded', setupSidebar);
     </script>
+
+    <button class="theme-switcher" onclick="document.body.classList.toggle('light-theme')">
+        Toggle Theme
+    </button>
+    
 </body>
 </html>

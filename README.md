@@ -66,3 +66,11 @@ Questions are categorized into logical phases (e.g., "Phase 0: Basics"). This en
 - **Database tooling:** Added `scripts/resetDatabase.js` (plus helpers) so data stores (users, progress, chat, bans, activity logs) can be reset locally without touching Git-tracked files, keeping the repo clean.
 - **Login/signup guards:** The auth cards now call `/api/user` before redirecting, ensuring the GitHub sign-in view remains visible until the token truly validates and preventing premature dashboard loads.
 - **New static content & assets:** Terms, Rules, Docs, and Banned pages were introduced alongside the avatar/shop media, new banner/card simulation runtimes, and refreshed dashboard/shop UI to showcase today’s feature set.
+
+## 🆕 Recent Updates (Mar 21, 2026)
+
+- **Local auth + OTP signup flow:** Added email/password login and OTP-based signup verification routes, while keeping GitHub OAuth available for existing users.
+- **Resend integration improvements:** Signup OTP emails now use Resend with stronger config handling and clearer provider error reporting to speed up debugging when sender/domain settings are invalid.
+- **OTP expiry policy update:** OTP validity has been standardized to a 10-minute window across storage and email messaging.
+- **JSON datastore synchronization:** Server bootstrap now ensures all required JSON files (including `questions.json` and `shop_items.json`) exist for consistent startup and test resets.
+- **Full user-data reset tooling in practice:** User records, progress, follows, DMs, global chat, activity, and ban records were cleaned for fresh testing, and leftover uploaded avatar artifacts were removed.

@@ -77,7 +77,9 @@ const dataFiles = {
     'global_chat_messages.json': [],
     'activity_log.json': [],
     'follows.json': [],
-    'direct_messages.json': []
+    'direct_messages.json': [],
+    'questions.json': [],
+    'shop_items.json': []
 };
 
 Object.entries(dataFiles).forEach(([file, defaultData]) => {

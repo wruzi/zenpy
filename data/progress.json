@@ -1,1 +1,118 @@
+<<<<<<< HEAD
 []
+=======
+[
+  {
+    "email": "chetangaud20@yahoo.com",
+    "currentQuestion": 14,
+    "startTime": "2026-03-20T11:57:25.250Z",
+    "questionTimes": [
+      {
+        "q": 1,
+        "time": 8,
+        "attempts": 1,
+        "xpEarned": 160,
+        "timestamp": 1774008395649
+      },
+      {
+        "q": 2,
+        "time": 27,
+        "attempts": 1,
+        "xpEarned": 153,
+        "timestamp": 1774008425341
+      },
+      {
+        "q": 3,
+        "time": 28,
+        "attempts": 1,
+        "xpEarned": 160,
+        "timestamp": 1774008455974
+      },
+      {
+        "q": 4,
+        "time": 39,
+        "attempts": 1,
+        "xpEarned": 167,
+        "timestamp": 1774008498407
+      },
+      {
+        "q": 5,
+        "time": 62,
+        "attempts": 1,
+        "xpEarned": 148,
+        "timestamp": 1774008563139
+      },
+      {
+        "q": 6,
+        "time": 360,
+        "attempts": 1,
+        "xpEarned": 118,
+        "timestamp": 1774008964226
+      },
+      {
+        "q": 7,
+        "time": 165,
+        "attempts": 1,
+        "xpEarned": 138,
+        "timestamp": 1774009154477
+      },
+      {
+        "q": 8,
+        "time": 79,
+        "attempts": 1,
+        "xpEarned": 168,
+        "timestamp": 1774009237511
+      },
+      {
+        "q": 9,
+        "time": 60,
+        "attempts": 1,
+        "xpEarned": 190,
+        "timestamp": 1774009300601
+      },
+      {
+        "q": 10,
+        "time": 73,
+        "attempts": 1,
+        "xpEarned": 191,
+        "timestamp": 1774009377457
+      },
+      {
+        "q": 11,
+        "time": 50,
+        "attempts": 1,
+        "xpEarned": 220,
+        "timestamp": 1774011943746
+      },
+      {
+        "q": 12,
+        "time": 239,
+        "attempts": 1,
+        "xpEarned": 189,
+        "timestamp": 1774012192707
+      },
+      {
+        "q": 13,
+        "time": 130,
+        "attempts": 1,
+        "xpEarned": 203,
+        "timestamp": 1774012327533
+      }
+    ],
+    "totalTime": 1320,
+    "averageTime": 101.53846153846153,
+    "completed": false,
+    "completedDate": null
+  },
+  {
+    "email": "neymarjrpog@gmail.com",
+    "currentQuestion": 1,
+    "startTime": "2026-03-21T09:32:54.946Z",
+    "questionTimes": [],
+    "totalTime": 0,
+    "averageTime": 0,
+    "completed": false,
+    "completedDate": null
+  }
+]
+>>>>>>> d508c30 (Add OTP auth flow, reset JSON data, and update README)

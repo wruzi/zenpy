@@ -1,1 +1,88 @@
+<<<<<<< HEAD
 []
+=======
+[
+  {
+    "email": "chetangaud20@yahoo.com",
+    "username": "wruzi",
+    "image": "chetangaud20_yahoo_com_1774072422549.jpg",
+    "bio": "",
+    "joined": "2026-03-20T11:57:25.250Z",
+    "xp": 2305,
+    "level": 10,
+    "zen": 470,
+    "streak": 0,
+    "longestStreak": 0,
+    "totalActiveMinutes": 0,
+    "inventory": {
+      "owned": [],
+      "equipped": {
+        "nameStyle": null,
+        "frame": null,
+        "title": "Newbie",
+        "effect": null,
+        "chatExtra": null,
+        "chatColor": null,
+        "chatBackground": null,
+        "profile_card": null,
+        "banner": null
+      }
+    },
+    "achievements": [
+      "first_steps"
+    ],
+    "lastActive": "2026-03-21T05:57:27.141Z",
+    "github": "",
+    "instagram": "",
+    "twitter": "",
+    "chatMessageCount": 1,
+    "provider": "github",
+    "providerId": "234759436",
+    "profileSetupCompleted": true,
+    "onboardingCompletedAt": "2026-03-20T11:58:40.401Z",
+    "termsAccepted": true,
+    "termsAcceptedAt": "2026-03-20T11:58:40.401Z",
+    "lastQuizDate": "2026-03-21"
+  },
+  {
+    "email": "neymarjrpog@gmail.com",
+    "username": "kanyewest",
+    "image": "neymarjrpog_gmail_com_1774085649667.jpg",
+    "bio": "",
+    "joined": "2026-03-21T09:32:54.944Z",
+    "xp": 0,
+    "level": 1,
+    "zen": 100,
+    "streak": 0,
+    "longestStreak": 0,
+    "totalActiveMinutes": 0,
+    "inventory": {
+      "owned": [],
+      "equipped": {
+        "nameStyle": null,
+        "frame": null,
+        "title": "Newbie",
+        "effect": null,
+        "chatExtra": null,
+        "chatColor": null,
+        "chatBackground": null,
+        "profile_card": null,
+        "banner": null
+      }
+    },
+    "achievements": [],
+    "lastActive": "2026-03-21T09:35:09.565Z",
+    "github": "",
+    "instagram": "",
+    "twitter": "",
+    "chatMessageCount": 0,
+    "provider": "local",
+    "providerId": "local",
+    "profileSetupCompleted": true,
+    "onboardingCompletedAt": "2026-03-21T09:34:39.224Z",
+    "termsAccepted": true,
+    "termsAcceptedAt": "2026-03-21T09:34:39.224Z",
+    "passwordHash": "$2b$10$.sgTPxamjoSweqHdJML.xuLXHTJgLNeefwK3rOVraAKTC19hWNkhS"
+  }
+]
+>>>>>>> d508c30 (Add OTP auth flow, reset JSON data, and update README)

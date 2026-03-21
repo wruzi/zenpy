@@ -20,14 +20,14 @@ function generateShortOTP() {
 }
 
 /**
- * Store OTP with expiry (5 minutes)
+ * Store OTP with expiry (default 10 minutes)
  */
-function storeOTP(email, otp, data = {}) {
+function storeOTP(email, otp, data = {}, ttlMs = 10 * 60 * 1000) {
     otpStore.set(email, {
         otp,
         data,
         createdAt: Date.now(),
-        expiresAt: Date.now() + 5 * 60 * 1000 // 5 minutes
+        expiresAt: Date.now() + ttlMs
     });
 }
 

@@ -303,9 +303,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="onboardAvatar">Avatar upload *</label>
+                    <label for="onboardAvatar">Avatar upload (optional)</label>
                     <input id="onboardAvatar" type="file" accept="image/*" class="form-control" style="padding:8px;">
-                    <div id="onboardAvatarStatus" class="onboarding-note mt-1">Upload an avatar to continue.</div>
+                    <div id="onboardAvatarStatus" class="onboarding-note mt-1">GitHub profile picture is used by default; upload is optional.</div>
                 </div>
 
                 <div class="form-group">
@@ -324,17 +324,17 @@
                 </div>
 
                 <div class="onboarding-full" style="border:1px solid var(--border); padding:10px;">
-                    <p class="text-sm" style="margin-bottom:8px;">Please read our <a id="onboardingTermsLink" href="/terms" target="_blank" rel="noopener noreferrer">Terms & Conditions</a>.</p>
+                    <p class="text-sm" style="margin-bottom:8px;">You can optionally read our <a id="onboardingTermsLink" href="/terms" target="_blank" rel="noopener noreferrer">Terms & Conditions</a>.</p>
                     <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem;">
                         <input id="onboardTermsCheck" type="checkbox">
-                        I understood Terms & Conditions
+                        I confirm I have reviewed (optional)
                     </label>
                 </div>
             </div>
 
             <div class="d-flex justify-between align-center mt-2">
-                <span class="onboarding-note">Required: username, avatar upload, terms acceptance.</span>
-                <button id="onboardSubmit" class="btn btn-primary">Continue to Dashboard</button>
+                <span class="onboarding-note">Required: username. Avatar and terms are optional, but recommended.</span>
+                <button id="onboardSubmit" class="btn btn-primary">Complete and Continue</button>
             </div>
         </div>
     </div>

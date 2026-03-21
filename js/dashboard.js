@@ -202,20 +202,10 @@ async function completeOnboarding() {
         return;
     }
 
-    if (!onboardingAvatarUploaded) {
-        showToast('Please upload your avatar first.', 'error');
-        return;
-    }
+    // Avatar and terms are optional; username is mandatory only.
+    // We still encourage users to upload an avatar and read terms, but don't block progression.
 
-    if (!onboardingTermsVisited) {
-        showToast('Please open and read Terms & Conditions first.', 'error');
-        return;
-    }
-
-    if (!termsCheckbox?.checked) {
-        showToast('Please confirm Terms & Conditions.', 'error');
-        return;
-    }
+    // No blocking checks for avatar or terms.
 
     if (submitButton) submitButton.disabled = true;
 

@@ -437,13 +437,8 @@ module.exports = function(app) {
             return res.status(400).json({ success: false, message: 'Username already taken.' });
         }
 
-        if (!termsAccepted) {
-            return res.status(400).json({ success: false, message: 'You must accept Terms & Conditions.' });
-        }
-
-        if (!hasCustomAvatar(user)) {
-            return res.status(400).json({ success: false, message: 'Please upload an avatar before continuing.' });
-        }
+        // Avatar and terms acceptance are optional now.
+        // We still store the user's choice if provided.
 
         user.username = cleanUsername;
         if (github !== undefined) user.github = String(github || '').trim();

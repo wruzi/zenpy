@@ -200,6 +200,16 @@
             if (!data) return;
             const { user, progress } = data;
 
+            function resolveAvatarSrc(image) {
+                if (!image || image === 'default-avatar.png' || image === 'Popcat Cartoon.jpg' || image === 'Popcat%20Cartoon.jpg') {
+                    return '/assets/avatars/Popcat%20Cartoon.jpg';
+                }
+                if (String(image).startsWith('http') || String(image).startsWith('/')) {
+                    return image;
+                }
+                return `/assets/avatars/${image}`;
+            }
+
             document.getElementById('profileUsername').textContent = user.username;
             document.getElementById('profileTitle').textContent = user.inventory?.equipped?.title || 'Newbie';
             document.getElementById('profileXP').textContent = formatNumber(user.xp);
@@ -217,8 +227,12 @@
             applyEquippedProfileCard(user);
 
             // Avatar
-            if (user.image && user.image !== 'Popcat%20Cartoon.jpg') {
-                document.getElementById('avatarImg').src = `/assets/avatars/${user.image}`;
+            const avatarImg = document.getElementById('avatarImg');
+            if (avatarImg) {
+                avatarImg.src = resolveAvatarSrc(user.image);
+                avatarImg.onerror = function() {
+                    this.src = '/assets/avatars/Popcat%20Cartoon.jpg';
+                };
             }
 
             // Setup avatar upload

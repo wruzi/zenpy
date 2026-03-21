@@ -162,6 +162,32 @@ module.exports = function(app) {
             const progress = readJSON('progress.json');
             progress.push(createProgressRecord(email));
             writeJSON('progress.json', progress);
+        } else {
+            let changed = false;
+
+            if (!user.provider || user.provider !== provider) {
+                user.provider = provider;
+                changed = true;
+            }
+
+            if (provider === 'github') {
+                if (user.github !== 'linked') {
+                    user.github = 'linked';
+                    changed = true;
+                }
+                if (profileId && user.providerId !== profileId) {
+                    user.providerId = profileId;
+                    changed = true;
+                }
+                if (avatarUrl && (!user.image || user.image === 'default-avatar.png' || user.image === 'Popcat Cartoon.jpg' || user.image === 'Popcat%20Cartoon.jpg')) {
+                    user.image = avatarUrl;
+                    changed = true;
+                }
+            }
+
+            if (changed) {
+                writeJSON('users.json', users);
+            }
         }
         return user;
     }

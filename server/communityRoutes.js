@@ -5,7 +5,7 @@
 const authMiddleware = require('./middleware/auth');
 
 module.exports = function(app) {
-    const { readJSON, writeJSON, getItemCssClass } = app.locals;
+    const { readJSON, writeJSON, getItemCssClass, getBannerAsset } = app.locals;
 
     function getNameStyleClass(user) {
         return [
@@ -53,6 +53,7 @@ module.exports = function(app) {
                 frame: getItemCssClass(u.inventory?.equipped?.frame) || null,
                 profileCard: getItemCssClass(u.inventory?.equipped?.profile_card) || null,
                 banner: getItemCssClass(u.inventory?.equipped?.banner) || null,
+                bannerAsset: getBannerAsset(u.inventory?.equipped?.banner) || null,
                 chatStyle: getItemCssClass(u.inventory?.equipped?.chatExtra) || null,
                 title: u.inventory?.equipped?.title || 'Newbie',
                 inventory: u.inventory
@@ -102,6 +103,7 @@ module.exports = function(app) {
                 frame: getItemCssClass(u.inventory?.equipped?.frame) || null,
                 profileCard: getItemCssClass(u.inventory?.equipped?.profile_card) || null,
                 banner: getItemCssClass(u.inventory?.equipped?.banner) || null,
+                bannerAsset: getBannerAsset(u.inventory?.equipped?.banner) || null,
                 chatStyle: getItemCssClass(u.inventory?.equipped?.chatExtra) || null,
                 title: u.inventory?.equipped?.title || 'Newbie',
                 inventory: u.inventory

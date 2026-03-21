@@ -8,8 +8,9 @@ if (!requireAuth()) { /* redirected */ }
 let shopItems = [];
 let userData = null;
 let activeCategory = 'all';
+const bannerAccentMap = {};
 
-const premiumBannerPrefixes = ['banner_video_', 'banner_image_'];
+const premiumBannerPrefixes = ['banner_video_'];
 
 function isPremiumMediaBanner(item) {
     if (!item || item.category !== 'profile_banner') return false;
@@ -67,10 +68,7 @@ const shopIcons = {
     banner_video_premium: '<svg viewBox="0 0 24 24" fill="none" stroke="#ff6a00" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><polygon points="10,8 16,12 10,16"/></svg>',
     banner_video_022: '<svg viewBox="0 0 24 24" fill="none" stroke="#66d8ff" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><polygon points="10,8 16,12 10,16"/></svg>',
     banner_video_sakuna: '<svg viewBox="0 0 24 24" fill="none" stroke="#ff4066" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><polygon points="10,8 16,12 10,16"/></svg>',
-    banner_image_fahh: '<svg viewBox="0 0 24 24" fill="none" stroke="#7ef3ff" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-4 3 2 4-4 4 6"/></svg>',
-    banner_image_idiot: '<svg viewBox="0 0 24 24" fill="none" stroke="#ffd166" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-4 3 2 4-4 4 6"/></svg>',
-    banner_image_core: '<svg viewBox="0 0 24 24" fill="none" stroke="#7ef3ff" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-4 3 2 4-4 4 6"/></svg>',
-    banner_image_kitigawa: '<svg viewBox="0 0 24 24" fill="none" stroke="#ff86c8" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-4 3 2 4-4 4 6"/></svg>',
+    banner_video_zenistu: '<svg viewBox="0 0 24 24" fill="none" stroke="#ffe066" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><polygon points="10,8 16,12 10,16"/></svg>',
     banner_color_inferno: '<svg viewBox="0 0 24 24" fill="none" stroke="#ff6a00" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/></svg>',
     banner_color_ocean: '<svg viewBox="0 0 24 24" fill="none" stroke="#2ca8ff" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/></svg>',
     banner_color_forest: '<svg viewBox="0 0 24 24" fill="none" stroke="#28cc72" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/></svg>',
@@ -112,13 +110,69 @@ function addClassTokens(element, classString) {
 }
 
 function getAvatarUrl(user) {
-    if (!user?.image || user.image === 'default-avatar.png') return '/assets/avatars/Popcat%20Cartoon.jpg';
+    if (!user?.image || user.image === 'default-avatar.png' || user.image === 'default-avatar.svg') return '/assets/avatars/default-avatar.svg';
     if (user.image.startsWith('http') || user.image.startsWith('/')) return user.image;
     return `/assets/avatars/${encodeURIComponent(user.image)}`;
 }
 
 function getCategoryIcon(item) {
+    if (item?.category === 'profile_banner' && isPremiumMediaBanner(item)) {
+        const accent = bannerAccentMap[item.id] || '#FFD700';
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="${accent}" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><polygon points="10,8 16,12 10,16"/></svg>`;
+    }
     return shopIcons[item.id] || shopIcons.default;
+}
+
+function getBannerAccent(item) {
+    if (!item) return '#FF1493';
+    return bannerAccentMap[item.id] || '#FF1493';
+}
+
+function hexToRgba(hexColor, alpha = 0.35) {
+    const normalized = String(hexColor || '').replace('#', '');
+    if (!/^[0-9a-fA-F]{6}$/.test(normalized)) return `rgba(255,20,147,${alpha})`;
+    const red = parseInt(normalized.slice(0, 2), 16);
+    const green = parseInt(normalized.slice(2, 4), 16);
+    const blue = parseInt(normalized.slice(4, 6), 16);
+    return `rgba(${red},${green},${blue},${alpha})`;
+}
+
+function hexToRgbTuple(hexColor) {
+    const normalized = String(hexColor || '').replace('#', '');
+    if (!/^[0-9a-fA-F]{6}$/.test(normalized)) return '255, 20, 147';
+    const red = parseInt(normalized.slice(0, 2), 16);
+    const green = parseInt(normalized.slice(2, 4), 16);
+    const blue = parseInt(normalized.slice(4, 6), 16);
+    return `${red}, ${green}, ${blue}`;
+}
+
+async function preloadBannerAccents(items = []) {
+    const bannerItems = items.filter(item => item?.category === 'profile_banner' && item?.assetPath);
+    await Promise.all(bannerItems.map(async (item) => {
+        const accent = await getBannerAccentColor(item.assetPath, '#FF1493');
+        bannerAccentMap[item.id] = accent;
+    }));
+}
+
+function applyShowcaseThumbAccents() {
+    document.querySelectorAll('.premium-thumbs img.premium-gif').forEach(async (imgEl) => {
+        const src = imgEl.getAttribute('src');
+        if (!src) return;
+        const accent = await getBannerAccentColor(src, '#FFD700');
+        imgEl.style.borderColor = accent;
+        imgEl.style.boxShadow = `0 0 0 1px ${hexToRgba(accent, 0.45)}`;
+    });
+
+    const showcaseMain = document.querySelector('.premium-video');
+    if (showcaseMain) {
+        const src = showcaseMain.style.backgroundImage?.match(/url\(['"]?(.*?)['"]?\)/)?.[1];
+        if (src) {
+            getBannerAccentColor(src, '#FF1493').then((accent) => {
+                showcaseMain.style.borderColor = accent;
+                showcaseMain.style.boxShadow = `inset 0 0 0 2px ${hexToRgba(accent, 0.6)}, 4px 4px 0px ${hexToRgba(accent, 0.28)}`;
+            });
+        }
+    }
 }
 
 function getMergedNameStyle(equipped = {}, cssMap = null) {
@@ -150,7 +204,8 @@ function buildCssMapFromEquipped(equipped = {}) {
         chatStyle: resolveItemClass(equipped.chatExtra),
         chatColor: resolveItemClass(equipped.chatColor),
         chatBackground: resolveItemClass(equipped.chatBackground),
-        banner: resolveItemClass(equipped.banner)
+        banner: resolveItemClass(equipped.banner),
+        bannerAsset: findShopItemById(equipped.banner)?.assetPath || null
     };
 }
 
@@ -169,6 +224,8 @@ function applyShopPreview(item, currentUser) {
 
     previewCard.className = 'profile-preview-card';
     previewBanner.className = 'preview-banner';
+    previewBanner.style.backgroundImage = '';
+    previewBanner.style.boxShadow = '';
     previewAvatarImg.className = '';
     previewUsername.className = 'preview-username';
     previewTitle.className = 'preview-title';
@@ -180,9 +237,22 @@ function applyShopPreview(item, currentUser) {
     const cssMap = currentUser?.cssMap || buildCssMapFromEquipped(equipped);
     const previewingBanner = item?.category === 'profile_banner';
     const effectiveBannerClass = previewingBanner ? item?.cssClass : cssMap.banner;
+    const effectiveBannerAsset = previewingBanner
+        ? item?.assetPath
+        : (cssMap.bannerAsset || findShopItemById(equipped.banner)?.assetPath || null);
 
     addClassTokens(previewCard, cssMap.profileCard);
     addClassTokens(previewBanner, effectiveBannerClass);
+    if (effectiveBannerAsset) {
+        previewBanner.style.backgroundImage = `url('${effectiveBannerAsset}')`;
+        const accentSourceItem = previewingBanner ? item : findShopItemById(equipped.banner);
+        const accent = getBannerAccent(accentSourceItem);
+        previewBanner.style.setProperty('--banner-glow-rgb', hexToRgbTuple(accent));
+        previewBanner.style.animation = 'premium-banner-glow 2.8s ease-in-out infinite';
+        previewBanner.style.boxShadow = `inset 0 0 0 2px ${hexToRgba(accent, 0.7)}, 0 0 0 1px ${hexToRgba(accent, 0.35)}`;
+    } else {
+        previewBanner.style.animation = '';
+    }
     addClassTokens(previewAvatarImg, cssMap.frame);
     addClassTokens(previewUsername, cssMap.nameStyle);
     addClassTokens(previewChatName, cssMap.nameStyle);
@@ -204,7 +274,7 @@ function applyShopPreview(item, currentUser) {
     }
 
     previewAvatarImg.src = getAvatarUrl(currentUser);
-    previewAvatarImg.onerror = () => { previewAvatarImg.src = '/assets/avatars/Popcat%20Cartoon.jpg'; };
+    previewAvatarImg.onerror = () => { previewAvatarImg.src = '/assets/avatars/default-avatar.svg'; };
 
     previewUsername.textContent = currentUser?.username || 'Username';
     previewChatName.textContent = currentUser?.username || 'Username';
@@ -237,6 +307,8 @@ async function loadShop() {
     if (!itemsData?.success) return;
 
     shopItems = itemsData.items || [];
+    await preloadBannerAccents(shopItems);
+    applyShowcaseThumbAccents();
     renderShop('all');
     renderInventory();
     applyShopPreview(null, userData);
@@ -245,6 +317,12 @@ async function loadShop() {
 function renderShop(category = 'all') {
     activeCategory = category;
     const grid = document.getElementById('shopGrid');
+    const premiumShowcase = document.getElementById('premiumShowcase');
+
+    if (premiumShowcase) {
+        premiumShowcase.style.display = (category === 'all' || category === 'premium') ? 'grid' : 'none';
+    }
+
     const filtered = category === 'all'
         ? shopItems
         : category === 'chat'
@@ -275,8 +353,14 @@ function renderShop(category = 'all') {
             lockReason = `Need ${item.requirement.value}-day streak`;
         }
 
+        const accent = getBannerAccent(item);
+        const bannerStyle = isPremiumMediaBanner(item)
+            ? `border-color:${accent}; box-shadow:4px 4px 0px ${hexToRgba(accent, 0.28)}; animation: premium-banner-glow 2.8s ease-in-out infinite; --banner-glow-rgb:${hexToRgbTuple(accent)};`
+            : '';
+        const lockedStyle = locked ? 'opacity:0.58;' : '';
+
         return `
-            <div class="item-card rarity-${item.rarity} animate-fadeInUp" ${locked ? 'style="opacity:0.58"' : ''}>
+            <div class="item-card rarity-${item.rarity} animate-fadeInUp" style="${bannerStyle}${lockedStyle}">
                 ${owned ? '<div class="owned-badge">OWNED</div>' : ''}
                 <div class="item-emoji">${getCategoryIcon(item)}</div>
                 <div class="item-name ${item.category === 'name_style' || item.category === 'effect' ? (item.cssClass || '') : ''}">${item.name}</div>

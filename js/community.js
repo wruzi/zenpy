@@ -52,9 +52,30 @@ async function fetchUnread() {
 }
 
 function getAvatarUrl(user) {
-    if (!user.image || user.image === 'default-avatar.png') return '/assets/avatars/Popcat%20Cartoon.jpg';
+    if (!user.image || user.image === 'default-avatar.png' || user.image === 'default-avatar.svg') return '/assets/avatars/default-avatar.svg';
     if (user.image.startsWith('http')) return user.image;
     return `/assets/avatars/${user.image}`;
+}
+
+function hexToRgbTuple(hexColor) {
+    const normalized = String(hexColor || '').replace('#', '');
+    if (!/^[0-9a-fA-F]{6}$/.test(normalized)) return '255, 20, 147';
+    const red = parseInt(normalized.slice(0, 2), 16);
+    const green = parseInt(normalized.slice(2, 4), 16);
+    const blue = parseInt(normalized.slice(4, 6), 16);
+    return `${red}, ${green}, ${blue}`;
+}
+
+async function applyDynamicBannerGlow(root = document) {
+    const banners = root.querySelectorAll('.dynamic-banner[data-banner-asset]');
+    await Promise.all(Array.from(banners).map(async (bannerEl) => {
+        const asset = bannerEl.getAttribute('data-banner-asset');
+        if (!asset || typeof getBannerAccentColor !== 'function') return;
+        const accent = await getBannerAccentColor(asset, '#FF1493');
+        bannerEl.style.setProperty('--banner-glow-rgb', hexToRgbTuple(accent));
+        bannerEl.style.animation = 'premium-banner-glow 2.8s ease-in-out infinite';
+        bannerEl.style.boxShadow = `inset 0 0 0 2px rgba(${hexToRgbTuple(accent)}, 0.6), 0 0 20px rgba(${hexToRgbTuple(accent)}, 0.45)`;
+    }));
 }
 
 function renderUsers(users) {
@@ -71,6 +92,9 @@ function renderUsers(users) {
         const frameClass = u.frame || '';
         const cardClass = u.profileCard || '';
         const bannerClass = u.banner || 'banner-default';
+        const bannerInlineStyle = u.bannerAsset
+            ? ` style="background-image:url('${u.bannerAsset}')" data-banner-asset="${u.bannerAsset}"`
+            : '';
         const titleText = u.title && u.title !== 'Newbie' ? `<div style="font-size:0.7rem;color:var(--accent);margin-top:2px;font-weight:bold;">${escapeHTML(u.title)}</div>` : '';
         const socialLinks = [];
         if (u.github) socialLinks.push(`<a href="${escapeHTML(u.github)}" target="_blank" title="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg></a>`);
@@ -79,10 +103,10 @@ function renderUsers(users) {
 
         return `
             <div class="user-card ${cardClass}" style="position: relative;">
-                <div class="profile-banner ${bannerClass}"></div>
+                <div class="profile-banner ${bannerClass} ${u.bannerAsset ? 'dynamic-banner' : ''}"${bannerInlineStyle}></div>
                 ${u.inventory?.owned?.includes('animated_avatar') ? `<div class="card-bg-effect glitch-name" style="position:absolute; inset:0; opacity:0.03; pointer-events:none; z-index:0;"></div>` : ''}
                 <div class="user-card-header" style="position:relative; z-index:1;">
-                    <div class="user-card-avatar ${frameClass}"><img src="${avatarUrl}" alt="" onerror="this.src='/assets/avatars/Popcat%20Cartoon.jpg'"></div>
+                    <div class="user-card-avatar ${frameClass}"><img src="${avatarUrl}" alt="" onerror="this.src='/assets/avatars/default-avatar.svg'"></div>
                     <div>
                         <div class="user-card-name ${nameClass}" style="cursor:pointer;" onclick="viewProfile('${u.email}')">${escapeHTML(u.username)}</div>
                         ${titleText}
@@ -109,6 +133,8 @@ function renderUsers(users) {
                 </div>
             </div>`;
     }).join('');
+
+    applyDynamicBannerGlow(grid);
 }
 
 async function toggleFollow(email, btn) {
@@ -225,6 +251,9 @@ async function viewProfile(email) {
     const frameClass = u.frame || '';
     const cardClass = u.profileCard || '';
     const bannerClass = u.banner || 'banner-default';
+    const bannerInlineStyle = u.bannerAsset
+        ? ` style="background-image:url('${u.bannerAsset}')" data-banner-asset="${u.bannerAsset}"`
+        : '';
 
     const socialLinks = [];
     if (u.github) socialLinks.push(`<a href="${escapeHTML(u.github)}" target="_blank" style="color:var(--text-muted);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg> GitHub</a>`);
@@ -233,9 +262,9 @@ async function viewProfile(email) {
 
     modal.className = `profile-modal ${cardClass}`;
     modal.innerHTML = `
-        <div class="profile-banner profile-modal-banner ${bannerClass}"></div>
+        <div class="profile-banner profile-modal-banner ${bannerClass} ${u.bannerAsset ? 'dynamic-banner' : ''}"${bannerInlineStyle}></div>
         <div style="text-align:center;">
-            <div class="profile-modal-avatar ${frameClass}"><img src="${avatarUrl}" alt="" onerror="this.src='/assets/avatars/Popcat%20Cartoon.jpg'"></div>
+            <div class="profile-modal-avatar ${frameClass}"><img src="${avatarUrl}" alt="" onerror="this.src='/assets/avatars/default-avatar.svg'"></div>
             <h3 class="${nameClass}" style="font-size:1.1rem;margin-bottom:2px;">${escapeHTML(u.username)}</h3>
             <p class="text-muted text-sm">${u.inventory?.equipped?.title || 'Newbie'}</p>
             ${u.bio ? `<p style="font-size:0.85rem;color:var(--text-secondary);margin:8px 0;">${escapeHTML(u.bio)}</p>` : ''}
@@ -265,6 +294,7 @@ async function viewProfile(email) {
     `;
 
     document.getElementById('profileOverlay').classList.add('active');
+    applyDynamicBannerGlow(document.getElementById('profileModal'));
 }
 
 function closeProfile() {

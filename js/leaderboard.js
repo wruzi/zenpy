@@ -105,7 +105,7 @@ function renderTable(leaderboard, type) {
         const rankDisplay = rankIcons[entry.rank] || `<span style="font-weight:700;opacity:0.6;">#${entry.rank}</span>`;
         const nameClass = entry.nameStyle || '';
         const frameClass = entry.frame || '';
-        let avatarUrl = entry.image || '/assets/avatars/Popcat%20Cartoon.jpg';
+        let avatarUrl = entry.image || '/assets/avatars/default-avatar.svg';
         if (!avatarUrl.startsWith('http') && !avatarUrl.startsWith('/')) {
             avatarUrl = `/assets/avatars/${avatarUrl}`;
         }
@@ -114,7 +114,7 @@ function renderTable(leaderboard, type) {
         const userCell = `
             <td>
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <img src="${avatarUrl}" alt="" class="${frameClass}" style="width:28px;height:28px;object-fit:cover;flex-shrink:0;" onerror="this.src='/assets/avatars/Popcat%20Cartoon.jpg'">
+                    <img src="${avatarUrl}" alt="" class="${frameClass}" style="width:28px;height:28px;object-fit:cover;flex-shrink:0;" onerror="this.src='/assets/avatars/default-avatar.svg'">
                     <span class="${nameClass}">${escapeHTML(entry.username)}</span>
                     ${entry.title && entry.title !== 'Newbie' ? `<span class="text-muted text-sm">${entry.title}</span>` : ''}
                 </div>

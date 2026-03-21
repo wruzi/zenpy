@@ -40,7 +40,7 @@ module.exports = function(app) {
         return {
             email,
             username: username || email.split('@')[0],
-            image: avatarUrl || 'Popcat%20Cartoon.jpg',
+            image: avatarUrl || 'default-avatar.svg',
             bio: '',
             joined: now,
             xp: 0,
@@ -179,7 +179,7 @@ module.exports = function(app) {
                     user.providerId = profileId;
                     changed = true;
                 }
-                if (avatarUrl && (!user.image || user.image === 'default-avatar.png' || user.image === 'Popcat Cartoon.jpg' || user.image === 'Popcat%20Cartoon.jpg')) {
+                if (avatarUrl && (!user.image || user.image === 'default-avatar.png' || user.image === 'default-avatar.svg')) {
                     user.image = avatarUrl;
                     changed = true;
                 }

@@ -25,12 +25,12 @@ const avatarUpload = multer({
     storage: avatarStorage,
     limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
     fileFilter: (req, file, cb) => {
-        const allowed = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+        const allowed = ['.png', '.gif', '.webp'];
         const ext = path.extname(file.originalname).toLowerCase();
         if (allowed.includes(ext)) {
             cb(null, true);
         } else {
-            cb(new Error('Only PNG, JPG, GIF, WEBP images are allowed.'));
+            cb(new Error('Only PNG, GIF, WEBP images are allowed.'));
         }
     }
 });
@@ -62,7 +62,7 @@ module.exports = function(app) {
             }
 
             // Delete old avatar if not default
-            if (user.image && user.image !== 'default-avatar.png' && user.image !== 'Popcat Cartoon.jpg' && user.image !== 'Popcat%20Cartoon.jpg' && !user.image.startsWith('http')) {
+            if (user.image && user.image !== 'default-avatar.png' && user.image !== 'default-avatar.svg' && !user.image.startsWith('http')) {
                 const oldPath = path.join(__dirname, '..', 'assets', 'avatars', user.image);
                 if (fs.existsSync(oldPath)) {
                     try { fs.unlinkSync(oldPath); } catch (e) { /* ignore */ }

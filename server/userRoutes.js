@@ -6,8 +6,8 @@ const authMiddleware = require('./middleware/auth');
 const banCheck = require('./middleware/banCheck');
 
 module.exports = function(app) {
-    const { readJSON, writeJSON, getItemCssClass } = app.locals;
-    const DEFAULT_AVATARS = new Set(['default-avatar.png', 'Popcat Cartoon.jpg', 'Popcat%20Cartoon.jpg']);
+    const { readJSON, writeJSON, getItemCssClass, getShopItems, getBannerAsset } = app.locals;
+    const DEFAULT_AVATARS = new Set(['default-avatar.png', 'default-avatar.svg']);
 
     function ensureInventoryShape(user) {
         if (!user.inventory || typeof user.inventory !== 'object') {
@@ -53,6 +53,37 @@ module.exports = function(app) {
         return !!(user.image && !DEFAULT_AVATARS.has(user.image));
     }
 
+    function normalizeSocialHandle(value) {
+        const input = String(value || '').trim();
+        if (!input || input.toLowerCase() === 'linked') return '';
+
+        const cleanedInput = input.replace(/^@+/, '').trim();
+
+        try {
+            const parsed = new URL(cleanedInput.includes('://') ? cleanedInput : `https://${cleanedInput}`);
+            const pathPart = parsed.pathname.replace(/^\/+/, '').split('/')[0];
+            if (pathPart) return pathPart.replace(/^@+/, '');
+        } catch {
+        }
+
+        return cleanedInput.split('/')[0].replace(/^@+/, '').trim();
+    }
+
+    function buildSocialLink(platform, value) {
+        const username = normalizeSocialHandle(value);
+        if (!username) return '';
+
+        const domains = {
+            github: 'https://github.com/',
+            instagram: 'https://instagram.com/',
+            twitter: 'https://x.com/',
+            linkedin: 'https://linkedin.com/in/'
+        };
+
+        const base = domains[platform];
+        return base ? `${base}${username}` : '';
+    }
+
     function buildNameStyleClass(equipped = {}) {
         return [
             getItemCssClass(equipped.nameStyle),
@@ -68,7 +99,8 @@ module.exports = function(app) {
             chatStyle: getItemCssClass(user.inventory?.equipped?.chatExtra) || null,
             chatColor: getItemCssClass(user.inventory?.equipped?.chatColor) || null,
             chatBackground: getItemCssClass(user.inventory?.equipped?.chatBackground) || null,
-            banner: getItemCssClass(user.inventory?.equipped?.banner) || null
+            banner: getItemCssClass(user.inventory?.equipped?.banner) || null,
+            bannerAsset: getBannerAsset(user.inventory?.equipped?.banner) || null
         };
     }
 
@@ -208,8 +240,8 @@ module.exports = function(app) {
         }
 
         if (bio !== undefined) user.bio = bio;
-        if (github !== undefined) user.github = github;
-        if (linkedin !== undefined) user.linkedin = linkedin;
+        if (github !== undefined) user.github = buildSocialLink('github', github);
+        if (linkedin !== undefined) user.linkedin = buildSocialLink('linkedin', linkedin);
 
         writeJSON('users.json', users);
         res.json({ success: true, message: 'Profile updated.', user });
@@ -276,7 +308,7 @@ module.exports = function(app) {
     // ---- SHOP: BUY ITEM ----
     app.post('/api/shop/buy', authMiddleware, (req, res) => {
         const { itemId } = req.body;
-        const shopItems = readJSON('shop_items.json');
+        const shopItems = getShopItems();
         const users = readJSON('users.json');
         const progress = readJSON('progress.json');
         
@@ -343,7 +375,7 @@ module.exports = function(app) {
     app.post('/api/shop/equip', authMiddleware, (req, res) => {
         const { itemId, slot } = req.body;
         const users = readJSON('users.json');
-        const shopItems = readJSON('shop_items.json');
+        const shopItems = getShopItems();
         const user = users.find(u => u.email === req.user.email);
 
         if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
@@ -410,9 +442,9 @@ module.exports = function(app) {
         }
 
         if (bio !== undefined) user.bio = bio;
-        if (github !== undefined) user.github = github;
-        if (instagram !== undefined) user.instagram = instagram;
-        if (twitter !== undefined) user.twitter = twitter;
+        if (github !== undefined) user.github = buildSocialLink('github', github);
+        if (instagram !== undefined) user.instagram = buildSocialLink('instagram', instagram);
+        if (twitter !== undefined) user.twitter = buildSocialLink('twitter', twitter);
 
         writeJSON('users.json', users);
         res.json({ success: true, message: 'Profile updated.', user });
@@ -441,9 +473,9 @@ module.exports = function(app) {
         // We still store the user's choice if provided.
 
         user.username = cleanUsername;
-        if (github !== undefined) user.github = String(github || '').trim();
-        if (instagram !== undefined) user.instagram = String(instagram || '').trim();
-        if (twitter !== undefined) user.twitter = String(twitter || '').trim();
+        if (github !== undefined) user.github = buildSocialLink('github', github);
+        if (instagram !== undefined) user.instagram = buildSocialLink('instagram', instagram);
+        if (twitter !== undefined) user.twitter = buildSocialLink('twitter', twitter);
 
         const nowIso = new Date().toISOString();
         user.profileSetupCompleted = true;
@@ -457,7 +489,7 @@ module.exports = function(app) {
 
     // ---- SHOP: GET ITEMS ----
     app.get('/api/shop/items', authMiddleware, (req, res) => {
-        const shopItems = readJSON('shop_items.json');
+        const shopItems = getShopItems();
         res.json({ success: true, items: shopItems });
     });
 
@@ -548,6 +580,8 @@ module.exports = function(app) {
     // Helper: Check achievements
     function checkAchievements(user, users) {
         const newAchievements = [];
+        if (!Array.isArray(user.achievements)) user.achievements = [];
+        user.chatMessageCount = user.chatMessageCount || 0;
 
         if (user.zen >= 5000 && !user.achievements.includes('rich_kid')) {
             user.achievements.push('rich_kid');
@@ -555,11 +589,25 @@ module.exports = function(app) {
             newAchievements.push('rich_kid');
         }
 
+        if (user.zen >= 12000 && !user.achievements.includes('zen_tycoon')) {
+            user.achievements.push('zen_tycoon');
+            user.xp += 1800;
+            user.zen += 500;
+            newAchievements.push('zen_tycoon');
+        }
+
         if (user.chatMessageCount >= 100 && !user.achievements.includes('social_butterfly')) {
             user.achievements.push('social_butterfly');
             user.xp += 300;
             user.zen += 150;
             newAchievements.push('social_butterfly');
+        }
+
+        if (user.chatMessageCount >= 300 && !user.achievements.includes('chat_champion_300')) {
+            user.achievements.push('chat_champion_300');
+            user.xp += 900;
+            user.zen += 350;
+            newAchievements.push('chat_champion_300');
         }
 
         if (newAchievements.length > 0) {

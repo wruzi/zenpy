@@ -236,6 +236,14 @@ module.exports = function(app) {
                 newAchievements.push({ id: 'speed_demon_10', name: 'Speed Demon', xp: 500, zen: 200 });
             }
 
+            // Nitro Solver (25 questions under 2 min)
+            if (fastSolves >= 25 && !user.achievements.includes('nitro_solver_25')) {
+                user.achievements.push('nitro_solver_25');
+                user.xp += 1400;
+                user.zen += 500;
+                newAchievements.push({ id: 'nitro_solver_25', name: 'Nitro Solver', xp: 1400, zen: 500 });
+            }
+
             // Perfectionist (50 first-attempt solves)
             const firstAttemptSolves = userProgress.questionTimes.filter(qt => qt.attempts === 1).length;
             if (firstAttemptSolves >= 50 && !user.achievements.includes('perfectionist_50')) {
@@ -243,6 +251,14 @@ module.exports = function(app) {
                 user.xp += 2000;
                 user.zen += 500;
                 newAchievements.push({ id: 'perfectionist_50', name: 'Perfectionist', xp: 2000, zen: 500 });
+            }
+
+            // One-Shot Legend (100 first-attempt solves)
+            if (firstAttemptSolves >= 100 && !user.achievements.includes('oneshot_legend_100')) {
+                user.achievements.push('oneshot_legend_100');
+                user.xp += 4500;
+                user.zen += 1200;
+                newAchievements.push({ id: 'oneshot_legend_100', name: 'One-Shot Legend', xp: 4500, zen: 1200 });
             }
 
             // Weekly Warrior (7 day streak)
@@ -259,6 +275,14 @@ module.exports = function(app) {
                 user.xp += 5000;
                 user.zen += 2000;
                 newAchievements.push({ id: 'streak_30', name: 'Zen Master', xp: 5000, zen: 2000 });
+            }
+
+            // Iron Discipline (60 day streak)
+            if (user.streak >= 60 && !user.achievements.includes('streak_60')) {
+                user.achievements.push('streak_60');
+                user.xp += 8000;
+                user.zen += 3500;
+                newAchievements.push({ id: 'streak_60', name: 'Iron Discipline', xp: 8000, zen: 3500 });
             }
 
             // Python God (100 questions)
@@ -285,12 +309,36 @@ module.exports = function(app) {
                 newAchievements.push({ id: 'gpt_engineer_200', name: 'GPT Engineer', xp: 7000, zen: 2200 });
             }
 
+            // Neural Architect (220 questions)
+            if (userProgress.questionTimes.length >= 220 && !user.achievements.includes('neural_architect_220')) {
+                user.achievements.push('neural_architect_220');
+                user.xp += 9000;
+                user.zen += 3000;
+                newAchievements.push({ id: 'neural_architect_220', name: 'Neural Architect', xp: 9000, zen: 3000 });
+            }
+
             // ZenPy Grandmaster (250 questions)
             if (userProgress.questionTimes.length >= 250 && !user.achievements.includes('zenpy_grandmaster_250')) {
                 user.achievements.push('zenpy_grandmaster_250');
                 user.xp += 15000;
                 user.zen += 6000;
                 newAchievements.push({ id: 'zenpy_grandmaster_250', name: 'ZenPy Grandmaster', xp: 15000, zen: 6000 });
+            }
+
+            // XP Titan (50,000 XP)
+            if (user.xp >= 50000 && !user.achievements.includes('xp_titan_50k')) {
+                user.achievements.push('xp_titan_50k');
+                user.xp += 3000;
+                user.zen += 1200;
+                newAchievements.push({ id: 'xp_titan_50k', name: 'XP Titan', xp: 3000, zen: 1200 });
+            }
+
+            // Zen Vault (20,000 Zen)
+            if (user.zen >= 20000 && !user.achievements.includes('zen_vault_20k')) {
+                user.achievements.push('zen_vault_20k');
+                user.xp += 2200;
+                user.zen += 800;
+                newAchievements.push({ id: 'zen_vault_20k', name: 'Zen Vault', xp: 2200, zen: 800 });
             }
 
             // Recalculate level after achievement bonuses

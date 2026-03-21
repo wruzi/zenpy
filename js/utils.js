@@ -2,6 +2,241 @@
 // ZenPy - Utility Functions
 // ============================================
 
+const ZENPY_THEME_KEY = 'zenpy_theme';
+const ZENPY_BANNER_COLOR_CACHE_KEY = 'zenpy_banner_color_cache';
+const ZENPY_THEME_OPTIONS = [
+    { mode: 'dark', label: 'Dark' },
+    { mode: 'light', label: 'Light' },
+    { mode: 'nature', label: 'Nature' },
+    { mode: 'ocean', label: 'Ocean' },
+    { mode: 'sunset', label: 'Sunset' }
+];
+const ZENPY_THEME_MODES = ZENPY_THEME_OPTIONS.map((themeOption) => themeOption.mode);
+
+function getThemeLabel(themeMode) {
+    const option = ZENPY_THEME_OPTIONS.find((themeOption) => themeOption.mode === themeMode);
+    return option?.label || 'Dark';
+}
+
+function applySavedTheme() {
+    const savedTheme = localStorage.getItem(ZENPY_THEME_KEY);
+    const themeMode = ZENPY_THEME_MODES.includes(savedTheme) ? savedTheme : 'dark';
+    applyThemeMode(themeMode);
+}
+
+function saveThemePreference(themeMode) {
+    localStorage.setItem(ZENPY_THEME_KEY, ZENPY_THEME_MODES.includes(themeMode) ? themeMode : 'dark');
+}
+
+function applyThemeMode(themeMode) {
+    const normalizedMode = ZENPY_THEME_MODES.includes(themeMode) ? themeMode : 'dark';
+    document.body.classList.toggle('light-theme', normalizedMode === 'light');
+    document.body.classList.toggle('nature-theme', normalizedMode === 'nature');
+    document.body.classList.toggle('ocean-theme', normalizedMode === 'ocean');
+    document.body.classList.toggle('sunset-theme', normalizedMode === 'sunset');
+    document.body.dataset.themeMode = normalizedMode;
+}
+
+function getCurrentThemeMode() {
+    const activeMode = document.body?.dataset?.themeMode;
+    if (ZENPY_THEME_MODES.includes(activeMode)) return activeMode;
+    if (document.body?.classList.contains('sunset-theme')) return 'sunset';
+    if (document.body?.classList.contains('ocean-theme')) return 'ocean';
+    if (document.body?.classList.contains('nature-theme')) return 'nature';
+    if (document.body?.classList.contains('light-theme')) return 'light';
+    return 'dark';
+}
+
+function getNextThemeMode(currentMode) {
+    const index = ZENPY_THEME_MODES.indexOf(currentMode);
+    return ZENPY_THEME_MODES[(index + 1) % ZENPY_THEME_MODES.length];
+}
+
+function ensureThemeSwitcher() {
+    const host = document.getElementById('themeSwitcherHost');
+    if (!host) return;
+
+    let button = document.getElementById('themeSwitcherButton');
+    if (!button) {
+        button = document.createElement('button');
+        button.id = 'themeSwitcherButton';
+        button.type = 'button';
+        button.className = 'btn theme-switcher theme-switcher-inline';
+        button.addEventListener('click', () => {
+            const nextMode = getNextThemeMode(getCurrentThemeMode());
+            applyThemeMode(nextMode);
+            saveThemePreference(nextMode);
+            button.textContent = `Theme: ${getThemeLabel(nextMode)}`;
+        });
+        host.innerHTML = '';
+        host.appendChild(button);
+    }
+
+    button.textContent = `Theme: ${getThemeLabel(getCurrentThemeMode())}`;
+}
+
+function initSmoothPageTransitions() {
+    if (!document.body) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    document.body.classList.add('page-enter');
+
+    document.addEventListener('click', (event) => {
+        const link = event.target.closest('a[href]');
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+        if (link.hasAttribute('download')) return;
+        if (link.target && link.target !== '_self') return;
+        if (event.defaultPrevented) return;
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+
+        const targetUrl = new URL(link.href, window.location.origin);
+        const currentUrl = new URL(window.location.href);
+        if (targetUrl.origin !== currentUrl.origin) return;
+        if (targetUrl.pathname === currentUrl.pathname && targetUrl.search === currentUrl.search) return;
+
+        event.preventDefault();
+        document.body.classList.remove('page-enter');
+        document.body.classList.add('page-exit');
+        setTimeout(() => {
+            window.location.href = targetUrl.pathname + targetUrl.search + targetUrl.hash;
+        }, 360);
+    }, true);
+}
+
+function normalizeSocialHandle(rawValue = '') {
+    const input = String(rawValue || '').trim();
+    if (!input || input.toLowerCase() === 'linked') return '';
+
+    const cleanedInput = input.replace(/^@+/, '').trim();
+
+    try {
+        const parsed = new URL(cleanedInput.includes('://') ? cleanedInput : `https://${cleanedInput}`);
+        const pathPart = parsed.pathname.replace(/^\/+/, '').split('/')[0];
+        if (pathPart) return pathPart.replace(/^@+/, '');
+    } catch {
+    }
+
+    return cleanedInput.split('/')[0].replace(/^@+/, '').trim();
+}
+
+function buildSocialLink(platform, value = '') {
+    const username = normalizeSocialHandle(value);
+    if (!username) return '';
+
+    const domains = {
+        github: 'https://github.com/',
+        instagram: 'https://instagram.com/',
+        twitter: 'https://x.com/'
+    };
+
+    const base = domains[platform];
+    return base ? `${base}${username}` : '';
+}
+
+function socialHandleFromValue(value = '') {
+    return normalizeSocialHandle(value);
+}
+
+function initThemeSystem() {
+    if (!document.body) return;
+    applySavedTheme();
+    ensureThemeSwitcher();
+    initSmoothPageTransitions();
+}
+
+function hexFromRgb(red, green, blue) {
+    const toHex = (value) => value.toString(16).padStart(2, '0');
+    return `#${toHex(red)}${toHex(green)}${toHex(blue)}`;
+}
+
+function getBannerColorCache() {
+    try {
+        const parsed = JSON.parse(localStorage.getItem(ZENPY_BANNER_COLOR_CACHE_KEY) || '{}');
+        return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch {
+        return {};
+    }
+}
+
+function setBannerColorCache(cache) {
+    localStorage.setItem(ZENPY_BANNER_COLOR_CACHE_KEY, JSON.stringify(cache));
+}
+
+async function extractDominantGifColor(assetPath, fallback = '#ff1493') {
+    return new Promise((resolve) => {
+        const image = new Image();
+        image.crossOrigin = 'anonymous';
+        image.decoding = 'async';
+
+        image.onload = () => {
+            try {
+                const canvas = document.createElement('canvas');
+                const sampleWidth = 40;
+                const sampleHeight = 24;
+                canvas.width = sampleWidth;
+                canvas.height = sampleHeight;
+                const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                if (!ctx) return resolve(fallback);
+
+                ctx.drawImage(image, 0, 0, sampleWidth, sampleHeight);
+                const { data } = ctx.getImageData(0, 0, sampleWidth, sampleHeight);
+
+                let bestScore = -1;
+                let bestColor = fallback;
+
+                for (let i = 0; i < data.length; i += 4) {
+                    const red = data[i];
+                    const green = data[i + 1];
+                    const blue = data[i + 2];
+                    const alpha = data[i + 3];
+                    if (alpha < 32) continue;
+
+                    const maxValue = Math.max(red, green, blue);
+                    const minValue = Math.min(red, green, blue);
+                    const saturation = maxValue === 0 ? 0 : (maxValue - minValue) / maxValue;
+                    const brightness = maxValue / 255;
+
+                    if (brightness < 0.18) continue;
+
+                    const score = saturation * 0.75 + brightness * 0.25;
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestColor = hexFromRgb(red, green, blue);
+                    }
+                }
+
+                resolve(bestColor);
+            } catch {
+                resolve(fallback);
+            }
+        };
+
+        image.onerror = () => resolve(fallback);
+        image.src = assetPath;
+    });
+}
+
+async function getBannerAccentColor(assetPath, fallback = '#ff1493') {
+    if (!assetPath) return fallback;
+
+    const cache = getBannerColorCache();
+    if (cache[assetPath]) return cache[assetPath];
+
+    const color = await extractDominantGifColor(assetPath, fallback);
+    cache[assetPath] = color;
+    setBannerColorCache(cache);
+    return color;
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeSystem);
+} else {
+    initThemeSystem();
+}
+
 // Intercept OAuth Tokens from URL globally before any logic runs
 (function() {
     const params = new URLSearchParams(window.location.search);
@@ -151,15 +386,15 @@ async function setupSidebar() {
             if (u.image && el('sidebarAvatar')) {
                 const img = el('sidebarAvatar').querySelector('img');
                 if (img) {
-                    if (u.image === 'default-avatar.png') {
-                        img.src = '/assets/avatars/Popcat%20Cartoon.jpg';
+                    if (u.image === 'default-avatar.png' || u.image === 'default-avatar.svg') {
+                        img.src = '/assets/avatars/default-avatar.svg';
                     } else if (u.image.startsWith('http')) {
                         img.src = u.image;
                     } else {
                         img.src = `/assets/avatars/${u.image}`;
                     }
                     img.onerror = function() {
-                        this.src = '/assets/avatars/Popcat%20Cartoon.jpg';
+                        this.src = '/assets/avatars/default-avatar.svg';
                     };
                 }
             }

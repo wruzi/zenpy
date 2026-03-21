@@ -16,7 +16,7 @@ module.exports = function(app) {
     }
 
     function getAvatarPath(user) {
-        if (!user.image || user.image === 'default-avatar.png' || user.image === 'Popcat Cartoon.jpg' || user.image === 'Popcat%20Cartoon.jpg') return '/assets/avatars/Popcat%20Cartoon.jpg';
+        if (!user.image || user.image === 'default-avatar.png' || user.image === 'default-avatar.svg') return '/assets/avatars/default-avatar.svg';
         if (user.image.startsWith('http')) return user.image;
         return `/assets/avatars/${user.image}`;
     }

@@ -76,7 +76,7 @@ async function loadDashboard() {
 }
 
 function isDefaultAvatar(image) {
-    return !image || image === 'default-avatar.png' || image === 'Popcat Cartoon.jpg' || image === 'Popcat%20Cartoon.jpg';
+    return !image || image === 'default-avatar.png' || image === 'default-avatar.svg';
 }
 
 function initializeOnboarding(user) {
@@ -92,9 +92,9 @@ function initializeOnboarding(user) {
     const avatarStatus = document.getElementById('onboardAvatarStatus');
 
     if (usernameInput) usernameInput.value = user.username || '';
-    if (githubInput) githubInput.value = user.github && user.github !== 'linked' ? user.github : '';
-    if (instagramInput) instagramInput.value = user.instagram || '';
-    if (twitterInput) twitterInput.value = user.twitter || '';
+    if (githubInput) githubInput.value = socialHandleFromValue(user.github && user.github !== 'linked' ? user.github : '');
+    if (instagramInput) instagramInput.value = socialHandleFromValue(user.instagram || '');
+    if (twitterInput) twitterInput.value = socialHandleFromValue(user.twitter || '');
 
     onboardingAvatarUploaded = !isDefaultAvatar(user.image) && !String(user.image || '').startsWith('http');
     onboardingTermsVisited = false;
@@ -215,9 +215,9 @@ async function completeOnboarding() {
             method: 'POST',
             body: JSON.stringify({
                 username,
-                github: githubInput?.value || '',
-                instagram: instagramInput?.value || '',
-                twitter: twitterInput?.value || '',
+                github: buildSocialLink('github', githubInput?.value || ''),
+                instagram: buildSocialLink('instagram', instagramInput?.value || ''),
+                twitter: buildSocialLink('twitter', twitterInput?.value || ''),
                 termsAccepted: true
             })
         });

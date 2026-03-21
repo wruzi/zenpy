@@ -23,16 +23,19 @@
             border: 1px solid var(--border); border-radius: 10px;
             background: linear-gradient(135deg, rgba(126,243,255,0.08), rgba(255,64,202,0.08));
         }
+        .item-card .item-emoji {
+            transition: var(--transition);
+        }
         .item-emoji svg { width: 22px; height: 22px; display: block; }
         .item-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
         .item-desc {
             font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.5;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            max-height: 2.4em;
-            min-height: 2.3em;
+            min-height: 4.5em;
         }
         .item-price { font-size: 0.9rem; font-weight: 700; color: var(--warning); margin-bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 4px; }
         .item-rarity { margin-bottom: 8px; }
@@ -49,6 +52,104 @@
             color: var(--text-muted); transition: var(--transition); text-transform: uppercase; letter-spacing: 0.04em;
         }
         .category-btn.active, .category-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .premium-banner {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 2px solid var(--border);
+            background: linear-gradient(135deg, rgba(255, 20, 147, 0.08), rgba(30, 144, 255, 0.07));
+            box-shadow: 6px 6px 0px rgba(255, 20, 147, 0.15);
+        }
+        .premium-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .premium-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            padding: 4px 10px;
+            border: 1px solid var(--accent);
+            background: rgba(255, 20, 147, 0.12);
+            color: var(--accent);
+            font-size: 0.68rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .premium-copy h3 {
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .premium-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .premium-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .premium-note {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+        }
+        .premium-note strong { color: var(--warning); font-weight: 700; }
+        .premium-media {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .premium-video {
+            min-height: 220px;
+            border: 2px solid var(--border);
+            background-size: cover;
+            background-position: center;
+            filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.45));
+        }
+        .premium-type {
+            border: 1px solid var(--border);
+            background: rgba(10, 10, 15, 0.55);
+            padding: 10px;
+        }
+        .premium-type h4 {
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+        .premium-type h4 span {
+            color: var(--accent);
+        }
+        .premium-thumbs {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+            width: 100%;
+        }
+        .premium-thumbs img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border: 2px solid var(--border);
+            background: var(--bg-card);
+            transition: var(--transition);
+        }
+        .premium-thumbs img.premium-gif {
+            border-color: var(--warning);
+        }
+        .premium-type { overflow: hidden; }
+        @media (max-width: 1100px) {
+            .premium-thumbs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
         .inv-item {
             display: inline-flex; flex-direction: column; align-items: center;
             padding: 12px; border: 1px solid var(--border); min-width: 100px; text-align: center; font-size: 0.82rem;
@@ -98,7 +199,7 @@
     <div class="app-layout">
         <aside class="sidebar">
             <div class="sidebar-profile">
-                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/avatars/Popcat%20Cartoon.jpg" alt=""></div>
+                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/avatars/default-avatar.svg" alt=""></div>
                 <div class="sidebar-username" id="sidebarUsername">—</div>
                 <div class="sidebar-title" id="sidebarTitle">Newbie</div>
                 <div class="sidebar-stats">
@@ -145,6 +246,32 @@
                 <button class="category-btn" onclick="filterCategory('profile_card')">Cards</button>
             </div>
 
+            <section class="premium-banner" id="premiumShowcase">
+                <div class="premium-copy">
+                    <p class="premium-chip">Premium Drop · New Media</p>
+                    <h3>Elite Banner Collection</h3>
+                    <p class="premium-desc">
+                        Your latest uploads are now packed into a premium-only GIF banner line. These animated banners are built for high-impact profiles, smoother motion presence, and an exclusive identity for top-tier ZenPy players.
+                    </p>
+                    <div class="premium-actions">
+                        <button class="btn btn-primary" onclick="filterCategory('premium')">View Premium Items</button>
+                        <span class="premium-note"><strong>Premium category is now GIF-only with newly added animated banners.</strong></span>
+                    </div>
+                </div>
+                <div class="premium-media">
+                    <div class="premium-video" role="img" aria-label="Premium video preview" style="background-image:url('/assets/shop/premium_video_banner.gif');"></div>
+                    <div class="premium-type">
+                        <h4><span>GIF</span> Banners</h4>
+                        <div class="premium-thumbs">
+                            <img class="premium-gif" src="/assets/shop/premium_video_banner.gif" alt="Premium gif banner 1">
+                            <img class="premium-gif" src="/assets/shop/022.gif" alt="Premium gif banner 2">
+                            <img class="premium-gif" src="/assets/shop/sakuna.gif" alt="Premium gif banner 3">
+                            <img class="premium-gif" src="/assets/shop/zenistu.gif" alt="Premium gif banner 4">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <div class="shop-grid stagger" id="shopGrid">
                 <p class="text-muted">Loading shop...</p>
             </div>
@@ -156,7 +283,7 @@
             <div id="profilePreview" class="profile-preview-card">
                 <div id="previewBanner" class="preview-banner"></div>
                 <div class="preview-profile-row">
-                    <div class="profile-preview-avatar" id="previewAvatar"><img id="previewAvatarImg" src="/assets/avatars/Popcat%20Cartoon.jpg" alt="Preview"></div>
+                    <div class="profile-preview-avatar" id="previewAvatar"><img id="previewAvatarImg" src="/assets/avatars/default-avatar.svg" alt="Preview"></div>
                     <div class="profile-preview-meta">
                         <div class="preview-username" id="previewUsername">Username</div>
                         <div class="preview-userlevel" id="previewUserlevel">Lv. -</div>

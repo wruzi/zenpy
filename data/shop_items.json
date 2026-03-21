@@ -447,6 +447,7 @@
     "rarity": "legendary",
     "price": 8000,
     "cssClass": "banner-video-premium",
+    "assetPath": "/assets/shop/premium_video_banner.gif",
     "requirement": {
       "type": "questions",
       "value": 188
@@ -460,6 +461,7 @@
     "rarity": "legendary",
     "price": 8200,
     "cssClass": "banner-video-022",
+    "assetPath": "/assets/shop/022.gif",
     "requirement": {
       "type": "questions",
       "value": 195
@@ -473,61 +475,24 @@
     "rarity": "legendary",
     "price": 8600,
     "cssClass": "banner-video-sakuna",
+    "assetPath": "/assets/shop/sakuna.gif",
     "requirement": {
       "type": "questions",
       "value": 205
     }
   },
   {
-    "id": "banner_image_fahh",
-    "name": "FAHH Image Banner",
-    "description": "Premium static image banner for your profile card top area.",
+    "id": "banner_video_zenistu",
+    "name": "Zenistu Burst Banner",
+    "description": "Premium animated GIF banner with high-energy motion and bold contrast.",
     "category": "profile_banner",
     "rarity": "legendary",
-    "price": 7800,
-    "cssClass": "banner-image-fahh",
+    "price": 8400,
+    "cssClass": "banner-video-zenistu",
+    "assetPath": "/assets/shop/zenistu.gif",
     "requirement": {
       "type": "questions",
-      "value": 175
-    }
-  },
-  {
-    "id": "banner_image_idiot",
-    "name": "Idiot Image Banner",
-    "description": "Premium image banner style with full-width impact.",
-    "category": "profile_banner",
-    "rarity": "legendary",
-    "price": 7600,
-    "cssClass": "banner-image-idiot",
-    "requirement": {
-      "type": "questions",
-      "value": 170
-    }
-  },
-  {
-    "id": "banner_image_core",
-    "name": "Core Image Banner",
-    "description": "Premium image-based profile banner from your uploaded art.",
-    "category": "profile_banner",
-    "rarity": "legendary",
-    "price": 7900,
-    "cssClass": "banner-image-core",
-    "requirement": {
-      "type": "questions",
-      "value": 180
-    }
-  },
-  {
-    "id": "banner_image_kitigawa",
-    "name": "Kitigawa Image Banner",
-    "description": "Premium portrait image banner with clean full-width presentation.",
-    "category": "profile_banner",
-    "rarity": "legendary",
-    "price": 8100,
-    "cssClass": "banner-image-kitigawa",
-    "requirement": {
-      "type": "questions",
-      "value": 185
+      "value": 198
     }
   },
   {

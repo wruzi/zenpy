@@ -28,7 +28,7 @@
     <div class="app-layout">
         <aside class="sidebar">
             <div class="sidebar-profile">
-                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/avatars/Popcat%20Cartoon.jpg" alt=""></div>
+                <div class="sidebar-avatar" id="sidebarAvatar"><img src="/assets/avatars/default-avatar.svg" alt=""></div>
                 <div class="sidebar-username" id="sidebarUsername">—</div>
                 <div class="sidebar-title" id="sidebarTitle">Newbie</div>
                 <div class="sidebar-stats">
@@ -64,7 +64,7 @@
                 <div>
                     <div class="card profile-avatar-section mb-3">
                         <div class="profile-avatar" id="profileAvatar">
-                            <img src="/assets/avatars/Popcat%20Cartoon.jpg" alt="" id="avatarImg">
+                            <img src="/assets/avatars/default-avatar.svg" alt="" id="avatarImg">
                             <label for="avatarUpload" class="avatar-upload-btn">
                                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
                                 Upload
@@ -82,6 +82,7 @@
                         <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:8px;">Edit Profile</h4>
                         <div class="form-group"><label>Username</label><input type="text" id="editUsername" class="form-control"></div>
                         <div class="form-group"><label>Bio</label><textarea id="editBio" class="form-control" rows="2" placeholder="Tell us about yourself..."></textarea></div>
+                        <div id="themeSwitcherHost" class="mb-1"></div>
                         <button class="btn btn-primary btn-sm w-full" onclick="updateProfile()">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                             Save Changes
@@ -91,16 +92,17 @@
                         <h4 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:8px;">Social Links</h4>
                         <div class="social-link-row">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
-                            <input type="text" id="editGithub" class="form-control" placeholder="https://github.com/username" style="font-size:0.8rem;">
+                            <input type="text" id="editGithub" class="form-control" placeholder="github username" style="font-size:0.8rem;">
                         </div>
                         <div class="social-link-row">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg>
-                            <input type="text" id="editInstagram" class="form-control" placeholder="https://instagram.com/username" style="font-size:0.8rem;">
+                            <input type="text" id="editInstagram" class="form-control" placeholder="instagram username" style="font-size:0.8rem;">
                         </div>
                         <div class="social-link-row">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M4 4l11.73 16H20L8.27 4H4z"/><path d="M4 20l6.77-8.5"/><path d="M20 4l-6.77 8.5"/></svg>
-                            <input type="text" id="editTwitter" class="form-control" placeholder="https://x.com/username" style="font-size:0.8rem;">
+                            <input type="text" id="editTwitter" class="form-control" placeholder="x username" style="font-size:0.8rem;">
                         </div>
+                        <p class="text-muted text-sm" style="margin-bottom:10px;">Enter usernames only. Links are generated automatically.</p>
                         <button class="btn btn-ghost btn-sm w-full mt-1" onclick="updateSocialLinks()">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
                             Save Links
@@ -210,8 +212,8 @@
             const { user, progress } = data;
 
             function resolveAvatarSrc(image) {
-                if (!image || image === 'default-avatar.png' || image === 'Popcat Cartoon.jpg' || image === 'Popcat%20Cartoon.jpg') {
-                    return '/assets/avatars/Popcat%20Cartoon.jpg';
+                if (!image || image === 'default-avatar.png' || image === 'default-avatar.svg') {
+                    return '/assets/avatars/default-avatar.svg';
                 }
                 if (String(image).startsWith('http') || String(image).startsWith('/')) {
                     return image;
@@ -228,9 +230,9 @@
             document.getElementById('profileLevel').textContent = user.level;
             document.getElementById('editUsername').value = user.username;
             document.getElementById('editBio').value = user.bio || '';
-            document.getElementById('editGithub').value = user.github || '';
-            document.getElementById('editInstagram').value = user.instagram || '';
-            document.getElementById('editTwitter').value = user.twitter || '';
+            document.getElementById('editGithub').value = socialHandleFromValue(user.github || '');
+            document.getElementById('editInstagram').value = socialHandleFromValue(user.instagram || '');
+            document.getElementById('editTwitter').value = socialHandleFromValue(user.twitter || '');
             if (progress?.averageTime) document.getElementById('profileAvgTime').textContent = Math.round(progress.averageTime) + 's';
 
             applyEquippedProfileCard(user);
@@ -240,7 +242,7 @@
             if (avatarImg) {
                 avatarImg.src = resolveAvatarSrc(user.image);
                 avatarImg.onerror = function() {
-                    this.src = '/assets/avatars/Popcat%20Cartoon.jpg';
+                    this.src = '/assets/avatars/default-avatar.svg';
                 };
             }
 
@@ -352,12 +354,16 @@
         }
 
         async function updateSocialLinks() {
+            const githubHandle = document.getElementById('editGithub').value;
+            const instagramHandle = document.getElementById('editInstagram').value;
+            const twitterHandle = document.getElementById('editTwitter').value;
+
             const data = await apiCall('/api/user', {
                 method: 'PUT',
                 body: JSON.stringify({
-                    github: document.getElementById('editGithub').value,
-                    instagram: document.getElementById('editInstagram').value,
-                    twitter: document.getElementById('editTwitter').value
+                    github: buildSocialLink('github', githubHandle),
+                    instagram: buildSocialLink('instagram', instagramHandle),
+                    twitter: buildSocialLink('twitter', twitterHandle)
                 })
             });
             if (data?.success) showToast('Links saved!', 'success');

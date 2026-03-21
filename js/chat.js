@@ -76,16 +76,16 @@ function renderMessage(msg) {
     messageText = messageText.replace(/@(\w+)/g, '<span class="mention">@$1</span>');
 
     // Handle avatar
-    let avatarUrl = msg.image || '/assets/avatars/Popcat%20Cartoon.jpg';
-    if (avatarUrl === 'default-avatar.png' || avatarUrl === '/assets/images/default-avatar.png') {
-        avatarUrl = '/assets/avatars/Popcat%20Cartoon.jpg';
+    let avatarUrl = msg.image || '/assets/avatars/default-avatar.svg';
+    if (avatarUrl === 'default-avatar.png' || avatarUrl === 'default-avatar.svg' || avatarUrl === '/assets/images/default-avatar.png') {
+        avatarUrl = '/assets/avatars/default-avatar.svg';
     } else if (!avatarUrl.startsWith('http') && !avatarUrl.startsWith('/')) {
         avatarUrl = `/assets/avatars/${avatarUrl}`;
     }
 
     div.innerHTML = `
         <div class="msg-avatar ${msg.frame || ''}">
-            <img src="${avatarUrl}" alt="" onerror="this.src='/assets/avatars/Popcat%20Cartoon.jpg'">
+            <img src="${avatarUrl}" alt="" onerror="this.src='/assets/avatars/default-avatar.svg'">
         </div>
         <div class="msg-content ${msg.chatStyle || ''}">
             <div class="msg-header">

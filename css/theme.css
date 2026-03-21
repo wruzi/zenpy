@@ -402,6 +402,7 @@ img.vip-border {
 .leader-banner.banner-video-premium,
 .msg-banner.banner-video-premium,
 .preview-banner.banner-video-premium {
+    --banner-glow-rgb: 255, 106, 0;
     background: #06080f;
     background-image: url('/assets/shop/premium_video_banner.gif');
     background-size: cover;
@@ -415,6 +416,7 @@ img.vip-border {
 .leader-banner.banner-video-022,
 .msg-banner.banner-video-022,
 .preview-banner.banner-video-022 {
+    --banner-glow-rgb: 102, 216, 255;
     background: #06080f;
     background-image: url('/assets/shop/022.gif');
     background-size: cover;
@@ -428,6 +430,7 @@ img.vip-border {
 .leader-banner.banner-video-sakuna,
 .msg-banner.banner-video-sakuna,
 .preview-banner.banner-video-sakuna {
+    --banner-glow-rgb: 255, 64, 102;
     background: #06080f;
     background-image: url('/assets/shop/sakuna.gif');
     background-size: cover;
@@ -437,48 +440,18 @@ img.vip-border {
     animation: premium-banner-glow 2.8s ease-in-out infinite;
 }
 
-.profile-banner.banner-image-fahh,
-.leader-banner.banner-image-fahh,
-.msg-banner.banner-image-fahh,
-.preview-banner.banner-image-fahh {
+.profile-banner.banner-video-zenistu,
+.leader-banner.banner-video-zenistu,
+.msg-banner.banner-video-zenistu,
+.preview-banner.banner-video-zenistu {
+    --banner-glow-rgb: 255, 224, 102;
     background: #06080f;
-    background-image: url('/assets/shop/FAHH.png');
+    background-image: url('/assets/shop/zenistu.gif');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-}
-
-.profile-banner.banner-image-idiot,
-.leader-banner.banner-image-idiot,
-.msg-banner.banner-image-idiot,
-.preview-banner.banner-image-idiot {
-    background: #06080f;
-    background-image: url('/assets/shop/idiot.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.profile-banner.banner-image-core,
-.leader-banner.banner-image-core,
-.msg-banner.banner-image-core,
-.preview-banner.banner-image-core {
-    background: #06080f;
-    background-image: url('/assets/shop/image.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.profile-banner.banner-image-kitigawa,
-.leader-banner.banner-image-kitigawa,
-.msg-banner.banner-image-kitigawa,
-.preview-banner.banner-image-kitigawa {
-    background: #06080f;
-    background-image: url('/assets/shop/kitigawa.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    box-shadow: inset 0 0 0 2px rgba(255, 224, 102, 0.55);
+    animation: premium-banner-glow 2.8s ease-in-out infinite;
 }
 
 .profile-banner.banner-color-inferno,
@@ -919,14 +892,15 @@ img.vip-border {
 .leader-banner.banner-default,
 .msg-banner.banner-default,
 .preview-banner.banner-default {
+    --banner-glow-rgb: 255, 106, 0;
     background: linear-gradient(135deg, #1b1c24, #141a24); 
     background-size: cover;
     background-position: center;
 }
 
 @keyframes premium-banner-glow {
-    0%, 100% { box-shadow: inset 0 0 0 2px rgba(255, 106, 0, 0.55), 0 0 18px rgba(255, 106, 0, 0.45); }
-    50% { box-shadow: inset 0 0 0 2px rgba(255, 106, 0, 0.8), 0 0 26px rgba(255, 106, 0, 0.75); }
+    0%, 100% { box-shadow: inset 0 0 0 2px rgba(var(--banner-glow-rgb, 255, 106, 0), 0.55), 0 0 18px rgba(var(--banner-glow-rgb, 255, 106, 0), 0.45); }
+    50% { box-shadow: inset 0 0 0 2px rgba(var(--banner-glow-rgb, 255, 106, 0), 0.8), 0 0 26px rgba(var(--banner-glow-rgb, 255, 106, 0), 0.75); }
 }
 
 @keyframes banner-wave {

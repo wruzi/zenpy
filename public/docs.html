@@ -8,55 +8,80 @@
     <link rel="stylesheet" href="/css/theme.css">
     <link rel="stylesheet" href="/css/animations.css">
     <style>
-        .docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
-        .docs-card {
+        .docs-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 14px;
+            align-items: start;
+        }
+        .docs-toc {
             border: 1px solid var(--border);
-            background: linear-gradient(165deg, rgba(14, 20, 34, 0.92), rgba(8, 12, 22, 0.92));
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 14px;
+        }
+        .docs-toc h4 {
+            margin-bottom: 8px;
+            font-size: 0.82rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .docs-toc a {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            padding: 6px 8px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-bottom: 4px;
+        }
+        .docs-toc a:hover {
+            border-color: var(--border);
+            color: var(--accent);
+        }
+        .docs-content { display: grid; gap: 12px; }
+        .docs-section {
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 14px;
             box-shadow: var(--shadow);
         }
-        .docs-card h4 {
-            font-size: 0.84rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--accent);
+        .docs-section h3 {
             margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 0.95rem;
+            color: var(--accent);
         }
-        .docs-card p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px; }
-        .docs-card pre {
+        .docs-section p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin-bottom: 8px;
+        }
+        .docs-section pre {
             margin: 0;
             border: 1px solid var(--border);
-            background: rgba(5, 10, 18, 0.85);
             border-radius: 8px;
             padding: 10px;
             font-size: 0.76rem;
             line-height: 1.7;
-            color: #b9ffd6;
             overflow-x: auto;
         }
         .docs-intro {
             padding: 14px;
             border: 1px solid var(--border);
             border-radius: 12px;
-            background: linear-gradient(120deg, rgba(30, 144, 255, 0.14), rgba(255, 20, 147, 0.1));
-            margin-bottom: 14px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            font-size: 0.83rem;
+            line-height: 1.65;
         }
-        .docs-index {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 14px;
-        }
-        .docs-index span {
-            padding: 4px 8px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 0.72rem;
-            color: var(--text-muted);
+        @media (max-width: 980px) {
+            .docs-layout { grid-template-columns: 1fr; }
+            .docs-toc { position: static; }
         }
     </style>
 </head>
@@ -93,159 +118,169 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                     Python Documentation
                 </h2>
-                <span class="badge">Comprehensive Reference</span>
+                <span class="badge">MDN Style Guide</span>
             </div>
 
             <div class="docs-intro">
-                Covers Python fundamentals, data structures, OOP, errors, files, modules, async, typing, and practical examples for ZenPy learners.
+                Structured reference for ZenPy phases 0-15. Use the left index to jump to concept blocks, then practice in compiler with the linked phase goals. Each section contains concise rules and one runnable Python snippet.
             </div>
 
-            <div class="docs-index">
-                <span>Syntax</span><span>Types</span><span>Control Flow</span><span>Functions</span><span>OOP</span><span>Collections</span><span>Exceptions</span><span>Files</span><span>Modules</span><span>Decorators</span><span>Async</span><span>Typing</span>
-            </div>
+            <div class="docs-layout">
+                <aside class="docs-toc">
+                    <h4>On This Page</h4>
+                    <a href="#syntax">Syntax & Variables</a>
+                    <a href="#control">Control Flow</a>
+                    <a href="#functions">Functions</a>
+                    <a href="#collections">Collections</a>
+                    <a href="#oop">OOP</a>
+                    <a href="#io">File I/O</a>
+                    <a href="#errors">Exceptions</a>
+                    <a href="#stats">Math & Stats</a>
+                    <a href="#token">Tokenization</a>
+                    <a href="#sequence">Sequence Modeling</a>
+                    <a href="#attention">Attention Basics</a>
+                    <a href="#tips">Practice Rules</a>
+                </aside>
 
-            <div class="docs-grid">
-                <section class="docs-card">
-                    <h4>Variables & Types</h4>
-                    <p>Python is dynamically typed. Use readable names and avoid single-letter variables in production code.</p>
-                    <pre>name = "ZenPy"
-age = 21
-pi = 3.14159
-active = True
-skills = ["loops", "functions"]
-profile = {"level": 4, "xp": 1250}</pre>
-                </section>
+                <div class="docs-content">
+                    <section id="syntax" class="docs-section">
+                        <h3>Syntax & Variables (Phase 0-1)</h3>
+                        <p>Use indentation, readable variable names, and explicit output formatting. This foundation maps to early ZenPy loops and condition drills.</p>
+                        <pre>username = "zen_coder"
+level = 3
+xp = 720
 
-                <section class="docs-card">
-                    <h4>Control Flow</h4>
-                    <p>Use indentation consistently. Prefer clear branches over deeply nested conditions.</p>
-                    <pre>if xp >= 1000:
-    rank = "Pro"
-elif xp >= 300:
-    rank = "Intermediate"
+print(f"{username} | Lv{level} | XP {xp}")</pre>
+                    </section>
+
+                    <section id="control" class="docs-section">
+                        <h3>Control Flow (Phase 1)</h3>
+                        <p>Use if/elif/else for branching and loops for deterministic computation. Prefer linear logic over deep nesting.</p>
+                        <pre>score = 78
+if score >= 90:
+    rank = "A"
+elif score >= 70:
+    rank = "B"
 else:
-    rank = "Beginner"
+    rank = "C"
 
-for index in range(1, 6):
-    print(index)</pre>
-                </section>
+for i in range(1, 4):
+    print(i, rank)</pre>
+                    </section>
 
-                <section class="docs-card">
-                    <h4>Functions</h4>
-                    <p>Use docstrings and type hints for maintainability.</p>
-                    <pre>def solve_score(correct: int, speed_bonus: int = 0) -> int:
-    """Return XP score for a solved problem."""
-    base = 25 * correct
-    return base + speed_bonus
+                    <section id="functions" class="docs-section">
+                        <h3>Functions (Phase 2)</h3>
+                        <p>Write small, testable functions. Return values instead of printing from every helper.</p>
+                        <pre>def ap_nth(a: int, d: int, n: int) -> int:
+    return a + (n - 1) * d
 
-print(solve_score(4, speed_bonus=10))</pre>
-                </section>
+print(ap_nth(2, 3, 5))</pre>
+                    </section>
 
-                <section class="docs-card">
-                    <h4>Comprehensions</h4>
-                    <p>Comprehensions are concise and fast for mapping/filtering collections.</p>
-                    <pre>numbers = [1, 2, 3, 4, 5, 6]
-squares = [number ** 2 for number in numbers]
-fast = [time for time in [14, 22, 31, 18] if time &lt; 20]</pre>
-                </section>
+                    <section id="collections" class="docs-section">
+                        <h3>Collections & Frequency Maps (Phase 3-4)</h3>
+                        <p>Lists support ordered iteration; dictionaries power frequency counting and fast lookups for many interview-style tasks.</p>
+                        <pre>text = "banana"
+freq = {}
+for ch in text:
+    freq[ch] = freq.get(ch, 0) + 1
 
-                <section class="docs-card">
-                    <h4>Classes (OOP)</h4>
-                    <p>Use classes when behavior and state should live together.</p>
-                    <pre>class User:
-    def __init__(self, username: str, level: int = 1):
-        self.username = username
-        self.level = level
+print(freq["a"])</pre>
+                    </section>
 
-    def level_up(self) -> None:
-        self.level += 1
+                    <section id="oop" class="docs-section">
+                        <h3>OOP Basics (Phase 4)</h3>
+                        <p>Use classes for cohesive state + behavior. Keep methods focused and side effects explicit.</p>
+                        <pre>class Counter:
+    def __init__(self):
+        self.value = 0
 
-u = User("coder")
-u.level_up()</pre>
-                </section>
+    def add(self, step=1):
+        self.value += step
 
-                <section class="docs-card">
-                    <h4>Collections</h4>
-                    <p>Pick the right type: list (order), set (unique), dict (key-value), tuple (immutable).</p>
-                    <pre>tags = {"python", "algorithms", "python"}
-# {'python', 'algorithms'}
+c = Counter()
+c.add(4)
+print(c.value)</pre>
+                    </section>
 
-counts = {"easy": 12, "medium": 7}
-counts["hard"] = counts.get("hard", 0) + 1</pre>
-                </section>
+                    <section id="io" class="docs-section">
+                        <h3>File I/O (Phase 4)</h3>
+                        <p>Always use context managers so resources close even if runtime errors occur.</p>
+                        <pre>with open("result.txt", "w", encoding="utf-8") as file:
+    file.write("ZenPy practice log\n")
 
-                <section class="docs-card">
-                    <h4>Exceptions</h4>
-                    <p>Catch expected errors and keep exception blocks specific.</p>
-                    <pre>try:
-    value = int("42")
-except ValueError as error:
-    print("Invalid number", error)
+with open("result.txt", "r", encoding="utf-8") as file:
+    print(file.read().strip())</pre>
+                    </section>
+
+                    <section id="errors" class="docs-section">
+                        <h3>Exceptions (All Phases)</h3>
+                        <p>Catch only expected failures and preserve useful messages for debugging.</p>
+                        <pre>raw = "42"
+try:
+    value = int(raw)
+except ValueError:
+    print("Invalid integer")
 else:
-    print("OK", value)
-finally:
-    print("Done")</pre>
-                </section>
+    print(value)</pre>
+                    </section>
 
-                <section class="docs-card">
-                    <h4>File Handling</h4>
-                    <p>Use context managers (`with`) so files are always closed safely.</p>
-                    <pre>with open("notes.txt", "w", encoding="utf-8") as file:
-    file.write("Practice daily\n")
+                    <section id="stats" class="docs-section">
+                        <h3>Math & Stats (Phase 10-12)</h3>
+                        <p>Many new questions rely on mean, variance, probability formulas, and safe float formatting.</p>
+                        <pre>nums = [1, 2, 3, 4, 5]
+mean = sum(nums) / len(nums)
+var = sum((x - mean) ** 2 for x in nums) / len(nums)
+print(f"{mean:.2f}")
+print(f"{var:.4f}")</pre>
+                    </section>
 
-with open("notes.txt", "r", encoding="utf-8") as file:
-    content = file.read()</pre>
-                </section>
+                    <section id="token" class="docs-section">
+                        <h3>Tokenization & Vocabulary (Phase 13)</h3>
+                        <p>Lowercase + split is a minimal tokenizer. Build stable token-to-id maps using first occurrence order.</p>
+                        <pre>sentence = "Build Better Models"
+tokens = sentence.lower().split()
+vocab = {}
+for token in tokens:
+    if token not in vocab:
+        vocab[token] = len(vocab)
+print(tokens)
+print(vocab)</pre>
+                    </section>
 
-                <section class="docs-card">
-                    <h4>Modules & Packages</h4>
-                    <p>Split code by responsibility and import only what you need.</p>
-                    <pre>import math
-from datetime import datetime
+                    <section id="sequence" class="docs-section">
+                        <h3>Sequence Windows (Phase 14)</h3>
+                        <p>Create context-target pairs by shifting windows. This pattern is the backbone of next-token prediction tasks.</p>
+                        <pre>ids = [5, 6, 7, 8, 9]
+window = 3
+for i in range(len(ids) - window):
+    context = ids[i:i + window]
+    target = ids[i + window]
+    print(context, "->", target)</pre>
+                    </section>
 
-radius = 5
-area = math.pi * radius ** 2
-print(datetime.now(), area)</pre>
-                </section>
+                    <section id="attention" class="docs-section">
+                        <h3>Attention Basics (Phase 15)</h3>
+                        <p>Start from dot product, then scale by sqrt(d). Keep implementation explicit before optimization.</p>
+                        <pre>q = [1, 2, 3]
+k = [4, 5, 6]
+dot = sum(a * b for a, b in zip(q, k))
+d = len(q)
+scaled = dot / (d ** 0.5)
+print(dot)
+print(f"{scaled:.4f}")</pre>
+                    </section>
 
-                <section class="docs-card">
-                    <h4>Decorators</h4>
-                    <p>Decorators wrap functions for logging, auth checks, caching, and timing.</p>
-                    <pre>def logger(fn):
-    def wrapped(*args, **kwargs):
-        print("Calling", fn.__name__)
-        return fn(*args, **kwargs)
-    return wrapped
-
-@logger
-def greet(name):
-    return f"Hi {name}"</pre>
-                </section>
-
-                <section class="docs-card">
-                    <h4>Async / Await</h4>
-                    <p>Use `asyncio` for I/O-bound tasks (network, file, APIs).</p>
-                    <pre>import asyncio
-
-async def fetch_mock():
-    await asyncio.sleep(1)
-    return "done"
-
-result = asyncio.run(fetch_mock())</pre>
-                </section>
-
-                <section class="docs-card">
-                    <h4>Type Hints & Dataclasses</h4>
-                    <p>Type hints improve readability and editor support.</p>
-                    <pre>from dataclasses import dataclass
-
-@dataclass
-class Progress:
-    question: int
-    xp: int
-
-record = Progress(question=12, xp=430)</pre>
-                </section>
+                    <section id="tips" class="docs-section">
+                        <h3>Practice Rules</h3>
+                        <p>Read input carefully, print exactly expected output, use hints only when blocked, and re-run tests locally before submit. Every 10 first-time solves now grants a Zen bonus, so consistency matters.</p>
+                        <pre># Submission checklist
+# 1) Parse input correctly
+# 2) Return/print exact format
+# 3) Handle edge cases
+# 4) Keep code clean and deterministic</pre>
+                    </section>
+                </div>
             </div>
         </main>
     </div>

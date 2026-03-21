@@ -7,6 +7,7 @@ const authMiddleware = require('./middleware/auth');
 
 module.exports = function(app) {
     const { readJSON, writeJSON } = app.locals;
+    const normalizeOutput = (text) => String(text || '').replace(/\r\n/g, '\n').trim();
 
     // ---- GET ALL QUESTIONS (list view) ----
     app.get('/api/questions', authMiddleware, (req, res) => {
@@ -26,7 +27,7 @@ module.exports = function(app) {
             completed: userProgress ? userProgress.questionTimes.some(qt => qt.q === q.id) : false
         }));
 
-        res.json({ success: true, questions: questionList, currentQuestion: currentQ });
+        res.json({ success: true, questions: questionList, currentQuestion: currentQ, totalQuestions: questions.length });
     });
 
     // ---- GET SINGLE QUESTION ----
@@ -81,7 +82,7 @@ module.exports = function(app) {
         try {
             const questionId = parseInt(req.params.id);
             const { results, timeTaken } = req.body;
-            // results = array of { passed: boolean } from client-side Pyodide execution
+            // results = array of raw execution outputs/errors from client-side Pyodide execution
 
             const questions = readJSON('questions.json');
             const question = questions.find(q => q.id === questionId);
@@ -98,8 +99,41 @@ module.exports = function(app) {
                 return res.status(404).json({ success: false, message: 'User not found.' });
             }
 
-            // Check all tests passed
-            const allPassed = results && results.every(r => r.passed);
+            const submittedResults = Array.isArray(results) ? results : [];
+            const expectedTests = question.testCases || [];
+            if (submittedResults.length !== expectedTests.length) {
+                return res.json({
+                    success: true,
+                    passed: false,
+                    message: 'Invalid test submission. Please retry.'
+                });
+            }
+
+            const allPassed = expectedTests.every((test, index) => {
+                const result = submittedResults[index] || {};
+                const output = normalizeOutput(result.output);
+                const hasError = !!result.error;
+
+                if (test.type === 'compile_only') {
+                    return !hasError;
+                }
+
+                if (hasError) {
+                    return false;
+                }
+
+                if (test.type === 'output_contains') {
+                    return output.includes(String(test.mustContain || '').trim());
+                }
+
+                if (test.type === 'line_count') {
+                    const lineCount = output ? output.split('\n').filter(Boolean).length : 0;
+                    return lineCount === Number(test.expectedLines || 0);
+                }
+
+                return output === normalizeOutput(test.expectedOutput);
+            });
+
             if (!allPassed) {
                 return res.json({
                     success: true,
@@ -153,8 +187,16 @@ module.exports = function(app) {
                 userProgress.totalTime = userProgress.questionTimes.reduce((s, qt) => s + qt.time, 0);
                 userProgress.averageTime = userProgress.totalTime / userProgress.questionTimes.length;
 
-                // Check completion (all 100 done)
-                if (userProgress.questionTimes.length >= 100) {
+                const solvedCount = userProgress.questionTimes.length;
+
+                // Solve milestone bonus: +1000 Zen every 10 first-time solves
+                if (solvedCount > 0 && solvedCount % 10 === 0) {
+                    user.zen += 1000;
+                    zenEarned += 1000;
+                }
+
+                // Check completion (all 250 done)
+                if (solvedCount >= 250) {
                     userProgress.completed = true;
                     userProgress.completedDate = new Date().toISOString();
                 }
@@ -227,6 +269,30 @@ module.exports = function(app) {
                 newAchievements.push({ id: 'completionist', name: 'Python God', xp: 10000, zen: 5000 });
             }
 
+            // GPT Apprentice (150 questions)
+            if (userProgress.questionTimes.length >= 150 && !user.achievements.includes('gpt_apprentice_150')) {
+                user.achievements.push('gpt_apprentice_150');
+                user.xp += 4000;
+                user.zen += 1200;
+                newAchievements.push({ id: 'gpt_apprentice_150', name: 'GPT Apprentice', xp: 4000, zen: 1200 });
+            }
+
+            // GPT Engineer (200 questions)
+            if (userProgress.questionTimes.length >= 200 && !user.achievements.includes('gpt_engineer_200')) {
+                user.achievements.push('gpt_engineer_200');
+                user.xp += 7000;
+                user.zen += 2200;
+                newAchievements.push({ id: 'gpt_engineer_200', name: 'GPT Engineer', xp: 7000, zen: 2200 });
+            }
+
+            // ZenPy Grandmaster (250 questions)
+            if (userProgress.questionTimes.length >= 250 && !user.achievements.includes('zenpy_grandmaster_250')) {
+                user.achievements.push('zenpy_grandmaster_250');
+                user.xp += 15000;
+                user.zen += 6000;
+                newAchievements.push({ id: 'zenpy_grandmaster_250', name: 'ZenPy Grandmaster', xp: 15000, zen: 6000 });
+            }
+
             // Recalculate level after achievement bonuses
             user.level = Math.floor(user.xp / 250) + 1;
 
@@ -272,7 +338,18 @@ module.exports = function(app) {
 
         res.json({
             success: true,
-            testCases: question.testCases
+            testCases: (question.testCases || []).map(test => {
+                if (test.type === 'compile_only') {
+                    return { type: 'compile_only', description: test.description || 'Code must compile and run.' };
+                }
+                if (test.type === 'output_contains') {
+                    return { type: 'output_contains', input: test.input || '', mustContain: test.mustContain || '', hidden: !!test.hidden };
+                }
+                if (test.type === 'line_count') {
+                    return { type: 'line_count', input: test.input || '', expectedLines: test.expectedLines || 0, hidden: !!test.hidden };
+                }
+                return { input: test.input || '', hidden: !!test.hidden };
+            })
         });
     });
 };

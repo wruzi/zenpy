@@ -19,7 +19,7 @@
     "cssClass": "gold-name",
     "requirement": {
       "type": "questions",
-      "value": 10
+      "value": 25
     }
   },
   {
@@ -32,7 +32,7 @@
     "cssClass": "rainbow-name",
     "requirement": {
       "type": "questions",
-      "value": 30
+      "value": 75
     }
   },
   {
@@ -45,7 +45,7 @@
     "cssClass": "fire-name",
     "requirement": {
       "type": "questions",
-      "value": 15
+      "value": 27
     }
   },
   {
@@ -58,7 +58,7 @@
     "cssClass": "cyberpunk-name",
     "requirement": {
       "type": "questions",
-      "value": 40
+      "value": 88
     }
   },
   {
@@ -71,7 +71,7 @@
     "cssClass": "glitch-name",
     "requirement": {
       "type": "questions",
-      "value": 60
+      "value": 150
     }
   },
   {
@@ -97,7 +97,7 @@
     "cssClass": "sparkle-name",
     "requirement": {
       "type": "questions",
-      "value": 50
+      "value": 110
     }
   },
   {
@@ -120,7 +120,7 @@
     "cssClass": "neon-frame",
     "requirement": {
       "type": "questions",
-      "value": 10
+      "value": 25
     }
   },
   {
@@ -143,7 +143,7 @@
     "cssClass": "crown-frame",
     "requirement": {
       "type": "questions",
-      "value": 80
+      "value": 200
     }
   },
   {
@@ -169,7 +169,7 @@
     "cssClass": "custom-title",
     "requirement": {
       "type": "questions",
-      "value": 45
+      "value": 99
     }
   },
   {
@@ -182,7 +182,7 @@
     "cssClass": "animated-avatar",
     "requirement": {
       "type": "questions",
-      "value": 25
+      "value": 75
     }
   },
   {
@@ -195,7 +195,7 @@
     "cssClass": "prism-frame",
     "requirement": {
       "type": "questions",
-      "value": 48
+      "value": 106
     }
   },
   {
@@ -234,7 +234,7 @@
     "cssClass": "arcane-frame",
     "requirement": {
       "type": "questions",
-      "value": 92
+      "value": 230
     }
   },
   {
@@ -247,7 +247,7 @@
     "cssClass": "chat-neon",
     "requirement": {
       "type": "questions",
-      "value": 25
+      "value": 45
     }
   },
   {
@@ -296,7 +296,7 @@
     "cssClass": "chat-text-mint",
     "requirement": {
       "type": "questions",
-      "value": 20
+      "value": 36
     }
   },
   {
@@ -345,7 +345,7 @@
     "cssClass": "chat-bg-matrix",
     "requirement": {
       "type": "questions",
-      "value": 22
+      "value": 40
     }
   },
   {
@@ -397,7 +397,7 @@
     "cssClass": "title-legend",
     "requirement": {
       "type": "questions",
-      "value": 90
+      "value": 225
     }
   },
   {
@@ -410,7 +410,7 @@
     "cssClass": "banner-nebula",
     "requirement": {
       "type": "questions",
-      "value": 55
+      "value": 121
     }
   },
   {
@@ -449,7 +449,7 @@
     "cssClass": "banner-video-premium",
     "requirement": {
       "type": "questions",
-      "value": 75
+      "value": 188
     }
   },
   {
@@ -462,7 +462,7 @@
     "cssClass": "banner-video-022",
     "requirement": {
       "type": "questions",
-      "value": 78
+      "value": 195
     }
   },
   {
@@ -475,7 +475,7 @@
     "cssClass": "banner-video-sakuna",
     "requirement": {
       "type": "questions",
-      "value": 82
+      "value": 205
     }
   },
   {
@@ -488,7 +488,7 @@
     "cssClass": "banner-image-fahh",
     "requirement": {
       "type": "questions",
-      "value": 70
+      "value": 175
     }
   },
   {
@@ -501,7 +501,7 @@
     "cssClass": "banner-image-idiot",
     "requirement": {
       "type": "questions",
-      "value": 68
+      "value": 170
     }
   },
   {
@@ -514,7 +514,7 @@
     "cssClass": "banner-image-core",
     "requirement": {
       "type": "questions",
-      "value": 72
+      "value": 180
     }
   },
   {
@@ -527,7 +527,7 @@
     "cssClass": "banner-image-kitigawa",
     "requirement": {
       "type": "questions",
-      "value": 74
+      "value": 185
     }
   },
   {
@@ -580,7 +580,7 @@
     "cssClass": "banner-equation-sim",
     "requirement": {
       "type": "questions",
-      "value": 50
+      "value": 110
     }
   },
   {
@@ -593,7 +593,7 @@
     "cssClass": "banner-physics-sim",
     "requirement": {
       "type": "questions",
-      "value": 54
+      "value": 119
     }
   },
   {
@@ -606,7 +606,7 @@
     "cssClass": "banner-physics-sim physics-theme-orbital",
     "requirement": {
       "type": "questions",
-      "value": 58
+      "value": 128
     }
   },
   {
@@ -619,7 +619,7 @@
     "cssClass": "banner-physics-sim physics-theme-collider",
     "requirement": {
       "type": "questions",
-      "value": 62
+      "value": 136
     }
   },
   {
@@ -658,7 +658,7 @@
     "cssClass": "banner-physics-sim physics-theme-reactor",
     "requirement": {
       "type": "questions",
-      "value": 72
+      "value": 180
     }
   },
   {
@@ -671,7 +671,7 @@
     "cssClass": "banner-physics-sim physics-theme-wormhole",
     "requirement": {
       "type": "questions",
-      "value": 84
+      "value": 210
     }
   },
   {
@@ -723,7 +723,7 @@
     "cssClass": "card-hacker",
     "requirement": {
       "type": "questions",
-      "value": 40
+      "value": 72
     }
   },
   {
@@ -749,7 +749,7 @@
     "cssClass": "card-aurora",
     "requirement": {
       "type": "questions",
-      "value": 55
+      "value": 121
     }
   },
   {
@@ -788,7 +788,7 @@
     "cssClass": "card-neon",
     "requirement": {
       "type": "questions",
-      "value": 35
+      "value": 77
     }
   },
   {
@@ -814,7 +814,7 @@
     "cssClass": "card-orion",
     "requirement": {
       "type": "questions",
-      "value": 70
+      "value": 154
     }
   }
 ]

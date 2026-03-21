@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-[]
-=======
 [
   {
     "email": "chetangaud20@yahoo.com",
@@ -115,4 +112,3 @@
     "completedDate": null
   }
 ]
->>>>>>> d508c30 (Add OTP auth flow, reset JSON data, and update README)

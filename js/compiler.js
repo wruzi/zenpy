@@ -9,6 +9,7 @@ let pyodide = null;
 let editor = null;
 let currentQuestion = null;
 let currentQuestionId = 1;
+let totalQuestions = 250;
 let timerInterval = null;
 let secondsElapsed = 0;
 let copyAttempts = parseInt(localStorage.getItem('zenpy_copyAttempts')) || 0;
@@ -310,7 +311,7 @@ sys.stdout = StringIO()
 sys.stderr = StringIO()
 `);
                     await pyodide.runPythonAsync(code);
-                    results.push({ passed: true });
+                    results.push({ output: '', error: null, type: 'compile_only' });
 
                     testResultsEl.innerHTML += `
                         <div class="test-case passed">
@@ -320,7 +321,7 @@ sys.stderr = StringIO()
                             </div>
                         </div>`;
                 } catch (err) {
-                    results.push({ passed: false });
+                    results.push({ output: '', error: err.message, type: 'compile_only' });
                     testResultsEl.innerHTML += `
                         <div class="test-case failed">
                             <span class="test-icon">${failIcon}</span>
@@ -341,7 +342,7 @@ sys.stderr = StringIO()
                     await pyodide.runPythonAsync(code);
                     const output = pyodide.runPython('sys.stdout.getvalue()');
                     const passed = output && output.includes(test.mustContain);
-                    results.push({ passed });
+                    results.push({ output: output || '', error: null, type: 'output_contains' });
 
                     testResultsEl.innerHTML += `
                         <div class="test-case ${passed ? 'passed' : 'failed'}">
@@ -352,7 +353,7 @@ sys.stderr = StringIO()
                             </div>
                         </div>`;
                 } catch (err) {
-                    results.push({ passed: false });
+                    results.push({ output: '', error: err.message, type: 'output_contains' });
                     testResultsEl.innerHTML += `
                         <div class="test-case failed">
                             <span class="test-icon">${failIcon}</span>
@@ -373,19 +374,19 @@ sys.stderr = StringIO()
                     await pyodide.runPythonAsync(code);
                     const output = pyodide.runPython('sys.stdout.getvalue()');
                     const lines = output.trim().split('\n').filter(l => l.length > 0);
-                    const passed = lines.length >= test.expectedLines;
-                    results.push({ passed });
+                    const passed = lines.length === test.expectedLines;
+                    results.push({ output: output || '', error: null, type: 'line_count' });
 
                     testResultsEl.innerHTML += `
                         <div class="test-case ${passed ? 'passed' : 'failed'}">
                             <span class="test-icon">${passed ? passIcon : failIcon}</span>
                             <div>
                                 <strong>Line Count</strong> ${passed ? 'Passed' : 'Failed'}
-                                ${!passed ? `<div class="test-details">Expected at least ${test.expectedLines} lines, got ${lines.length}</div>` : ''}
+                                ${!passed ? `<div class="test-details">Expected ${test.expectedLines} lines, got ${lines.length}</div>` : ''}
                             </div>
                         </div>`;
                 } catch (err) {
-                    results.push({ passed: false });
+                    results.push({ output: '', error: err.message, type: 'line_count' });
                     testResultsEl.innerHTML += `
                         <div class="test-case failed">
                             <span class="test-icon">${failIcon}</span>
@@ -420,20 +421,17 @@ def input(prompt=''):
 
                 await pyodide.runPythonAsync(code);
                 const output = pyodide.runPython('sys.stdout.getvalue()');
-                const expected = test.expectedOutput;
-                const passed = output.trim() === expected.trim();
-                results.push({ passed });
+                results.push({ output: output || '', error: null });
 
                 testResultsEl.innerHTML += `
-                    <div class="test-case ${passed ? 'passed' : 'failed'}">
-                        <span class="test-icon">${passed ? passIcon : failIcon}</span>
+                    <div class="test-case passed">
+                        <span class="test-icon">${passIcon}</span>
                         <div>
-                            <strong>Test ${i + 1}</strong> ${passed ? 'Passed' : 'Failed'}
-                            ${!passed ? `<div class="test-details">Expected: ${escapeHTML(expected.trim())}<br>Got: ${escapeHTML(output.trim())}</div>` : ''}
+                            <strong>Test ${i + 1}</strong> Executed
                         </div>
                     </div>`;
             } catch (err) {
-                results.push({ passed: false });
+                results.push({ output: '', error: err.message });
                 testResultsEl.innerHTML += `
                     <div class="test-case failed">
                         <span class="test-icon">${failIcon}</span>
@@ -443,7 +441,6 @@ def input(prompt=''):
         }
 
         // Submit results to server
-        const allPassed = results.every(r => r.passed);
         const submitData = await apiCall(`/api/question/${currentQuestionId}/submit`, {
             method: 'POST',
             body: JSON.stringify({ results, timeTaken: secondsElapsed })
@@ -472,10 +469,12 @@ def input(prompt=''):
 
             setTimeout(() => {
                 buildQuestionNav(submitData.nextQuestion);
-                if (submitData.nextQuestion <= 100) {
+                if (submitData.nextQuestion <= totalQuestions) {
                     loadQuestion(submitData.nextQuestion);
                 }
             }, 2000);
+        } else if (submitData?.success) {
+            showToast(submitData.message || 'Some test cases failed. Keep trying!', 'warning');
         }
 
     } catch (err) {
@@ -547,8 +546,10 @@ async function buildQuestionNav(currentQ) {
     const data = await apiCall('/api/questions');
     if (!data?.success) return;
 
+    totalQuestions = data.totalQuestions || data.questions?.length || totalQuestions;
+
     const nav = document.getElementById('questionNav');
-    nav.innerHTML = data.questions.slice(0, Math.min(currentQ + 5, 100)).map(q => {
+    nav.innerHTML = data.questions.slice(0, Math.min(currentQ + 5, totalQuestions)).map(q => {
         let cls = 'q-nav-btn';
         if (q.completed) cls += ' completed';
         else if (q.id === currentQ) cls += ' current';

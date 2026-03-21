@@ -8,6 +8,7 @@ let dashboardData = null;
 let onboardingAvatarUploaded = false;
 let onboardingTermsVisited = false;
 let onboardingHandlersBound = false;
+const TOTAL_QUESTIONS = 250;
 
 async function loadDashboard() {
     const data = await setupSidebar();
@@ -19,7 +20,7 @@ async function loadDashboard() {
     // Welcome message
     document.getElementById('welcomeMsg').textContent = `Welcome back, ${user.username}`;
     document.getElementById('currentQuestionMsg').textContent = 
-        `Currently on Question ${progress?.currentQuestion || 1} of 100`;
+        `Currently on Question ${progress?.currentQuestion || 1} of ${TOTAL_QUESTIONS}`;
 
     // Top stats
     document.getElementById('topXP').textContent = formatNumber(user.xp);
@@ -27,7 +28,7 @@ async function loadDashboard() {
     document.getElementById('topStreak').textContent = user.streak;
 
     // Stats cards
-    document.getElementById('statCurrentQ').textContent = `${(progress?.currentQuestion - 1) || 0}/100`;
+    document.getElementById('statCurrentQ').textContent = `${(progress?.currentQuestion - 1) || 0}/${TOTAL_QUESTIONS}`;
     document.getElementById('statTotalXP').textContent = formatNumber(user.xp);
     document.getElementById('statZen').textContent = formatNumber(user.zen);
 
@@ -245,7 +246,10 @@ function renderDashboardAchievements(achievements) {
         { id: 'perfectionist_50', name: 'Perfectionist', desc: '50 first-attempt', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#1E90FF" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' },
         { id: 'social_butterfly', name: 'Social Butterfly', desc: '100 messages', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FF1493" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>' },
         { id: 'rich_kid', name: 'Rich Kid', desc: '5000 Zen earned', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 9h-3a1.5 1.5 0 000 3h1a1.5 1.5 0 010 3h-3m2-8v1m0 6v1"/></svg>' },
-        { id: 'completionist', name: 'Python God', desc: 'All 100 done', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M2 18l3-11 5 5 2-7 2 7 5-5 3 11z"/><path d="M2 18h20"/></svg>' }
+        { id: 'completionist', name: 'Python God', desc: '100 questions solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M2 18l3-11 5 5 2-7 2 7 5-5 3 11z"/><path d="M2 18h20"/></svg>' },
+        { id: 'gpt_apprentice_150', name: 'GPT Apprentice', desc: '150 questions solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#00C2FF" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.2L18 21l-6-4-6 4 1.5-7.8L2 9h7z"/></svg>' },
+        { id: 'gpt_engineer_200', name: 'GPT Engineer', desc: '200 questions solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#8A2BE2" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>' },
+        { id: 'zenpy_grandmaster_250', name: 'ZenPy Grandmaster', desc: 'All 250 solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M4 19h16"/><path d="M6 19l2-12 4 5 4-5 2 12"/></svg>' }
     ];
 
     const earned = allAchievements.filter(a => achievements.includes(a.id));
@@ -306,7 +310,7 @@ function renderQuickFacts(user, progress) {
         </div>
         <div class="d-flex align-center gap-1 mb-1" style="padding:8px;border:1px solid var(--border);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><rect x="3" y="12" width="4" height="8"/><rect x="10" y="8" width="4" height="12"/><rect x="17" y="4" width="4" height="16"/></svg>
-            <span class="text-sm">Completion: <strong>${solved}%</strong> (${solved}/100)</span>
+            <span class="text-sm">Completion: <strong>${Math.min(100, Math.round((solved / TOTAL_QUESTIONS) * 100))}%</strong> (${solved}/${TOTAL_QUESTIONS})</span>
         </div>
         <div class="d-flex align-center gap-1 mb-1" style="padding:8px;border:1px solid var(--border);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
@@ -342,7 +346,7 @@ function renderAdvancedAnalytics(user, progress) {
     const joinedDate = user?.joined ? new Date(user.joined) : new Date();
     const daysOnPlatform = Math.max(1, Math.ceil((Date.now() - joinedDate.getTime()) / (1000 * 60 * 60 * 24)));
     const solveVelocity = solved / daysOnPlatform;
-    const projectedDaysToFinish = solveVelocity > 0 ? Math.ceil((100 - solved) / solveVelocity) : null;
+    const projectedDaysToFinish = solveVelocity > 0 ? Math.ceil((Math.max(0, TOTAL_QUESTIONS - solved)) / solveVelocity) : null;
     const streakMomentum = Math.min(100, (user.streak || 0) * 8);
 
     analyticsEl.innerHTML = `

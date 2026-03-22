@@ -213,7 +213,3 @@ For collaborations, support, or platform-related queries:
 - Respect community members in chat and DMs.
 - Avoid spam, abuse, automation, and exploit attempts.
 - Keep submissions authentic—do not misuse the platform.
-
-## License
-
-MIT

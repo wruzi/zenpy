@@ -5,7 +5,8 @@
   "main": "backend/server/server.js",
   "scripts": {
     "start": "node backend/server/server.js",
-    "dev": "nodemon backend/server/server.js"
+    "dev": "nodemon --config nodemon.json backend/server/server.js",
+    "migrate:supabase": "node backend/scripts/migrateJsonToSupabase.js"
   },
   "keywords": [
     "python",
@@ -28,7 +29,8 @@
     "passport-google-oauth20": "^2.0.0",
     "pyodide": "^0.29.3",
     "resend": "^4.6.0",
-    "socket.io": "^4.7.2"
+    "socket.io": "^4.7.2",
+    "@supabase/supabase-js": "^2.58.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

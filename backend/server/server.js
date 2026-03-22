@@ -9,6 +9,7 @@ const { Server } = require('socket.io');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
+const { createJsonStore } = require('./supabaseStore');
 
 const app = express();
 const server = http.createServer(app);
@@ -35,30 +36,29 @@ app.use('/assets', express.static(path.join(__dirname, '..', '..', 'frontend', '
 
 // --- Data Directory ---
 const DATA_DIR = path.join(__dirname, '..', '..', 'database', 'data');
+const dataFiles = {
+    'users.json': [],
+    'progress.json': [],
+    'banned.json': [],
+    'global_chat_messages.json': [],
+    'activity_log.json': [],
+    'follows.json': [],
+    'direct_messages.json': [],
+    'promo_codes.json': [],
+    'questions.json': [],
+    'shop_items.json': []
+};
 
-function readJSON(filename) {
-    const filepath = path.join(DATA_DIR, filename);
-    try {
-        if (!fs.existsSync(filepath)) return [];
-        const data = fs.readFileSync(filepath, 'utf8');
-        return JSON.parse(data);
-    } catch (e) {
-        console.error(`Error reading ${filename}:`, e.message);
-        return [];
-    }
-}
+const jsonStore = createJsonStore({
+    dataDir: DATA_DIR,
+    keys: Object.keys(dataFiles),
+    defaults: dataFiles,
+    tableName: process.env.SUPABASE_JSON_TABLE || 'json_store',
+    logger: console
+});
 
-function writeJSON(filename, data) {
-    const filepath = path.join(DATA_DIR, filename);
-    try {
-        fs.writeFileSync(filepath, JSON.stringify(data, null, 2), 'utf8');
-    } catch (e) {
-        console.error(`Error writing ${filename}:`, e.message);
-    }
-}
-
-app.locals.readJSON = readJSON;
-app.locals.writeJSON = writeJSON;
+app.locals.readJSON = (filename) => jsonStore.readJSON(filename);
+app.locals.writeJSON = (filename, data) => jsonStore.writeJSON(filename, data);
 app.locals.DATA_DIR = DATA_DIR;
 
 const SHOP_ASSETS_DIR = path.join(__dirname, '..', '..', 'frontend', 'assets', 'shop');
@@ -81,7 +81,7 @@ function toTitle(value = '') {
 }
 
 function getShopItems() {
-    const baseItems = readJSON('shop_items.json');
+    const baseItems = app.locals.readJSON('shop_items.json');
     const items = Array.isArray(baseItems) ? [...baseItems] : [];
     const existingIds = new Set(items.map(item => item.id));
     const existingAssets = new Set(
@@ -155,27 +155,6 @@ app.locals.getItemCssClass = function(itemId) {
     return item ? (item.cssClass || null) : itemId;
 };
 
-// --- Ensure data files exist ---
-const dataFiles = {
-    'users.json': [],
-    'progress.json': [],
-    'banned.json': [],
-    'global_chat_messages.json': [],
-    'activity_log.json': [],
-    'follows.json': [],
-    'direct_messages.json': [],
-    'promo_codes.json': [],
-    'questions.json': [],
-    'shop_items.json': []
-};
-
-Object.entries(dataFiles).forEach(([file, defaultData]) => {
-    const filepath = path.join(DATA_DIR, file);
-    if (!fs.existsSync(filepath)) {
-        writeJSON(file, defaultData);
-    }
-});
-
 // --- Ensure avatars directory ---
 const avatarsDir = path.join(__dirname, '..', '..', 'frontend', 'assets', 'avatars');
 if (!fs.existsSync(avatarsDir)) fs.mkdirSync(avatarsDir, { recursive: true });
@@ -199,7 +178,7 @@ dmRoutes(app);
 
 // --- Chat Server (Socket.io) ---
 const chatServer = require('./chatServer');
-chatServer(io, readJSON, writeJSON, app.locals.getItemCssClass);
+chatServer(io, app.locals.readJSON, app.locals.writeJSON, app.locals.getItemCssClass);
 
 // --- Serve Pages ---
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'index.html')));
@@ -221,8 +200,30 @@ app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'f
 
 // --- Start Server ---
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`\n🚀 ZenPy server running on http://localhost:${PORT}`);
-    console.log(`📁 Data directory: ${DATA_DIR}`);
-    console.log(`🎮 Ready to code!\n`);
+
+async function bootstrap() {
+    await jsonStore.init();
+
+    server.listen(PORT, () => {
+        console.log(`\n🚀 ZenPy server running on http://localhost:${PORT}`);
+        console.log(`📁 Data directory: ${DATA_DIR}`);
+        console.log(`🗄️ Storage mode: ${jsonStore.getMode()}`);
+        console.log(`🎮 Ready to code!\n`);
+    });
+}
+
+bootstrap().catch((error) => {
+    console.error('Failed to bootstrap server:', error.message);
+    process.exit(1);
+});
+
+['SIGINT', 'SIGTERM'].forEach((signal) => {
+    process.on(signal, async () => {
+        try {
+            await jsonStore.flushNow();
+        } catch (error) {
+            console.error('Failed to flush data on shutdown:', error.message);
+        }
+        process.exit(0);
+    });
 });

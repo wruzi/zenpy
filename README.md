@@ -19,6 +19,7 @@ ZenPy is a full-stack coding web app and Python learning platform with gamificat
 - [Authentication](#authentication)
 - [API Highlights](#api-highlights)
 - [Project Structure](#project-structure)
+- [Supabase Integration](#supabase-integration)
 - [Contact](#contact)
 - [Rules](#rules)
 
@@ -199,6 +200,40 @@ JWT is used for protected API requests.
 - [database/data](database/data) — JSON storage for users, progress, questions, chat, follows, inventory data
 - [frontend/assets](frontend/assets) — avatar, image, and shop media assets
 - [backend/scripts](backend/scripts) — reset and generation scripts for maintenance and content tooling
+
+## Supabase Integration
+
+ZenPy now supports Supabase-backed JSON storage using a single key/value table (`json_store`) while keeping local JSON fallback.
+
+### 1) Add environment variables
+
+Set these in your `.env`:
+
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_JSON_TABLE=json_store` (optional, defaults to `json_store`)
+
+If missing, server auto-falls back to local files in [database/data](database/data).
+
+### 2) Create the Supabase table
+
+Run SQL from [backend/scripts/supabase_json_store.sql](backend/scripts/supabase_json_store.sql) in Supabase SQL editor.
+
+### 3) Migrate existing JSON data
+
+Run:
+
+- `npm run migrate:supabase`
+
+This imports all JSON files from [database/data](database/data) into the Supabase table.
+
+### 4) Start app
+
+Run:
+
+- `npm run dev`
+
+Server logs will print storage mode (`supabase` or `local`).
 
 ## Contact
 

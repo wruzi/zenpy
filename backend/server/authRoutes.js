@@ -13,6 +13,7 @@ const SIGNUP_RESEND_COOLDOWN_MS = 3 * 60 * 1000;
 const SIGNUP_RESEND_MAX_TRIES = 2;
 const SIGNUP_RESEND_BLOCK_MS = 12 * 60 * 60 * 1000;
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
+const IS_PRODUCTION = (process.env.NODE_ENV || '').toLowerCase() === 'production';
 
 module.exports = function(app) {
     const { readJSON, writeJSON } = app.locals;
@@ -181,6 +182,23 @@ module.exports = function(app) {
         if (sendResult && sendResult.error) {
             throw new Error(sendResult.error.message || 'Failed to send OTP email.');
         }
+
+        if (sendResult && sendResult.id) {
+            console.log('[OTP]', 'delivery id', sendResult.id, 'to', email);
+        } else {
+            console.log('[OTP]', 'email accepted by provider (no delivery id returned)', 'to', email);
+        }
+        return sendResult;
+    }
+
+    function buildDevOtpFallbackResponse(otp, error) {
+        return {
+            success: true,
+            message: 'Email delivery failed, using development OTP fallback.',
+            otp,
+            delivery: 'fallback',
+            debug: error?.message || 'Unknown email delivery error'
+        };
     }
 
     function getOrCreateUser(email, defaultUsername, provider, profileId, avatarUrl, githubUsername = '') {
@@ -296,7 +314,15 @@ module.exports = function(app) {
                 purpose: 'signup'
             }, SIGNUP_OTP_TTL_MS);
 
-            await sendSignupOtpEmail(validation.email, validation.username, otp);
+            try {
+                await sendSignupOtpEmail(validation.email, validation.username, otp);
+            } catch (deliveryError) {
+                if (!IS_PRODUCTION) {
+                    console.warn('Signup OTP email delivery failed (dev fallback):', deliveryError.message);
+                    return res.json(buildDevOtpFallbackResponse(otp, deliveryError));
+                }
+                throw deliveryError;
+            }
 
             setSignupResendInfo(validation.email, {
                 attempts: 0,
@@ -304,7 +330,7 @@ module.exports = function(app) {
                 blockedUntil: 0
             });
 
-            res.json({ success: true, message: 'OTP sent to your email.' });
+            res.json({ success: true, message: 'OTP sent to your email.', delivery: 'email' });
         } catch (error) {
             console.error('Signup OTP request error:', error.message);
             res.status(500).json({ success: false, message: error.message || 'Could not send OTP right now.' });
@@ -349,7 +375,15 @@ module.exports = function(app) {
                 ...otpData.data,
                 lastResendAt: now
             }, SIGNUP_OTP_TTL_MS);
-            await sendSignupOtpEmail(email, otpData.data.username, newOtp);
+            try {
+                await sendSignupOtpEmail(email, otpData.data.username, newOtp);
+            } catch (deliveryError) {
+                if (!IS_PRODUCTION) {
+                    console.warn('Resend OTP email delivery failed (dev fallback):', deliveryError.message);
+                    return res.json(buildDevOtpFallbackResponse(newOtp, deliveryError));
+                }
+                throw deliveryError;
+            }
 
             const updatedAttempts = resendInfo.attempts + 1;
             setSignupResendInfo(email, {
@@ -358,7 +392,7 @@ module.exports = function(app) {
                 blockedUntil: 0
             });
 
-            res.json({ success: true, message: 'A new OTP has been sent.' });
+            res.json({ success: true, message: 'A new OTP has been sent.', delivery: 'email' });
         } catch (error) {
             console.error('Resend OTP error:', error.message);
             res.status(500).json({ success: false, message: error.message || 'Could not resend OTP right now.' });

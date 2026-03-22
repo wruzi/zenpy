@@ -129,6 +129,7 @@
             </form>
 
             <div id="otpPanel" class="hidden mt-2">
+                <div id="otpDevHint" class="hidden mb-2" style="border:2px solid var(--warning);padding:10px;color:var(--warning);font-size:0.82rem;"></div>
                 <div class="form-group">
                     <label for="otpCode">Enter OTP</label>
                     <input id="otpCode" class="form-control" maxlength="6" placeholder="6-digit code" style="letter-spacing:0.18em; text-align:center;">
@@ -166,6 +167,7 @@
             confirmPassword: document.getElementById('confirmPassword'),
             requestOtpBtn: document.getElementById('requestOtpBtn'),
             otpPanel: document.getElementById('otpPanel'),
+            otpDevHint: document.getElementById('otpDevHint'),
             otpCode: document.getElementById('otpCode'),
             verifyOtpBtn: document.getElementById('verifyOtpBtn'),
             resendOtpBtn: document.getElementById('resendOtpBtn'),
@@ -186,6 +188,16 @@
             }
             els.signupError.textContent = message;
             els.signupError.classList.remove('hidden');
+        }
+
+        function setOtpDevHint(message = '') {
+            if (!message) {
+                els.otpDevHint.classList.add('hidden');
+                els.otpDevHint.textContent = '';
+                return;
+            }
+            els.otpDevHint.textContent = message;
+            els.otpDevHint.classList.remove('hidden');
         }
 
         function launchDashboardTransition() {
@@ -285,6 +297,13 @@
                 }
 
                 els.otpPanel.classList.remove('hidden');
+                setOtpDevHint('');
+
+                if (data.delivery === 'fallback' && data.otp) {
+                    setOtpDevHint(`DEV OTP FALLBACK: ${data.otp}`);
+                    showToast('Email failed; using development OTP fallback.', 'warning');
+                }
+
                 resendAttempts = 0;
                 clearResendCooldown();
                 els.resendOtpBtn.disabled = false;
@@ -364,6 +383,11 @@
                 if (!response.ok || !data.success) {
                     setError(data.message || 'Could not resend OTP.');
                     return;
+                }
+
+                if (data.delivery === 'fallback' && data.otp) {
+                    setOtpDevHint(`DEV OTP FALLBACK: ${data.otp}`);
+                    showToast('Email failed; using development OTP fallback.', 'warning');
                 }
 
                 resendAttempts += 1;

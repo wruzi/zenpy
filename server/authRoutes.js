@@ -14,6 +14,11 @@ const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 module.exports = function(app) {
     const { readJSON, writeJSON } = app.locals;
 
+    function buildGithubProfileLink(username = '') {
+        const clean = String(username || '').trim().replace(/^@+/, '');
+        return clean ? `https://github.com/${clean}` : '';
+    }
+
     function validateSignupInput({ email, username, password }) {
         const normalizedEmail = (email || '').trim().toLowerCase();
         const normalizedUsername = (username || '').trim();
@@ -35,7 +40,7 @@ module.exports = function(app) {
         };
     }
 
-    function createBaseUser(email, username, provider, providerId = '', avatarUrl = null) {
+    function createBaseUser(email, username, provider, providerId = '', avatarUrl = null, githubUsername = '') {
         const now = new Date().toISOString();
         return {
             email,
@@ -65,7 +70,7 @@ module.exports = function(app) {
             },
             achievements: [],
             lastActive: now,
-            github: provider === 'github' ? 'linked' : '',
+            github: provider === 'github' ? buildGithubProfileLink(githubUsername || username) : '',
             instagram: '',
             twitter: '',
             chatMessageCount: 0,
@@ -149,12 +154,12 @@ module.exports = function(app) {
         }
     }
 
-    function getOrCreateUser(email, defaultUsername, provider, profileId, avatarUrl) {
+    function getOrCreateUser(email, defaultUsername, provider, profileId, avatarUrl, githubUsername = '') {
         const users = readJSON('users.json');
         let user = users.find(u => u.email === email);
 
         if (!user) {
-            user = createBaseUser(email, defaultUsername, provider, profileId, avatarUrl);
+            user = createBaseUser(email, defaultUsername, provider, profileId, avatarUrl, githubUsername || defaultUsername);
             users.push(user);
             writeJSON('users.json', users);
 
@@ -171,8 +176,9 @@ module.exports = function(app) {
             }
 
             if (provider === 'github') {
-                if (user.github !== 'linked') {
-                    user.github = 'linked';
+                const githubLink = buildGithubProfileLink(githubUsername || defaultUsername || user.username);
+                if (githubLink && user.github !== githubLink) {
+                    user.github = githubLink;
                     changed = true;
                 }
                 if (profileId && user.providerId !== profileId) {
@@ -203,8 +209,9 @@ module.exports = function(app) {
         let email = profile.emails && profile.emails[0] ? profile.emails[0].value : `${profile.username}@github.com`;
         email = email.toLowerCase();
         const avatar = profile.photos && profile.photos[0] ? profile.photos[0].value : null;
+        const githubUsername = profile.username || profile.displayName || '';
 
-        const user = getOrCreateUser(email, profile.username || profile.displayName, 'github', profile.id, avatar);
+        const user = getOrCreateUser(email, profile.username || profile.displayName, 'github', profile.id, avatar, githubUsername);
         return cb(null, user);
     }));
 

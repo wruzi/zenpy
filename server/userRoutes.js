@@ -104,6 +104,28 @@ module.exports = function(app) {
         };
     }
 
+    function normalizePromoCode(rawCode = '') {
+        return String(rawCode || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    }
+
+    function isCommunityHead(user) {
+        const explicitRole = String(user?.role || '').toLowerCase();
+        if (user?.isAdmin || user?.isCommunityHead || explicitRole === 'community_head' || explicitRole === 'admin') return true;
+
+        const allowList = String(process.env.COMMUNITY_HEAD_EMAILS || '')
+            .split(',')
+            .map(email => email.trim().toLowerCase())
+            .filter(Boolean);
+
+        if (allowList.length === 0) return true;
+
+        return allowList.includes(String(user?.email || '').toLowerCase());
+    }
+
+    function promoRedemptionsCount(promo) {
+        return Array.isArray(promo?.redeemedBy) ? promo.redeemedBy.length : 0;
+    }
+
     // ---- GET USER DATA ----
     app.get('/api/user/:email', authMiddleware, (req, res) => {
         const users = readJSON('users.json');
@@ -170,23 +192,26 @@ module.exports = function(app) {
         const user = users.find(u => u.email === req.user.email);
         if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
 
-        const quizIndex = getDailyQuizIndex();
-        const quiz = dailyQuestions[quizIndex];
-        
         const istOffsetMs = 5.5 * 60 * 60 * 1000;
         const istTime = Date.now() + istOffsetMs;
         const todayStr = new Date(istTime).toISOString().split('T')[0];
 
+        const quizIndex = getDailyQuizIndex();
+        const quiz = dailyQuestions[quizIndex];
+        const safeOptions = Array.isArray(quiz?.options) ? quiz.options : [];
+        const quizId = `${todayStr}:${quizIndex}`;
+
         res.json({
             success: true,
-            question: quiz.q,
-            options: quiz.options,
+            question: quiz?.q || 'Daily quiz is not available right now.',
+            options: safeOptions,
+            quizId,
             answeredToday: user.lastQuizDate === todayStr
         });
     });
 
     app.post('/api/daily-quiz', authMiddleware, (req, res) => {
-        const { answerIndex } = req.body;
+        const { answerIndex, quizId } = req.body;
         const users = readJSON('users.json');
         const user = users.find(u => u.email === req.user.email);
         if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
@@ -199,8 +224,24 @@ module.exports = function(app) {
             return res.status(400).json({ success: false, message: 'Already answered today!' });
         }
 
-        const quizIndex = getDailyQuizIndex();
+        const currentQuizIndex = getDailyQuizIndex();
+        let quizIndex = currentQuizIndex;
+
+        if (typeof quizId === 'string') {
+            const parts = quizId.split(':');
+            if (parts.length === 2) {
+                const parsedIndex = Number(parts[1]);
+                if (Number.isInteger(parsedIndex) && parsedIndex >= 0 && parsedIndex < dailyQuestions.length) {
+                    quizIndex = parsedIndex;
+                }
+            }
+        }
+
         const quiz = dailyQuestions[quizIndex];
+
+        if (!quiz || !Array.isArray(quiz.options) || quiz.options.length === 0) {
+            return res.status(500).json({ success: false, message: 'Quiz data unavailable.' });
+        }
         
         user.lastQuizDate = todayStr;
 
@@ -493,6 +534,171 @@ module.exports = function(app) {
         res.json({ success: true, items: shopItems });
     });
 
+    // ---- PROMO CODES: REDEEM ----
+    app.post('/api/promo-codes/redeem', authMiddleware, (req, res) => {
+        const code = normalizePromoCode(req.body?.code);
+        if (!code || code.length > 10) {
+            return res.status(400).json({ success: false, message: 'Promo code must be 1-10 letters/numbers.' });
+        }
+
+        const promoCodes = readJSON('promo_codes.json');
+        const users = readJSON('users.json');
+        const shopItems = getShopItems();
+
+        const user = users.find(u => u.email === req.user.email);
+        if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+        ensureInventoryShape(user);
+
+        const promo = (Array.isArray(promoCodes) ? promoCodes : []).find(entry => normalizePromoCode(entry?.code) === code);
+        if (!promo) return res.status(404).json({ success: false, message: 'Promo code not found.' });
+        if (promo.active === false) return res.status(400).json({ success: false, message: 'Promo code is inactive.' });
+
+        if (promo.expiresAt && new Date(promo.expiresAt).getTime() < Date.now()) {
+            return res.status(400).json({ success: false, message: 'Promo code has expired.' });
+        }
+
+        if (!Array.isArray(promo.redeemedBy)) promo.redeemedBy = [];
+
+        const alreadyRedeemed = promo.redeemedBy.some(entry => {
+            if (typeof entry === 'string') return entry === req.user.email;
+            return entry?.email === req.user.email;
+        });
+        if (alreadyRedeemed) {
+            return res.status(400).json({ success: false, message: 'You already redeemed this promo code.' });
+        }
+
+        const maxRedemptions = Number(promo.maxRedemptions || 0);
+        if (maxRedemptions > 0 && promoRedemptionsCount(promo) >= maxRedemptions) {
+            return res.status(400).json({ success: false, message: 'Promo code redemption limit reached.' });
+        }
+
+        const rewardZen = Math.max(0, Number(promo?.rewards?.zen || 0));
+        const rewardItemsRaw = Array.isArray(promo?.rewards?.itemIds) ? promo.rewards.itemIds : [];
+        const validRewardItems = rewardItemsRaw.filter(itemId => shopItems.some(shopItem => shopItem.id === itemId));
+
+        user.zen = (user.zen || 0) + rewardZen;
+
+        const unlockedItems = [];
+        validRewardItems.forEach((itemId) => {
+            if (!user.inventory.owned.includes(itemId)) {
+                user.inventory.owned.push(itemId);
+                unlockedItems.push(itemId);
+            }
+        });
+
+        promo.redeemedBy.push({
+            email: req.user.email,
+            redeemedAt: new Date().toISOString()
+        });
+
+        writeJSON('users.json', users);
+        writeJSON('promo_codes.json', promoCodes);
+
+        const unlockedNames = unlockedItems
+            .map(itemId => shopItems.find(item => item.id === itemId)?.name)
+            .filter(Boolean);
+
+        res.json({
+            success: true,
+            message: 'Promo code redeemed successfully.',
+            rewards: {
+                zen: rewardZen,
+                itemIds: unlockedItems,
+                itemNames: unlockedNames
+            },
+            zen: user.zen,
+            inventory: user.inventory
+        });
+    });
+
+    // ---- PROMO CODES: LIST (COMMUNITY HEAD / ADMIN) ----
+    app.get('/api/promo-codes', authMiddleware, (req, res) => {
+        const users = readJSON('users.json');
+        const user = users.find(u => u.email === req.user.email);
+        if (!user || !isCommunityHead(user)) {
+            return res.status(403).json({ success: false, message: 'Community head access required.' });
+        }
+
+        const promoCodes = readJSON('promo_codes.json');
+        const list = (Array.isArray(promoCodes) ? promoCodes : []).map(code => ({
+            code: code.code,
+            active: code.active !== false,
+            createdBy: code.createdBy || 'unknown',
+            createdAt: code.createdAt || null,
+            expiresAt: code.expiresAt || null,
+            maxRedemptions: code.maxRedemptions || null,
+            redeemedCount: promoRedemptionsCount(code),
+            rewards: {
+                zen: Number(code?.rewards?.zen || 0),
+                itemIds: Array.isArray(code?.rewards?.itemIds) ? code.rewards.itemIds : []
+            }
+        }));
+
+        res.json({ success: true, promoCodes: list });
+    });
+
+    // ---- PROMO CODES: CREATE (COMMUNITY HEAD / ADMIN) ----
+    app.post('/api/promo-codes/create', authMiddleware, (req, res) => {
+        const users = readJSON('users.json');
+        const user = users.find(u => u.email === req.user.email);
+        if (!user || !isCommunityHead(user)) {
+            return res.status(403).json({ success: false, message: 'Community head access required.' });
+        }
+
+        const promoCodes = readJSON('promo_codes.json');
+        const shopItems = getShopItems();
+
+        const code = normalizePromoCode(req.body?.code);
+        if (!code || code.length > 10) {
+            return res.status(400).json({ success: false, message: 'Code must be 1-10 letters/numbers.' });
+        }
+
+        const exists = (Array.isArray(promoCodes) ? promoCodes : []).some(entry => normalizePromoCode(entry?.code) === code);
+        if (exists) {
+            return res.status(400).json({ success: false, message: 'Promo code already exists.' });
+        }
+
+        const zenReward = Math.max(0, Number(req.body?.zen || 0));
+        const inputItems = Array.isArray(req.body?.itemIds)
+            ? req.body.itemIds
+            : String(req.body?.itemIds || '')
+                .split(',')
+                .map(value => value.trim())
+                .filter(Boolean);
+
+        const invalidItems = inputItems.filter(itemId => !shopItems.some(item => item.id === itemId));
+        if (invalidItems.length > 0) {
+            return res.status(400).json({ success: false, message: `Invalid shop item IDs: ${invalidItems.join(', ')}` });
+        }
+
+        const maxRedemptions = Number(req.body?.maxRedemptions || 0);
+        const expiresAt = req.body?.expiresAt ? new Date(req.body.expiresAt) : null;
+        if (expiresAt && Number.isNaN(expiresAt.getTime())) {
+            return res.status(400).json({ success: false, message: 'Invalid expiry date.' });
+        }
+
+        const newPromo = {
+            code,
+            active: req.body?.active !== false,
+            createdBy: user.email,
+            createdAt: new Date().toISOString(),
+            expiresAt: expiresAt ? expiresAt.toISOString() : null,
+            maxRedemptions: maxRedemptions > 0 ? Math.floor(maxRedemptions) : null,
+            perUserLimit: 1,
+            rewards: {
+                zen: zenReward,
+                itemIds: [...new Set(inputItems)]
+            },
+            redeemedBy: []
+        };
+
+        const nextCodes = Array.isArray(promoCodes) ? promoCodes : [];
+        nextCodes.push(newPromo);
+        writeJSON('promo_codes.json', nextCodes);
+
+        res.json({ success: true, message: 'Promo code created.', promoCode: newPromo });
+    });
+
     // ---- BAN USER ----
     app.post('/api/ban', authMiddleware, (req, res) => {
         const { email, reason, type } = req.body;
@@ -566,6 +772,23 @@ module.exports = function(app) {
             users,
             banned
         });
+    });
+
+    // ---- ADMIN: USERS TABLE ----
+    app.get('/api/admin/users', authMiddleware, (req, res) => {
+        const users = readJSON('users.json');
+        const banned = readJSON('banned.json');
+        const bannedEmails = new Set((Array.isArray(banned) ? banned : []).map(entry => entry?.email).filter(Boolean));
+
+        const tableUsers = (Array.isArray(users) ? users : []).map(user => ({
+            email: user.email,
+            username: user.username,
+            level: user.level || 1,
+            xp: user.xp || 0,
+            banned: bannedEmails.has(user.email)
+        }));
+
+        res.json({ success: true, users: tableUsers });
     });
 
     // ---- ADMIN: UNBAN USER ----

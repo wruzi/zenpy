@@ -8,9 +8,41 @@ let dashboardData = null;
 let onboardingAvatarUploaded = false;
 let onboardingTermsVisited = false;
 let onboardingHandlersBound = false;
+let activeDailyQuizId = null;
 const TOTAL_QUESTIONS = 250;
+const advancedChartInstances = [];
+
+function syncAchievementsHeight() {
+    const achievementsCard = document.getElementById('achievementsCard');
+    const quickFactsCard = document.getElementById('quickFactsCard');
+    const learningInsightsCard = document.getElementById('learningInsightsCard');
+    const insightsColumn = document.getElementById('insightsColumn');
+
+    if (!achievementsCard || !quickFactsCard || !learningInsightsCard || !insightsColumn) return;
+
+    const gap = parseFloat(getComputedStyle(insightsColumn).rowGap || '16') || 16;
+    const targetHeight = Math.ceil(quickFactsCard.offsetHeight + learningInsightsCard.offsetHeight + gap);
+
+    if (targetHeight > 0) {
+        achievementsCard.style.height = `${targetHeight}px`;
+    }
+}
+
+function enforceDashboardScale() {
+    if (document?.documentElement) {
+        document.documentElement.style.zoom = '1';
+        document.documentElement.style.fontSize = '16px';
+    }
+    if (document?.body) {
+        document.body.style.zoom = '1';
+        document.body.classList.remove('page-enter');
+        document.body.classList.remove('page-exit');
+        document.body.style.transform = 'none';
+    }
+}
 
 async function loadDashboard() {
+    enforceDashboardScale();
     const data = await setupSidebar();
     if (!data) return;
     dashboardData = data;
@@ -57,22 +89,60 @@ async function loadDashboard() {
     } catch(e) { }
 
     // Achievements
-    renderDashboardAchievements(user.achievements);
+    renderDashboardAchievements(user, progress);
 
     // Charts
     if (progress?.questionTimes?.length > 0) {
         createQuestionTimesChart(progress.questionTimes);
         createPerformanceChart(progress, user);
+    } else {
+        renderEmptyCoreCharts();
     }
 
     // Quick Facts
     renderQuickFacts(user, progress);
     renderAdvancedAnalytics(user, progress);
+    requestAnimationFrame(syncAchievementsHeight);
 
     // Load Daily Quiz
     loadDailyQuiz();
 
     initializeOnboarding(user);
+}
+
+function renderEmptyCoreCharts() {
+    const questionCanvas = document.getElementById('questionTimesChart');
+    const performanceCanvas = document.getElementById('performanceChart');
+
+    if (questionCanvas) {
+        questionCanvas.style.display = 'none';
+        const parent = questionCanvas.parentElement;
+        if (parent && !parent.querySelector('.empty-chart-state')) {
+            const message = document.createElement('div');
+            message.className = 'empty-chart-state';
+            message.style.padding = '16px';
+            message.style.border = '1px solid var(--border)';
+            message.style.color = 'var(--text-muted)';
+            message.style.fontSize = '0.85rem';
+            message.textContent = 'No solve data yet. Solve your first question to unlock Question Times analytics.';
+            parent.appendChild(message);
+        }
+    }
+
+    if (performanceCanvas) {
+        performanceCanvas.style.display = 'none';
+        const parent = performanceCanvas.parentElement;
+        if (parent && !parent.querySelector('.empty-chart-state')) {
+            const message = document.createElement('div');
+            message.className = 'empty-chart-state';
+            message.style.padding = '16px';
+            message.style.border = '1px solid var(--border)';
+            message.style.color = 'var(--text-muted)';
+            message.style.fontSize = '0.85rem';
+            message.textContent = 'Performance chart appears after your first solved question.';
+            parent.appendChild(message);
+        }
+    }
 }
 
 function isDefaultAvatar(image) {
@@ -236,8 +306,19 @@ async function completeOnboarding() {
     }
 }
 
-function renderDashboardAchievements(achievements) {
+function renderDashboardAchievements(user, progress) {
     const container = document.getElementById('achievementsList');
+    const unlocked = new Set(Array.isArray(user?.achievements) ? user.achievements : []);
+    const solved = (progress?.currentQuestion - 1) || 0;
+    const ownedItemsCount = (user?.inventory?.owned || []).length;
+    const equipped = user?.inventory?.equipped || {};
+    const hasTitle = Boolean(equipped.title && equipped.title !== 'Newbie');
+    const hasProfileSet = Boolean(equipped.frame && equipped.profile_card && equipped.banner);
+    const hasChatSet = Boolean(equipped.chatExtra && equipped.chatColor && equipped.chatBackground);
+    const socialsConnected = [user?.github, user?.instagram, user?.twitter]
+        .filter(Boolean)
+        .filter(link => String(link).trim() && link !== 'linked').length;
+
     const allAchievements = [
         { id: 'first_steps', name: 'First Steps', desc: 'Complete Q1', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#00FF88" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' },
         { id: 'speed_demon_10', name: 'Speed Demon', desc: '10 fast solves', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' },
@@ -249,11 +330,18 @@ function renderDashboardAchievements(achievements) {
         { id: 'completionist', name: 'Python God', desc: '100 questions solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M2 18l3-11 5 5 2-7 2 7 5-5 3 11z"/><path d="M2 18h20"/></svg>' },
         { id: 'gpt_apprentice_150', name: 'GPT Apprentice', desc: '150 questions solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#00C2FF" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.2L18 21l-6-4-6 4 1.5-7.8L2 9h7z"/></svg>' },
         { id: 'gpt_engineer_200', name: 'GPT Engineer', desc: '200 questions solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#8A2BE2" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>' },
-        { id: 'zenpy_grandmaster_250', name: 'ZenPy Grandmaster', desc: 'All 250 solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M4 19h16"/><path d="M6 19l2-12 4 5 4-5 2 12"/></svg>' }
+        { id: 'zenpy_grandmaster_250', name: 'ZenPy Grandmaster', desc: 'All 250 solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M4 19h16"/><path d="M6 19l2-12 4 5 4-5 2 12"/></svg>' },
+        { id: 'shop_first_piece', name: 'First Piece', desc: 'Own your first shop item', earned: ownedItemsCount >= 1, svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#7ef3ff" stroke-width="2"><path d="M12 3L2 9l10 6 10-6-10-6z"/><path d="M2 15l10 6 10-6"/></svg>' },
+        { id: 'set_builder_5', name: 'Set Builder', desc: 'Collect 5 shop pieces', earned: ownedItemsCount >= 5, svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#00FF88" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>' },
+        { id: 'wardrobe_10', name: 'Style Vault', desc: 'Collect 10 shop pieces', earned: ownedItemsCount >= 10, svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6"/></svg>' },
+        { id: 'profile_set', name: 'Profile Architect', desc: 'Equip frame + card + banner', earned: hasProfileSet, svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#8A2BE2" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><circle cx="12" cy="12" r="4"/></svg>' },
+        { id: 'chat_combo', name: 'Chat Stylist', desc: 'Equip chat style + color + background', earned: hasChatSet, svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FF1493" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M8 10h8M8 14h5"/></svg>' },
+        { id: 'identity_complete', name: 'Identity Complete', desc: 'Equip any custom title', earned: hasTitle, svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#00C2FF" stroke-width="2"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 10h8"/></svg>' },
+        { id: 'social_signature', name: 'Social Signature', desc: 'Link 2 social accounts', earned: socialsConnected >= 2, svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#52ffb7" stroke-width="2"><circle cx="6" cy="12" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="12" r="2"/><path d="M8 11l2.8-3.2M13.2 7.8L16 11"/></svg>' }
     ];
 
-    const earned = allAchievements.filter(a => achievements.includes(a.id));
-    const locked = allAchievements.filter(a => !achievements.includes(a.id));
+    const earned = allAchievements.filter(a => a.earned === true || unlocked.has(a.id));
+    const locked = allAchievements.filter(a => !(a.earned === true || unlocked.has(a.id)));
 
     let html = '';
 
@@ -292,37 +380,64 @@ function renderQuickFacts(user, progress) {
     const solved = (progress?.currentQuestion - 1) || 0;
     const avgTime = progress?.averageTime ? Math.round(progress.averageTime) : 0;
     const times = (progress?.questionTimes || []).map(qt => Number(qt.time) || 0).filter(Boolean);
+    const attempts = (progress?.questionTimes || []).map(qt => Number(qt.attempts) || 1);
     const fastest = times.length > 0 ? Math.min(...times) : 0;
     const totalTime = times.reduce((sum, value) => sum + value, 0);
+    const slowest = times.length > 0 ? Math.max(...times) : 0;
+    const completionPct = Math.min(100, Math.round((solved / TOTAL_QUESTIONS) * 100));
+    const firstTryCount = attempts.filter(a => a === 1).length;
+    const firstTryRate = attempts.length > 0 ? Math.round((firstTryCount / attempts.length) * 100) : 0;
+    const joinedDate = user?.joined ? new Date(user.joined) : new Date();
+    const daysOnPlatform = Math.max(1, Math.ceil((Date.now() - joinedDate.getTime()) / (1000 * 60 * 60 * 24)));
+    const solveVelocity = solved > 0 ? (solved / daysOnPlatform) : 0;
 
     factsEl.innerHTML = `
-        <div class="d-flex align-center gap-1 mb-1" style="padding:8px;border:1px solid var(--border);">
+        <div class="d-flex align-center gap-1 mb-1" style="padding:10px;border:1px solid var(--border);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span class="text-sm">Total coding time: <strong>${formatTime(totalTime)}</strong></span>
+            <span style="font-size:0.92rem;">Total coding time: <strong>${formatTime(totalTime)}</strong></span>
         </div>
-        <div class="d-flex align-center gap-1 mb-1" style="padding:8px;border:1px solid var(--border);">
+        <div class="d-flex align-center gap-1 mb-1" style="padding:10px;border:1px solid var(--border);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            <span class="text-sm">Average solve time: <strong>${avgTime ? avgTime + 's' : 'N/A'}</strong></span>
+            <span style="font-size:0.92rem;">Average solve time: <strong>${avgTime ? avgTime + 's' : 'N/A'}</strong></span>
         </div>
-        <div class="d-flex align-center gap-1 mb-1" style="padding:8px;border:1px solid var(--border);">
+        <div class="d-flex align-center gap-1 mb-1" style="padding:10px;border:1px solid var(--border);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            <span class="text-sm">Fastest solve: <strong>${fastest ? fastest + 's' : 'N/A'}</strong></span>
+            <span style="font-size:0.92rem;">Fastest solve: <strong>${fastest ? fastest + 's' : 'N/A'}</strong></span>
         </div>
-        <div class="d-flex align-center gap-1 mb-1" style="padding:8px;border:1px solid var(--border);">
+        <div class="d-flex align-center gap-1 mb-1" style="padding:10px;border:1px solid var(--border);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><rect x="3" y="12" width="4" height="8"/><rect x="10" y="8" width="4" height="12"/><rect x="17" y="4" width="4" height="16"/></svg>
-            <span class="text-sm">Completion: <strong>${Math.min(100, Math.round((solved / TOTAL_QUESTIONS) * 100))}%</strong> (${solved}/${TOTAL_QUESTIONS})</span>
+            <span style="font-size:0.92rem;">Completion: <strong>${completionPct}%</strong> (${solved}/${TOTAL_QUESTIONS})</span>
         </div>
-        <div class="d-flex align-center gap-1 mb-1" style="padding:8px;border:1px solid var(--border);">
+        <div class="d-flex align-center gap-1 mb-1" style="padding:10px;border:1px solid var(--border);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <span class="text-sm">XP per question: <strong>${solved > 0 ? Math.round(user.xp / solved) : 0}</strong> avg</span>
+            <span style="font-size:0.92rem;">XP per question: <strong>${solved > 0 ? Math.round(user.xp / solved) : 0}</strong> avg</span>
+        </div>
+        <div class="d-flex align-center gap-1 mb-1" style="padding:10px;border:1px solid var(--border);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 4-6"/></svg>
+            <span style="font-size:0.92rem;">Slowest solve: <strong>${slowest ? slowest + 's' : 'N/A'}</strong></span>
+        </div>
+        <div class="d-flex align-center gap-1 mb-1" style="padding:10px;border:1px solid var(--border);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l2 2 4-4"/></svg>
+            <span style="font-size:0.92rem;">First-attempt rate: <strong>${firstTryRate}%</strong></span>
+        </div>
+        <div class="d-flex align-center gap-1 mb-1" style="padding:10px;border:1px solid var(--border);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><path d="M12 2v20"/><path d="M18 8l-6-6-6 6"/></svg>
+            <span style="font-size:0.92rem;">Solve velocity: <strong>${solveVelocity.toFixed(2)} q/day</strong></span>
         </div>
     `;
+
+    requestAnimationFrame(syncAchievementsHeight);
 }
 
 function renderAdvancedAnalytics(user, progress) {
     const analyticsEl = document.getElementById('advancedAnalytics');
     const insightsEl = document.getElementById('learningInsights');
     if (!analyticsEl || !insightsEl) return;
+
+    advancedChartInstances.forEach(chart => {
+        if (chart && typeof chart.destroy === 'function') chart.destroy();
+    });
+    advancedChartInstances.length = 0;
 
     const questionTimes = progress?.questionTimes || [];
     const solved = (progress?.currentQuestion - 1) || 0;
@@ -348,38 +463,139 @@ function renderAdvancedAnalytics(user, progress) {
     const solveVelocity = solved / daysOnPlatform;
     const projectedDaysToFinish = solveVelocity > 0 ? Math.ceil((Math.max(0, TOTAL_QUESTIONS - solved)) / solveVelocity) : null;
     const streakMomentum = Math.min(100, (user.streak || 0) * 8);
+    const retryCount = Math.max(0, attempts.length - perfectAttempts);
+    const remaining = Math.max(0, TOTAL_QUESTIONS - solved);
+    const trendTimes = times.slice(-10);
+    const trendLabels = trendTimes.map((_, idx) => `S${idx + 1}`);
 
     analyticsEl.innerHTML = `
-        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
-            <span class="text-sm">Consistency Score: <strong>${consistencyScore}%</strong></span>
-        </div>
-        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
-            <span class="text-sm">Perfect Attempt Rate: <strong>${perfectRate}%</strong></span>
-        </div>
-        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
-            <span class="text-sm">Solve Velocity: <strong>${solveVelocity.toFixed(2)} q/day</strong></span>
-        </div>
-        <div style="padding:9px;border:1px solid var(--border);">
-            <div class="text-sm mb-1">Pace Breakdown</div>
-            <div class="text-sm text-muted">Fast (≤45s): ${fastCount} | Mid: ${mediumCount} | Deep: ${deepCount}</div>
+        <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;">
+            <div style="padding:10px;border:1px solid var(--border); background: var(--bg-card);">
+                <div class="text-sm mb-1">Speed Mix</div>
+                <canvas id="speedMixChart" height="130"></canvas>
+            </div>
+            <div style="padding:10px;border:1px solid var(--border); background: var(--bg-card);">
+                <div class="text-sm mb-1">Attempt Quality</div>
+                <canvas id="attemptMixChart" height="130"></canvas>
+            </div>
+            <div style="padding:10px;border:1px solid var(--border); background: var(--bg-card);">
+                <div class="text-sm mb-1">Progress Pace</div>
+                <canvas id="progressPaceChart" height="130"></canvas>
+            </div>
+            <div style="padding:10px;border:1px solid var(--border); background: var(--bg-card);">
+                <div class="text-sm mb-1">Consistency Trend</div>
+                <canvas id="consistencyTrendChart" height="130"></canvas>
+            </div>
         </div>
     `;
 
     insightsEl.innerHTML = `
-        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
-            <span class="text-sm">Streak Momentum: <strong>${streakMomentum}%</strong></span>
+        <div class="mt-1" style="padding:9px;border:1px solid var(--border);">
+            <div class="text-sm text-muted">Consistency: <strong>${consistencyScore}%</strong> · Perfect: <strong>${perfectRate}%</strong> · Velocity: <strong>${solveVelocity.toFixed(2)} q/day</strong></div>
+            <div class="text-sm text-muted">Streak Momentum: <strong>${streakMomentum}%</strong> · Days on platform: <strong>${daysOnPlatform}</strong> · ETA: <strong>${projectedDaysToFinish ? projectedDaysToFinish + ' days' : 'Need more solves'}</strong></div>
         </div>
-        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
-            <span class="text-sm">Days on platform: <strong>${daysOnPlatform}</strong></span>
-        </div>
-        <div class="d-flex align-center gap-1 mb-1" style="padding:9px;border:1px solid var(--border);">
-            <span class="text-sm">Projected completion: <strong>${projectedDaysToFinish ? projectedDaysToFinish + ' days' : 'Need more solves'}</strong></span>
-        </div>
-        <div style="padding:9px;border:1px solid var(--border);">
+        <div class="mt-1" style="padding:9px;border:1px solid var(--border);">
             <div class="text-sm mb-1">Focus Suggestion</div>
-            <div class="text-sm text-muted">${deepCount > fastCount ? 'Work on speed drills for easier questions to improve timing consistency.' : 'Great pace balance — push streak and attempt higher difficulty sets.'}</div>
+            <div class="text-sm text-muted">${deepCount > fastCount ? 'Work on easier timed drills to improve solve speed consistency.' : 'Strong pace balance. Keep streak momentum and push higher-tier sets.'}</div>
         </div>
     `;
+
+    if (typeof Chart === 'undefined') return;
+
+    const speedMixCanvas = document.getElementById('speedMixChart');
+    if (speedMixCanvas) {
+        advancedChartInstances.push(new Chart(speedMixCanvas.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Fast', 'Mid', 'Deep'],
+                datasets: [{
+                    data: [fastCount, mediumCount, deepCount],
+                    backgroundColor: ['rgba(0,255,136,0.75)', 'rgba(255,170,0,0.75)', 'rgba(255,68,68,0.75)'],
+                    borderColor: ['#00ff88', '#ffaa00', '#ff4444'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#a8b2d1', boxWidth: 10 } } }
+            }
+        }));
+    }
+
+    const attemptMixCanvas = document.getElementById('attemptMixChart');
+    if (attemptMixCanvas) {
+        advancedChartInstances.push(new Chart(attemptMixCanvas.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['First Try', 'Retry'],
+                datasets: [{
+                    data: [perfectAttempts, retryCount],
+                    backgroundColor: ['rgba(30,144,255,0.78)', 'rgba(148,0,211,0.75)'],
+                    borderColor: ['#1E90FF', '#9400D3'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#a8b2d1', boxWidth: 10 } } }
+            }
+        }));
+    }
+
+    const progressPaceCanvas = document.getElementById('progressPaceChart');
+    if (progressPaceCanvas) {
+        advancedChartInstances.push(new Chart(progressPaceCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Solved', 'Remaining'],
+                datasets: [{
+                    data: [solved, remaining],
+                    backgroundColor: ['rgba(126,243,255,0.8)', 'rgba(255,255,255,0.2)'],
+                    borderColor: ['#7ef3ff', 'rgba(255,255,255,0.35)'],
+                    borderWidth: 1,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: '#a8b2d1' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y: { ticks: { color: '#a8b2d1' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                }
+            }
+        }));
+    }
+
+    const consistencyTrendCanvas = document.getElementById('consistencyTrendChart');
+    if (consistencyTrendCanvas) {
+        advancedChartInstances.push(new Chart(consistencyTrendCanvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: trendLabels.length ? trendLabels : ['S1'],
+                datasets: [{
+                    label: 'Solve Time (s)',
+                    data: trendTimes.length ? trendTimes : [0],
+                    borderColor: 'rgba(255,20,147,0.9)',
+                    backgroundColor: 'rgba(255,20,147,0.18)',
+                    borderWidth: 2,
+                    pointRadius: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: '#a8b2d1' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y: { ticks: { color: '#a8b2d1' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                }
+            }
+        }));
+    }
+
+    requestAnimationFrame(syncAchievementsHeight);
 }
 
 // Zen timer display is now handled by ActivityTracker (activityTracker.js)
@@ -391,23 +607,43 @@ async function loadDailyQuiz() {
         if (res?.success) {
             renderDailyQuiz(res);
         }
-    } catch (e) { console.error('Error loading daily quiz', e); }
+    } catch (e) {
+        console.error('Error loading daily quiz', e);
+        const questionEl = document.getElementById('quizQuestionText');
+        const optionsEl = document.getElementById('quizOptions');
+        if (questionEl) questionEl.textContent = 'Daily quiz unavailable right now.';
+        if (optionsEl) optionsEl.innerHTML = '<p class="text-muted text-sm">Please refresh in a moment.</p>';
+    }
 }
 
 function renderDailyQuiz(data) {
-    const { question, options, answeredToday } = data;
+    const { question, options, answeredToday, quizId } = data;
     document.getElementById('quizQuestionText').textContent = question;
+    activeDailyQuizId = quizId || null;
+    const safeOptions = Array.isArray(options) ? options : [];
     
     if (answeredToday) {
         showQuizCooldown();
     } else {
-        const optionsHtml = options.map((opt, i) => `
+        if (quizTimerInterval) {
+            clearInterval(quizTimerInterval);
+            quizTimerInterval = null;
+        }
+
+        const optionsHtml = safeOptions.map((opt, i) => `
             <button class="btn btn-outline" style="text-align: left; justify-content: flex-start; padding: 8px 12px; font-size: 0.9rem;" onclick="submitQuizAnswer(${i}, this)">
                 ${opt}
             </button>
         `).join('');
+
+        if (!optionsHtml) {
+            document.getElementById('quizOptions').innerHTML = '<p class="text-muted text-sm">Quiz options unavailable right now. Refresh to retry.</p>';
+            return;
+        }
+
         document.getElementById('quizOptions').innerHTML = optionsHtml;
         document.getElementById('quizContent').style.opacity = '1';
+        document.getElementById('quizContent').style.pointerEvents = 'auto';
         document.getElementById('quizCooldownOverlay').style.display = 'none';
         document.getElementById('quizRewardBadge').style.display = 'inline-block';
     }
@@ -421,7 +657,7 @@ async function submitQuizAnswer(index, btnElement) {
     try {
         const res = await apiCall('/api/daily-quiz', {
             method: 'POST',
-            body: JSON.stringify({ answerIndex: index })
+            body: JSON.stringify({ answerIndex: index, quizId: activeDailyQuizId })
         });
         if (res?.success) {
             // Highlight the selected button
@@ -459,7 +695,8 @@ async function submitQuizAnswer(index, btnElement) {
 
 let quizTimerInterval = null;
 function showQuizCooldown() {
-    document.getElementById('quizContent').style.opacity = '0.05';
+    document.getElementById('quizContent').style.opacity = '0';
+    document.getElementById('quizContent').style.pointerEvents = 'none';
     document.getElementById('quizCooldownOverlay').style.display = 'flex';
     document.getElementById('quizRewardBadge').style.display = 'none';
     
@@ -496,5 +733,7 @@ function updateQuizTimer() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    enforceDashboardScale();
     loadDashboard();
+    window.addEventListener('resize', syncAchievementsHeight);
 });

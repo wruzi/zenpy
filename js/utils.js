@@ -77,6 +77,7 @@ function ensureThemeSwitcher() {
 
 function initSmoothPageTransitions() {
     if (!document.body) return;
+    if (document.body.classList.contains('no-page-transition')) return;
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     document.body.classList.add('page-enter');

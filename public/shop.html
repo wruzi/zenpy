@@ -46,6 +46,52 @@
             padding: 2px 6px; border: 1px solid var(--success); color: var(--success); text-transform: uppercase; letter-spacing: 0.1em;
         }
         .categories { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+        .shop-header-tools {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .shop-sort-menu {
+            position: relative;
+        }
+        .shop-sort-trigger {
+            min-width: 124px;
+            justify-content: flex-start;
+            gap: 6px;
+        }
+        .shop-sort-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            width: 260px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-lg);
+            display: none;
+            z-index: 30;
+            padding: 8px;
+        }
+        .shop-sort-menu.open .shop-sort-dropdown {
+            display: grid;
+            gap: 6px;
+        }
+        .sort-option {
+            width: 100%;
+            text-align: left;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            padding: 8px 10px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .sort-option:hover,
+        .sort-option.active {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
         .category-btn {
             padding: 6px 14px; font-family: var(--font-main); font-size: 0.78rem;
             font-weight: 600; border: 1px solid var(--border); background: transparent;
@@ -193,6 +239,26 @@
         }
         .preview-chat-username { font-size: 0.78rem; font-weight: 700; }
         .preview-chat-text { font-size: 0.78rem; color: var(--text-secondary); margin-top: 3px; }
+        .promo-card {
+            border: 2px solid var(--border);
+            background: var(--bg-card);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            margin-bottom: 18px;
+        }
+        .promo-row {
+            display: grid;
+            grid-template-columns: minmax(180px, 260px) auto;
+            gap: 10px;
+            align-items: center;
+        }
+        .promo-help {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+        @media (max-width: 700px) {
+            .promo-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -228,22 +294,48 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
                     Zen Shop
                 </h2>
-                <div class="top-stat">
-                    <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 9h-3a1.5 1.5 0 000 3h1a1.5 1.5 0 010 3h-3m2-8v1m0 6v1"/></svg></span>
-                    <span class="value" id="zenBalance">0</span> <span class="text-muted">Zen</span>
+                <div class="shop-header-tools">
+                    <div class="top-stat">
+                        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 9h-3a1.5 1.5 0 000 3h1a1.5 1.5 0 010 3h-3m2-8v1m0 6v1"/></svg></span>
+                        <span class="value" id="zenBalance">0</span> <span class="text-muted">Zen</span>
+                    </div>
+                    <div class="shop-sort-menu" id="shopSortMenu">
+                        <button class="btn btn-ghost btn-sm shop-sort-trigger" id="shopSortButton" onclick="toggleSortMenu(event)">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="7" y1="12" x2="21" y2="12"/><line x1="11" y1="18" x2="21" y2="18"/></svg>
+                            Sort Cards
+                        </button>
+                        <div class="shop-sort-dropdown" id="shopSortDropdown">
+                            <button class="sort-option" data-sort="price_asc" onclick="setSortMode('price_asc', event)">0 Zen coins → max Zen coins</button>
+                            <button class="sort-option" data-sort="price_desc" onclick="setSortMode('price_desc', event)">max Zen coins → 0 Zen coins</button>
+                            <button class="sort-option" data-sort="category_name_to_card" onclick="setSortMode('category_name_to_card', event)">shop category names → card</button>
+                            <button class="sort-option" data-sort="category_card_to_name" onclick="setSortMode('category_card_to_name', event)">shop category card → names</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="categories">
-                <button class="category-btn active" onclick="filterCategory('all')">All</button>
-                <button class="category-btn" onclick="filterCategory('name_style')">Names</button>
-                <button class="category-btn" onclick="filterCategory('avatar_frame')">Frames</button>
-                <button class="category-btn" onclick="filterCategory('effect')">Effects</button>
-                <button class="category-btn" onclick="filterCategory('name_accessory')">Titles</button>
-                <button class="category-btn" onclick="filterCategory('chat')">Chat</button>
-                <button class="category-btn" onclick="filterCategory('profile_banner')">Banners</button>
-                <button class="category-btn" onclick="filterCategory('premium')">Premium</button>
-                <button class="category-btn" onclick="filterCategory('profile_card')">Cards</button>
+                <button class="category-btn active" data-category="all" onclick="filterCategory('all', this)">All</button>
+                <button class="category-btn" data-category="name_style" onclick="filterCategory('name_style', this)">Names</button>
+                <button class="category-btn" data-category="avatar_frame" onclick="filterCategory('avatar_frame', this)">Frames</button>
+                <button class="category-btn" data-category="effect" onclick="filterCategory('effect', this)">Effects</button>
+                <button class="category-btn" data-category="name_accessory" onclick="filterCategory('name_accessory', this)">Titles</button>
+                <button class="category-btn" data-category="chat" onclick="filterCategory('chat', this)">Chat</button>
+                <button class="category-btn" data-category="profile_banner" onclick="filterCategory('profile_banner', this)">Banners</button>
+                <button class="category-btn" data-category="premium" onclick="filterCategory('premium', this)">Premium</button>
+                <button class="category-btn" data-category="profile_card" onclick="filterCategory('profile_card', this)">Cards</button>
+            </div>
+
+            <div class="promo-card">
+                <div class="d-flex align-center justify-between mb-1" style="gap:10px; flex-wrap:wrap;">
+                    <strong style="font-size:0.92rem;">Redeem Promo Code</strong>
+                    <span class="promo-help">Max 10 chars · rewards can include Zen + shop unlocks</span>
+                </div>
+                <div class="promo-row">
+                    <input id="promoCodeInput" class="form-control" type="text" maxlength="10" placeholder="Enter code (e.g. ZENDROP1)" style="text-transform:uppercase;">
+                    <button class="btn btn-primary" onclick="redeemPromoCode()">Redeem Code</button>
+                </div>
+                <div id="promoRedeemResult" class="promo-help mt-1"></div>
             </div>
 
             <section class="premium-banner" id="premiumShowcase">

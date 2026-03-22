@@ -9,6 +9,28 @@
     <link rel="stylesheet" href="/css/animations.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        html, body {
+            font-size: 16px;
+            zoom: 1;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        .main-content {
+            max-width: calc(100vw - 240px);
+            overflow-x: hidden;
+        }
+        .stats-grid {
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }
+        body.page-enter,
+        body.page-exit,
+        body.page-enter .main-content,
+        body.page-exit .main-content {
+            animation: none !important;
+            transform: none !important;
+            filter: none !important;
+        }
         body.onboarding-active .sidebar,
         body.onboarding-active .main-content {
             opacity: 0.2;
@@ -49,6 +71,18 @@
             font-size: 0.78rem;
             color: var(--text-muted);
         }
+        #achievementsCard {
+            height: 100%;
+            max-height: none;
+            display: flex;
+            flex-direction: column;
+        }
+        #achievementsList {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
         @media (max-width: 700px) {
             .onboarding-grid {
                 grid-template-columns: 1fr;
@@ -56,7 +90,7 @@
         }
     </style>
 </head>
-<body>
+<body class="no-page-transition">
     <div class="app-layout">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -207,7 +241,7 @@
                     </div>
                     
                     <!-- Overlay state -->
-                    <div id="quizCooldownOverlay" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; z-index:10;">
+                    <div id="quizCooldownOverlay" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; z-index:10; background: var(--bg-card); border: 2px solid var(--border);">
                         <h3 style="color:var(--text-primary); margin-bottom:8px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">New Question Arrives</h3>
                         <p class="session-code" id="quizCountdown" style="font-size:1.8rem; letter-spacing:0.1em; color:var(--accent); text-shadow: 0 2px 4px rgba(0,0,0,0.8); font-weight:900;">00:00:00</p>
                         <p class="text-muted text-sm mt-1" style="text-shadow: 0 1px 2px rgba(0,0,0,0.8);">timer till 12am IST</p>
@@ -237,9 +271,9 @@
                 </div>
             </div>
 
-            <!-- Achievements + Quick Facts Row -->
-            <div class="grid-2 mb-3">
-                <div class="card">
+            <!-- Achievements + Quick Facts + Learning Insights -->
+            <div class="grid-2 mb-3" style="align-items:stretch;">
+                <div class="card" id="achievementsCard">
                     <div class="card-header">
                         <span class="card-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><circle cx="12" cy="16" r="5"/><path d="M8.21 13.89L7 3h10l-1.21 10.89"/><path d="M12 11v2"/></svg>
@@ -250,21 +284,34 @@
                         <p class="text-muted text-sm">No achievements yet. Start solving to earn badges.</p>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><rect x="3" y="12" width="4" height="8"/><rect x="10" y="8" width="4" height="12"/><rect x="17" y="4" width="4" height="16"/></svg>
-                            Quick Facts
-                        </span>
+                <div id="insightsColumn" style="display:grid;grid-template-columns:1fr;gap:16px;align-content:start;height:100%;">
+                    <div class="card" id="quickFactsCard">
+                        <div class="card-header">
+                            <span class="card-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><rect x="3" y="12" width="4" height="8"/><rect x="10" y="8" width="4" height="12"/><rect x="17" y="4" width="4" height="16"/></svg>
+                                Quick Facts
+                            </span>
+                        </div>
+                        <div id="quickFacts">
+                            <p class="text-muted text-sm">Loading analytics...</p>
+                        </div>
                     </div>
-                    <div id="quickFacts">
-                        <p class="text-muted text-sm">Loading analytics...</p>
+                    <div class="card" id="learningInsightsCard">
+                        <div class="card-header">
+                            <span class="card-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><path d="M12 2v20"/><path d="M18 8l-6-6-6 6"/></svg>
+                                Learning Insights
+                            </span>
+                        </div>
+                        <div id="learningInsights">
+                            <p class="text-muted text-sm">Building personalized insights...</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Deep Analytics -->
-            <div class="grid-2 mb-3">
+            <div class="mb-3" style="display:grid; grid-template-columns:1fr; gap:16px;">
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title">
@@ -274,17 +321,6 @@
                     </div>
                     <div id="advancedAnalytics">
                         <p class="text-muted text-sm">Loading analytics...</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><path d="M12 2v20"/><path d="M18 8l-6-6-6 6"/></svg>
-                            Learning Insights
-                        </span>
-                    </div>
-                    <div id="learningInsights">
-                        <p class="text-muted text-sm">Building personalized insights...</p>
                     </div>
                 </div>
             </div>
@@ -340,11 +376,11 @@
     </div>
 
     <div id="toastContainer" class="toast-container"></div>
-    <script src="/js/icons.js"></script>
-    <script src="/js/utils.js"></script>
-    <script src="/js/gamification.js"></script>
-    <script src="/js/charts.js"></script>
+    <script src="/js/icons.js?v=20260322c"></script>
+    <script src="/js/utils.js?v=20260322c"></script>
+    <script src="/js/gamification.js?v=20260322c"></script>
+    <script src="/js/charts.js?v=20260322c"></script>
 
-    <script src="/js/dashboard.js"></script>
+    <script src="/js/dashboard.js?v=20260322c"></script>
 </body>
 </html>

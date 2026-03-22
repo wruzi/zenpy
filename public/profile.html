@@ -157,7 +157,14 @@
             { id: 'completionist', name: 'Python God', desc: '100 questions solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M2 18l3-11 5 5 2-7 2 7 5-5 3 11z"/><path d="M2 18h20"/></svg>' },
             { id: 'gpt_apprentice_150', name: 'GPT Apprentice', desc: '150 questions solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#00C2FF" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.2L18 21l-6-4-6 4 1.5-7.8L2 9h7z"/></svg>' },
             { id: 'gpt_engineer_200', name: 'GPT Engineer', desc: '200 questions solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#8A2BE2" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>' },
-            { id: 'zenpy_grandmaster_250', name: 'ZenPy Grandmaster', desc: 'All 250 solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M4 19h16"/><path d="M6 19l2-12 4 5 4-5 2 12"/></svg>' }
+            { id: 'zenpy_grandmaster_250', name: 'ZenPy Grandmaster', desc: 'All 250 solved', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M4 19h16"/><path d="M6 19l2-12 4 5 4-5 2 12"/></svg>' },
+            { id: 'shop_first_piece', name: 'First Piece', desc: 'Own your first shop item', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#7ef3ff" stroke-width="2"><path d="M12 3L2 9l10 6 10-6-10-6z"/><path d="M2 15l10 6 10-6"/></svg>' },
+            { id: 'set_builder_5', name: 'Set Builder', desc: 'Collect 5 shop pieces', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#00FF88" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>' },
+            { id: 'wardrobe_10', name: 'Style Vault', desc: 'Collect 10 shop pieces', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6"/></svg>' },
+            { id: 'profile_set', name: 'Profile Architect', desc: 'Equip frame + card + banner', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#8A2BE2" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><circle cx="12" cy="12" r="4"/></svg>' },
+            { id: 'chat_combo', name: 'Chat Stylist', desc: 'Equip chat style + color + background', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#FF1493" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M8 10h8M8 14h5"/></svg>' },
+            { id: 'identity_complete', name: 'Identity Complete', desc: 'Equip any custom title', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#00C2FF" stroke-width="2"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 10h8"/></svg>' },
+            { id: 'social_signature', name: 'Social Signature', desc: 'Link 2 social accounts', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="#52ffb7" stroke-width="2"><circle cx="6" cy="12" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="12" r="2"/><path d="M8 11l2.8-3.2M13.2 7.8L16 11"/></svg>' }
         ];
 
         const phases = [
@@ -249,7 +256,7 @@
             // Setup avatar upload
             document.getElementById('avatarUpload').addEventListener('change', uploadAvatar);
 
-            renderProfileAchievements(user.achievements || []);
+            renderProfileAchievements(user, progress || {});
             if (progress?.questionTimes?.length > 0) {
                 document.getElementById('chartPlaceholder').style.display = 'none';
                 renderProgressChart(progress.questionTimes);
@@ -288,10 +295,40 @@
             }
         }
 
-        function renderProfileAchievements(earned) {
+        function renderProfileAchievements(user, progress) {
             const container = document.getElementById('profileAchievements');
-            container.innerHTML = allAchievements.map(a => {
-                const isEarned = earned.includes(a.id);
+            const unlocked = new Set(Array.isArray(user?.achievements) ? user.achievements : []);
+            const solved = (progress?.currentQuestion - 1) || 0;
+            const ownedItemsCount = (user?.inventory?.owned || []).length;
+            const equipped = user?.inventory?.equipped || {};
+            const hasTitle = Boolean(equipped.title && equipped.title !== 'Newbie');
+            const hasProfileSet = Boolean(equipped.frame && equipped.profile_card && equipped.banner);
+            const hasChatSet = Boolean(equipped.chatExtra && equipped.chatColor && equipped.chatBackground);
+            const socialsConnected = [user?.github, user?.instagram, user?.twitter]
+                .filter(Boolean)
+                .filter(link => String(link).trim() && link !== 'linked').length;
+
+            const computed = {
+                shop_first_piece: ownedItemsCount >= 1,
+                set_builder_5: ownedItemsCount >= 5,
+                wardrobe_10: ownedItemsCount >= 10,
+                profile_set: hasProfileSet,
+                chat_combo: hasChatSet,
+                identity_complete: hasTitle,
+                social_signature: socialsConnected >= 2,
+                completionist: solved >= 100,
+                gpt_apprentice_150: solved >= 150,
+                gpt_engineer_200: solved >= 200,
+                zenpy_grandmaster_250: solved >= 250
+            };
+
+            const sortedAchievements = [
+                ...allAchievements.filter(a => computed[a.id] === true || unlocked.has(a.id)),
+                ...allAchievements.filter(a => !(computed[a.id] === true || unlocked.has(a.id)))
+            ];
+
+            container.innerHTML = sortedAchievements.map(a => {
+                const isEarned = computed[a.id] === true || unlocked.has(a.id);
                 return `<div class="d-flex align-center gap-1 mb-1" style="padding:8px;border:1px solid ${isEarned ? 'var(--success)' : 'var(--border)'};${isEarned ? '' : 'opacity:0.35;'}">
                     <span style="width:22px;height:22px;display:flex;flex-shrink:0;">${a.svg}</span>
                     <div style="flex:1;"><strong style="font-size:0.82rem;">${a.name}</strong><p class="text-muted" style="font-size:0.72rem;margin:0;">${a.desc}</p></div>

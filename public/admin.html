@@ -69,6 +69,50 @@
                     </table>
                 </div>
             </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <span class="card-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><path d="M20 12V8H4v4"/><path d="M2 12h20v8H2z"/><path d="M12 8V4"/></svg>
+                        Promo Code Management
+                    </span>
+                </div>
+
+                <div class="grid-2 mb-2">
+                    <div class="form-group">
+                        <label for="promoCode">Code (max 10)</label>
+                        <input id="promoCode" class="form-control" maxlength="10" placeholder="ZENDROP2" style="text-transform:uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label for="promoZen">Zen reward</label>
+                        <input id="promoZen" type="number" min="0" class="form-control" placeholder="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="promoItems">Shop item IDs (comma-separated)</label>
+                        <input id="promoItems" class="form-control" placeholder="neon_frame, chat_color_ice, card_neon">
+                    </div>
+                    <div class="form-group">
+                        <label for="promoMax">Max redemptions (optional)</label>
+                        <input id="promoMax" type="number" min="1" class="form-control" placeholder="200">
+                    </div>
+                    <div class="form-group">
+                        <label for="promoExpiry">Expiry (optional)</label>
+                        <input id="promoExpiry" type="datetime-local" class="form-control">
+                    </div>
+                    <div class="form-group d-flex align-end">
+                        <button class="btn btn-primary w-full" onclick="createPromoCode()">Create Promo Code</button>
+                    </div>
+                </div>
+
+                <div class="text-muted text-sm mb-2">Example seeded file: <strong>ZENDROP1</strong> gives Zen + selected shop unlocks. You can edit `data/promo_codes.json` directly too.</div>
+
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Code</th><th>Rewards</th><th>Redemptions</th><th>Expires</th><th>Status</th></tr></thead>
+                        <tbody id="promoCodesTable"><tr><td colspan="5" class="text-center text-muted p-3">Loading promo codes...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -108,6 +152,79 @@
                     </tr>
                 `).join('');
             }
+
+            await loadPromoCodes();
+        }
+
+        async function loadPromoCodes() {
+            const data = await apiCall('/api/promo-codes');
+            const tbody = document.getElementById('promoCodesTable');
+            if (!tbody) return;
+
+            if (!data?.success || !Array.isArray(data.promoCodes)) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted p-3">Promo codes unavailable or access denied.</td></tr>';
+                return;
+            }
+
+            if (data.promoCodes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted p-3">No promo codes yet.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.promoCodes.map(code => {
+                const rewardItems = (code.rewards?.itemIds || []).join(', ') || '—';
+                const rewardZen = Number(code.rewards?.zen || 0);
+                const max = code.maxRedemptions || '∞';
+                return `
+                    <tr>
+                        <td class="font-bold">${escapeHTML(code.code)}</td>
+                        <td><span class="text-warning">${rewardZen} Zen</span><br><span class="text-muted text-sm">${escapeHTML(rewardItems)}</span></td>
+                        <td>${code.redeemedCount}/${max}</td>
+                        <td class="text-muted">${code.expiresAt ? new Date(code.expiresAt).toLocaleString() : 'No expiry'}</td>
+                        <td>${code.active ? '<span class="text-success">Active</span>' : '<span class="text-error">Inactive</span>'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function createPromoCode() {
+            const code = (document.getElementById('promoCode')?.value || '').toUpperCase().trim();
+            const zen = Number(document.getElementById('promoZen')?.value || 0);
+            const itemIds = (document.getElementById('promoItems')?.value || '')
+                .split(',')
+                .map(v => v.trim())
+                .filter(Boolean);
+            const maxRedemptions = Number(document.getElementById('promoMax')?.value || 0);
+            const expiresAtRaw = document.getElementById('promoExpiry')?.value || '';
+
+            if (!code) {
+                showToast('Promo code is required', 'error');
+                return;
+            }
+
+            const data = await apiCall('/api/promo-codes/create', {
+                method: 'POST',
+                body: JSON.stringify({
+                    code,
+                    zen,
+                    itemIds,
+                    maxRedemptions: maxRedemptions > 0 ? maxRedemptions : null,
+                    expiresAt: expiresAtRaw ? new Date(expiresAtRaw).toISOString() : null
+                })
+            });
+
+            if (!data?.success) {
+                showToast(data?.message || 'Failed to create promo code', 'error');
+                return;
+            }
+
+            showToast('Promo code created', 'success');
+            document.getElementById('promoCode').value = '';
+            document.getElementById('promoZen').value = '';
+            document.getElementById('promoItems').value = '';
+            document.getElementById('promoMax').value = '';
+            document.getElementById('promoExpiry').value = '';
+            await loadPromoCodes();
         }
         async function banUser(email) {
             const data = await apiCall('/api/admin/ban', { method: 'POST', body: JSON.stringify({ email, reason: 'admin_ban' }) });

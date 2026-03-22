@@ -164,6 +164,7 @@ const dataFiles = {
     'activity_log.json': [],
     'follows.json': [],
     'direct_messages.json': [],
+    'promo_codes.json': [],
     'questions.json': [],
     'shop_items.json': []
 };

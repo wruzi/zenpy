@@ -192,13 +192,13 @@ JWT is used for protected API requests.
 
 ## Project Structure
 
-- [server](server) — Express backend, auth routes, quiz, economy, community and chat server logic
-- [public](public) — page entry points (dashboard, profile, practice, chat, community, auth)
-- [js](js) — frontend modules for dashboard, chat, community, leaderboard, shop, compiler, utils
-- [css](css) — base styles, themes, responsive styles, animations
-- [data](data) — JSON storage for users, progress, questions, chat, follows, inventory data
-- [assets](assets) — avatar, image, and shop media assets
-- [scripts](scripts) — reset and generation scripts for maintenance and content tooling
+- [backend/server](backend/server) — Express backend, auth routes, quiz, economy, community and chat server logic
+- [frontend/public](frontend/public) — page entry points (dashboard, profile, practice, chat, community, auth)
+- [frontend/js](frontend/js) — frontend modules for dashboard, chat, community, leaderboard, shop, compiler, utils
+- [frontend/css](frontend/css) — base styles, themes, responsive styles, animations
+- [database/data](database/data) — JSON storage for users, progress, questions, chat, follows, inventory data
+- [frontend/assets](frontend/assets) — avatar, image, and shop media assets
+- [backend/scripts](backend/scripts) — reset and generation scripts for maintenance and content tooling
 
 ## Contact
 

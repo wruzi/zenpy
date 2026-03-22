@@ -10,7 +10,7 @@ const fs = require('fs');
 // Configure multer storage
 const avatarStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const dir = path.join(__dirname, '..', 'assets', 'avatars');
+        const dir = path.join(__dirname, '..', '..', 'frontend', 'assets', 'avatars');
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         cb(null, dir);
     },
@@ -63,7 +63,7 @@ module.exports = function(app) {
 
             // Delete old avatar if not default
             if (user.image && user.image !== 'default-avatar.png' && user.image !== 'default-avatar.svg' && !user.image.startsWith('http')) {
-                const oldPath = path.join(__dirname, '..', 'assets', 'avatars', user.image);
+                const oldPath = path.join(__dirname, '..', '..', 'frontend', 'assets', 'avatars', user.image);
                 if (fs.existsSync(oldPath)) {
                     try { fs.unlinkSync(oldPath); } catch (e) { /* ignore */ }
                 }

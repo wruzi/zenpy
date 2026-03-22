@@ -40,7 +40,7 @@ def update_file(filepath):
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(text)
 
-update_file('public/docs.html')
+update_file('../frontend/public/docs.html')
 
 def update_index(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
@@ -72,4 +72,4 @@ def update_index(filepath):
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(text)
 
-update_index('public/index.html')
+update_index('../frontend/public/index.html')

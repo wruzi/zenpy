@@ -28,13 +28,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.static(path.join(__dirname, '..', 'public')));
-app.use('/css', express.static(path.join(__dirname, '..', 'css')));
-app.use('/js', express.static(path.join(__dirname, '..', 'js')));
-app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
+app.use(express.static(path.join(__dirname, '..', '..', 'frontend', 'public')));
+app.use('/css', express.static(path.join(__dirname, '..', '..', 'frontend', 'css')));
+app.use('/js', express.static(path.join(__dirname, '..', '..', 'frontend', 'js')));
+app.use('/assets', express.static(path.join(__dirname, '..', '..', 'frontend', 'assets')));
 
 // --- Data Directory ---
-const DATA_DIR = path.join(__dirname, '..', 'data');
+const DATA_DIR = path.join(__dirname, '..', '..', 'database', 'data');
 
 function readJSON(filename) {
     const filepath = path.join(DATA_DIR, filename);
@@ -61,7 +61,7 @@ app.locals.readJSON = readJSON;
 app.locals.writeJSON = writeJSON;
 app.locals.DATA_DIR = DATA_DIR;
 
-const SHOP_ASSETS_DIR = path.join(__dirname, '..', 'assets', 'shop');
+const SHOP_ASSETS_DIR = path.join(__dirname, '..', '..', 'frontend', 'assets', 'shop');
 
 function toSlug(value = '') {
     return String(value)
@@ -177,7 +177,7 @@ Object.entries(dataFiles).forEach(([file, defaultData]) => {
 });
 
 // --- Ensure avatars directory ---
-const avatarsDir = path.join(__dirname, '..', 'assets', 'avatars');
+const avatarsDir = path.join(__dirname, '..', '..', 'frontend', 'assets', 'avatars');
 if (!fs.existsSync(avatarsDir)) fs.mkdirSync(avatarsDir, { recursive: true });
 
 // --- Mount Routes ---
@@ -202,22 +202,22 @@ const chatServer = require('./chatServer');
 chatServer(io, readJSON, writeJSON, app.locals.getItemCssClass);
 
 // --- Serve Pages ---
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'index.html')));
-app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'login.html')));
-app.get('/verify', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'verify.html')));
-app.get('/signup', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'signup.html')));
-app.get('/forgot-password', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'forgot-password.html')));
-app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'dashboard.html')));
-app.get('/practice', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'practice.html')));
-app.get('/profile', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'profile.html')));
-app.get('/leaderboard', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'leaderboard.html')));
-app.get('/shop', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'shop.html')));
-app.get('/chat', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'chat.html')));
-app.get('/community', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'community.html')));
-app.get('/docs', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'docs.html')));
-app.get('/terms', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'terms.html')));
-app.get('/rules', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'rules.html')));
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'admin.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'index.html')));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'login.html')));
+app.get('/verify', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'verify.html')));
+app.get('/signup', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'signup.html')));
+app.get('/forgot-password', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'forgot-password.html')));
+app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'dashboard.html')));
+app.get('/practice', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'practice.html')));
+app.get('/profile', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'profile.html')));
+app.get('/leaderboard', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'leaderboard.html')));
+app.get('/shop', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'shop.html')));
+app.get('/chat', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'chat.html')));
+app.get('/community', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'community.html')));
+app.get('/docs', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'docs.html')));
+app.get('/terms', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'terms.html')));
+app.get('/rules', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'rules.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'admin.html')));
 
 // --- Start Server ---
 const PORT = process.env.PORT || 3000;

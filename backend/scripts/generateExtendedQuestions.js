@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const dataDir = path.join(__dirname, '..', 'data');
+const dataDir = path.join(__dirname, '..', '..', 'database', 'data');
 const questionsPath = path.join(dataDir, 'questions.json');
-const outputListPath = path.join(__dirname, '..', 'added_questions_101_250.txt');
+const outputListPath = path.join(__dirname, '..', '..', 'database', 'added_questions_101_250.txt');
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));

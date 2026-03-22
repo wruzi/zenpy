@@ -5,7 +5,7 @@ import { loadPyodide } from 'pyodide';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const questionsPath = path.join(__dirname, '..', 'data', 'questions.json');
+const questionsPath = path.join(__dirname, '..', '..', 'database', 'data', 'questions.json');
 const questions = JSON.parse(fs.readFileSync(questionsPath, 'utf8'));
 
 function buildCandidateCode(question) {
@@ -147,7 +147,7 @@ async function main() {
     }
   }
 
-  const reportPath = path.join(__dirname, '..', 'data', 'pyodide_validation_report.json');
+  const reportPath = path.join(__dirname, '..', '..', 'database', 'data', 'pyodide_validation_report.json');
   fs.writeFileSync(
     reportPath,
     JSON.stringify(

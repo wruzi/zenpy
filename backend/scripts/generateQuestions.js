@@ -138,8 +138,8 @@ advancedQuestions.forEach(q => {
 });
 
 // Write to file
-const dataDir = path.join(__dirname, '..', 'data');
+const dataDir = path.join(__dirname, '..', '..', 'database', 'data');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 fs.writeFileSync(path.join(dataDir, 'questions.json'), JSON.stringify(questions, null, 2));
-console.log(`Generated ${questions.length} questions to data/questions.json`);
+console.log(`Generated ${questions.length} questions to database/data/questions.json`);
 console.log('All initialCode fields are EMPTY — no pre-filled answers!');

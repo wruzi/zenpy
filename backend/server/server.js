@@ -198,6 +198,15 @@ app.get('/terms', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'f
 app.get('/rules', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'rules.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'public', 'admin.html')));
 
+app.get('/api/health', (req, res) => {
+    res.json({
+        success: true,
+        status: 'ok',
+        storageMode: jsonStore.getMode(),
+        timestamp: new Date().toISOString()
+    });
+});
+
 // --- Start Server ---
 const PORT = process.env.PORT || 3000;
 

@@ -25,12 +25,15 @@ const avatarUpload = multer({
     storage: avatarStorage,
     limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
     fileFilter: (req, file, cb) => {
-        const allowed = ['.png', '.gif', '.webp'];
+        const allowed = ['.png', '.gif', '.webp', '.jpg', '.jpeg'];
         const ext = path.extname(file.originalname).toLowerCase();
-        if (allowed.includes(ext)) {
+        const mime = String(file.mimetype || '').toLowerCase();
+        const allowedMimes = ['image/png', 'image/gif', 'image/webp', 'image/jpeg', 'image/jpg'];
+
+        if (allowed.includes(ext) && allowedMimes.includes(mime)) {
             cb(null, true);
         } else {
-            cb(new Error('Only PNG, GIF, WEBP images are allowed.'));
+            cb(new Error('Only PNG, GIF, WEBP, JPG, JPEG images are allowed.'));
         }
     }
 });

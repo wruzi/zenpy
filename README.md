@@ -1,268 +1,218 @@
 # ZenPy
 
-ZenPy is a full-stack Python practice platform with gamification, social learning, and real-time chat.
+ZenPy is a full-stack coding web app and Python learning platform with gamification, social features, and real-time interaction.
 
-## Status
+## Live Website
 
-This project is actively evolving. APIs, UI behavior, and data contracts may change.
+- https://zenpy.games
 
-## Core Features
+## Quick Navigation
 
-- Guided Python question flow (250+ questions across multiple phases)
-- Client-side execution workflow (Pyodide-oriented validation model)
-- XP/level progression, Zen currency, achievements, streaks
-- Shop system with equippable cosmetics (name styles, frames, cards, banners, chat styles)
-- Auto-discovered premium GIF banners from assets
-- Community pages, follow/unfollow, profile modal, direct messages
-- Global real-time chat via Socket.IO
-- OTP-based signup + local auth + GitHub OAuth
-- Onboarding flow with username/social setup
-- Theme system with persisted preference (dark/light/nature/ocean/sunset)
+- [What is ZenPy](#what-is-zenpy)
+- [Platform Features](#platform-features)
+- [Question Types](#question-types)
+- [Analytics Dashboard](#analytics-dashboard)
+- [Gamification](#gamification)
+- [Shop and Economy](#shop-and-economy)
+- [Community and Social](#community-and-social)
+- [Themes and UI](#themes-and-ui)
+- [Authentication](#authentication)
+- [API Highlights](#api-highlights)
+- [Project Structure](#project-structure)
+- [Contact](#contact)
+- [Rules](#rules)
 
-## Tech Stack
+## What is ZenPy
 
-- Backend: Node.js, Express, Socket.IO
-- Auth/Security: JWT, Passport (GitHub), bcrypt
-- Data store: JSON files in [data](data)
-- Frontend: HTML/CSS/Vanilla JS
-- Email OTP: Resend
+ZenPy is designed for consistent coding growth. It combines a structured Python question journey, measurable performance analytics, progression systems, and social collaboration into one platform.
 
-## Project Structure
+<details>
+<summary><strong>Why ZenPy feels different</strong></summary>
 
-- [server](server): Express server, route modules, chat socket server
-- [public](public): HTML pages
-- [js](js): frontend logic per page + shared utilities
-- [css](css): global/theme/animation styling
-- [data](data): JSON datastore (users, progress, chat, follows, etc.)
-- [assets](assets): avatars, shop media, images
-- [scripts](scripts): reset + question generation + validation tooling
+- Learning flow is progression-driven, not random practice only.
+- Every solve contributes to XP, level, rank, streak, and economy.
+- You can build identity via cosmetics, titles, chat styles, and profile setups.
+- Dashboard analytics gives clear signals on speed, quality, and consistency.
 
-## Prerequisites
+</details>
 
-- Node.js 18+
-- npm 9+
-- GitHub OAuth app credentials (optional, for GitHub login)
-- Resend API key + verified sender (optional, for OTP email flow)
+## Platform Features
 
-## Local Setup
+- 250-question coding journey with phased progression.
+- Browser-based coding and validation flow.
+- Daily Python quiz with cooldown and reward system.
+- Achievement tracking and milestone unlocks.
+- Realtime global chat + direct messaging.
+- Profile onboarding with avatar and social links.
+- Competitive leaderboards by XP, speed, progression, and Zen.
 
-1) Install dependencies
+## Question Types
 
-```bash
-npm install
-```
+ZenPy includes a broad range of problem styles, from beginner to advanced:
 
-2) Create environment file
+- Basics: print, variables, arithmetic, input/output.
+- Data handling: strings, lists, indexing, slicing, conversions.
+- Logic and flow: conditional paths and iterative thinking.
+- Skill reinforcement: test-case driven objective checks.
+- Guided practice: hint-driven and concept-tagged prompts.
 
-Create `.env` in repo root with (as needed):
+<details>
+<summary><strong>Question metadata included</strong></summary>
 
-```env
-PORT=3000
-JWT_SECRET=change_me
-GITHUB_CLIENT_ID=...
-GITHUB_CLIENT_SECRET=...
-RESEND_API_KEY=...
-RESEND_FROM_EMAIL=noreply@your-domain.com
-```
+- `difficulty`
+- `category` / phase
+- `concepts`
+- `hints`
+- `optimalTime`
+- `xpBase`
+- `testCases` (visible + hidden where applicable)
 
-Notes:
-- `RESEND_FROM_EMAIL` must be a verified sender/domain in your Resend account.
-- OTP signup requires `RESEND_API_KEY` + `RESEND_FROM_EMAIL`.
+</details>
 
-3) Run
+## Analytics Dashboard
 
-```bash
-npm run dev
-```
+The dashboard is built for actionable feedback, not just score display.
 
-or
+- Completion percentage and solved/remaining split.
+- Total coding time and average/fastest/slowest solve time.
+- First-attempt success quality and retries.
+- Solve velocity (questions per day).
+- Consistency and pace trend insights.
+- Visual charts for speed mix, attempt quality, and progression trend.
 
-```bash
-npm start
-```
+<details>
+<summary><strong>Advanced insights shown in dashboard</strong></summary>
 
-App URL: `http://localhost:3000`
+- Consistency score
+- Perfect-attempt rate
+- Streak momentum
+- Projected completion ETA based on current velocity
+- Focus suggestions for speed vs depth balance
 
-## NPM Scripts
+</details>
 
-- `npm start` → run server via [server/server.js](server/server.js)
-- `npm run dev` → run with nodemon for local development
+## Gamification
 
-## Utility Scripts
+ZenPy rewards consistency and quality through layered progression:
 
-- Reset user/testing data:
+- XP and level system
+- Streak and longest streak tracking
+- Achievement unlocks (progress + behavior based)
+- Competitive ranking and public progression signals
+- Daily quiz reward loop
 
-```bash
-node scripts/resetDatabase.js
-```
+## Shop and Economy
 
-Clears:
-- [data/users.json](data/users.json)
-- [data/progress.json](data/progress.json)
-- [data/global_chat_messages.json](data/global_chat_messages.json)
-- [data/direct_messages.json](data/direct_messages.json)
-- [data/follows.json](data/follows.json)
-- [data/activity_log.json](data/activity_log.json)
-- [data/banned.json](data/banned.json)
+ZenPy runs on an in-app economy powered by Zen coins.
 
-- Generate base questions:
+- Earn Zen from engagement and quiz performance.
+- Spend Zen in the shop to unlock cosmetics.
+- Equip cosmetics across profile, chat, and community cards.
+- Unlock premium items via requirement gates (questions, XP, streaks).
 
-```bash
-node scripts/generateQuestions.js
-```
+<details>
+<summary><strong>Shop categories currently supported</strong></summary>
 
-- Extend question bank:
+- Name styles
+- Effects
+- Avatar frames
+- Name accessories/titles
+- Chat extras and styles
+- Profile card cosmetics
+- Banner cosmetics
 
-```bash
-node scripts/generateExtendedQuestions.js
-```
+</details>
 
-- Validate questions with Pyodide harness:
+## Community and Social
 
-```bash
-node scripts/validatePyodideQuestions.mjs
-```
+ZenPy has a social-first experience for learners and builders:
 
-## Authentication Model
+- Global real-time chat (Socket.IO)
+- Direct messages
+- Follow/unfollow network
+- Community profile discovery
+- Shareable identity via equipped cosmetics
 
-ZenPy supports:
-- Local auth (`/api/auth/login`)
-- OTP signup flow (`request-otp` → `verify-otp`)
+## Themes and UI
+
+Theme preference is persisted and available globally across the app.
+
+- dark
+- light
+- nature
+- ocean
+- sunset
+
+## Authentication
+
+ZenPy supports multiple auth paths:
+
+- Local login
+- OTP-based signup (`request-otp` → `verify-otp`)
 - GitHub OAuth (`/auth/github`)
 
-On successful auth, JWT is used for protected API access (`Authorization: Bearer <token>`).
+JWT is used for protected API requests.
 
-## API Overview
+## API Highlights
 
 ### Auth
-
 - `POST /api/auth/signup/request-otp`
 - `POST /api/auth/signup/resend-otp`
 - `POST /api/auth/signup/verify-otp`
 - `POST /api/auth/login`
 - `GET /api/me`
 
-### User, Onboarding, Quiz
-
+### User / Quiz / Progress
 - `GET /api/user`
 - `GET /api/user/:email`
-- `PUT /api/user`
 - `PUT /api/user/profile`
 - `POST /api/user/complete-onboarding`
-- `GET /api/user/progress/:email`
 - `GET /api/daily-quiz`
 - `POST /api/daily-quiz`
 
 ### Questions
-
 - `GET /api/questions`
 - `GET /api/question/:id`
 - `POST /api/question/:id/submit`
 - `GET /api/question/:id/tests`
 
-### Shop / Economy
-
+### Economy / Shop
 - `GET /api/shop/items`
 - `POST /api/shop/buy`
 - `POST /api/shop/equip`
-- `POST /api/user/add-zen`
 
-### Community / Social
-
+### Social / Leaderboard
 - `GET /api/community/users`
-- `GET /api/community/user/:email`
 - `POST /api/follow`
 - `POST /api/unfollow`
-- `GET /api/followers/:email`
-- `GET /api/following/:email`
-
-### Direct Messages
-
-- `GET /api/dm/conversations`
-- `GET /api/dm/:email`
-- `POST /api/dm/send`
-- `GET /api/dm/unread`
-
-### Leaderboard
-
-- `GET /api/leaderboard/progression`
-- `GET /api/leaderboard/speed`
 - `GET /api/leaderboard/xp`
+- `GET /api/leaderboard/speed`
+- `GET /api/leaderboard/progression`
 - `GET /api/leaderboard/zen`
 
-### Moderation / Admin
+## Project Structure
 
-- `POST /api/ban`
-- `GET /api/check-ban`
-- `GET /api/users`
-- `GET /api/admin/stats`
-- `POST /api/admin/unban`
+- [server](server) — Express backend, auth routes, quiz, economy, community and chat server logic
+- [public](public) — page entry points (dashboard, profile, practice, chat, community, auth)
+- [js](js) — frontend modules for dashboard, chat, community, leaderboard, shop, compiler, utils
+- [css](css) — base styles, themes, responsive styles, animations
+- [data](data) — JSON storage for users, progress, questions, chat, follows, inventory data
+- [assets](assets) — avatar, image, and shop media assets
+- [scripts](scripts) — reset and generation scripts for maintenance and content tooling
 
-### Upload
+## Contact
 
-- `POST /api/upload/avatar`
-	- Allowed avatar types: PNG, GIF, WEBP
-	- Max file size: 2MB
+For collaborations, support, or platform-related queries:
 
-## Socket.IO Events (Global Chat)
+- Website: https://zenpy.games
+- Reach out via the platform community channels and profile links.
 
-Client emits:
-- `authenticate`
-- `send_message`
-- `typing`
-- `report_message`
+## Rules
 
-Server emits:
-- `chat_history`
-- `new_message`
-- `online_count`
-- `auth_success`
-- `auth_error`
-- `user_typing`
-- `report_received`
-- `system_message`
-
-## Data Model Notes
-
-The app persists state in JSON files under [data](data). Server bootstrapping ensures missing files are created.
-
-Important files:
-- [data/users.json](data/users.json): account profile, inventory, achievements, social links
-- [data/progress.json](data/progress.json): per-user question progress and times
-- [data/questions.json](data/questions.json): question bank and tests
-- [data/shop_items.json](data/shop_items.json): base shop catalog
-- [data/global_chat_messages.json](data/global_chat_messages.json): global chat history
-- [data/direct_messages.json](data/direct_messages.json): DM history
-- [data/follows.json](data/follows.json): follow graph
-
-## Media and Theme Notes
-
-- Default avatar is SVG-based: [assets/avatars/default-avatar.svg](assets/avatars/default-avatar.svg)
-- Existing JPEG assets have been removed from repo usage path
-- Theme preference persists in localStorage key `zenpy_theme`
-- Available themes: dark, light, nature, ocean, sunset
-
-## Troubleshooting
-
-- Login works but app redirects unexpectedly:
-	- Check `JWT_SECRET` consistency and token storage in browser localStorage.
-
-- OTP mail not sending:
-	- Verify `RESEND_API_KEY` and `RESEND_FROM_EMAIL`.
-	- Ensure sender domain is verified in Resend.
-
-- No users/data after reset:
-	- This is expected after running `node scripts/resetDatabase.js`.
-
-- GIF banners not appearing:
-	- Confirm files are under `assets/shop` with `.gif` extension.
-	- Auto-generated items are derived at runtime by server startup helpers.
-
-## Security / Production Notes
-
-- Replace fallback JWT secret for production.
-- Session cookie is currently `secure: false`; set secure cookies + HTTPS in production.
-- JSON file storage is suitable for development/testing; migrate to a database for production scale.
+- Use ZenPy for learning and fair coding practice.
+- Respect community members in chat and DMs.
+- Avoid spam, abuse, automation, and exploit attempts.
+- Keep submissions authentic—do not misuse the platform.
 
 ## License
 

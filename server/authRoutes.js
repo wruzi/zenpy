@@ -9,10 +9,39 @@ const JWT_SECRET = process.env.JWT_SECRET || 'zenpy_secret_key_change_in_product
 const RESEND_API_KEY = (process.env.RESEND_API_KEY || '').trim();
 const RESEND_FROM_EMAIL = (process.env.RESEND_FROM_EMAIL || process.env.ESEND_FROM_EMAIL || '').trim();
 const SIGNUP_OTP_TTL_MS = 10 * 60 * 1000;
+const SIGNUP_RESEND_COOLDOWN_MS = 3 * 60 * 1000;
+const SIGNUP_RESEND_MAX_TRIES = 2;
+const SIGNUP_RESEND_BLOCK_MS = 12 * 60 * 60 * 1000;
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
 module.exports = function(app) {
     const { readJSON, writeJSON } = app.locals;
+    const signupResendState = new Map();
+
+    function getSignupResendInfo(email) {
+        const now = Date.now();
+        const existing = signupResendState.get(email) || {
+            attempts: 0,
+            cooldownUntil: 0,
+            blockedUntil: 0
+        };
+
+        if (existing.blockedUntil && now >= existing.blockedUntil) {
+            const resetInfo = { attempts: 0, cooldownUntil: 0, blockedUntil: 0 };
+            signupResendState.set(email, resetInfo);
+            return resetInfo;
+        }
+
+        return existing;
+    }
+
+    function setSignupResendInfo(email, info) {
+        signupResendState.set(email, {
+            attempts: Number(info.attempts) || 0,
+            cooldownUntil: Number(info.cooldownUntil) || 0,
+            blockedUntil: Number(info.blockedUntil) || 0
+        });
+    }
 
     function buildGithubProfileLink(username = '') {
         const clean = String(username || '').trim().replace(/^@+/, '');
@@ -245,6 +274,11 @@ module.exports = function(app) {
                 return res.status(400).json({ success: false, message: validation.message });
             }
 
+            const resendInfo = getSignupResendInfo(validation.email);
+            if (resendInfo.blockedUntil && Date.now() < resendInfo.blockedUntil) {
+                return res.status(429).json({ success: false, message: 'Try again later.' });
+            }
+
             const users = readJSON('users.json');
             if (users.some(u => u.email === validation.email)) {
                 return res.status(409).json({ success: false, message: 'Email is already registered. Please login.' });
@@ -264,6 +298,12 @@ module.exports = function(app) {
 
             await sendSignupOtpEmail(validation.email, validation.username, otp);
 
+            setSignupResendInfo(validation.email, {
+                attempts: 0,
+                cooldownUntil: 0,
+                blockedUntil: 0
+            });
+
             res.json({ success: true, message: 'OTP sent to your email.' });
         } catch (error) {
             console.error('Signup OTP request error:', error.message);
@@ -278,14 +318,30 @@ module.exports = function(app) {
                 return res.status(400).json({ success: false, message: 'Email is required.' });
             }
 
+            const now = Date.now();
+            const resendInfo = getSignupResendInfo(email);
+
+            if (resendInfo.blockedUntil && now < resendInfo.blockedUntil) {
+                return res.status(429).json({ success: false, message: 'Try again later.' });
+            }
+
+            if (resendInfo.cooldownUntil && now < resendInfo.cooldownUntil) {
+                const remainingSeconds = Math.max(1, Math.ceil((resendInfo.cooldownUntil - now) / 1000));
+                return res.status(429).json({ success: false, message: `Please wait ${remainingSeconds}s before resending OTP.` });
+            }
+
+            if (resendInfo.attempts >= SIGNUP_RESEND_MAX_TRIES) {
+                setSignupResendInfo(email, {
+                    attempts: resendInfo.attempts,
+                    cooldownUntil: 0,
+                    blockedUntil: now + SIGNUP_RESEND_BLOCK_MS
+                });
+                return res.status(429).json({ success: false, message: 'Try again later.' });
+            }
+
             const otpData = getOTPData(email);
             if (!otpData || !otpData.data || otpData.data.purpose !== 'signup') {
                 return res.status(404).json({ success: false, message: 'No pending signup found. Request OTP again.' });
-            }
-
-            const now = Date.now();
-            if (otpData.data.lastResendAt && now - otpData.data.lastResendAt < 45000) {
-                return res.status(429).json({ success: false, message: 'Please wait a few seconds before resending OTP.' });
             }
 
             const newOtp = generateOTP();
@@ -294,6 +350,13 @@ module.exports = function(app) {
                 lastResendAt: now
             }, SIGNUP_OTP_TTL_MS);
             await sendSignupOtpEmail(email, otpData.data.username, newOtp);
+
+            const updatedAttempts = resendInfo.attempts + 1;
+            setSignupResendInfo(email, {
+                attempts: updatedAttempts,
+                cooldownUntil: now + SIGNUP_RESEND_COOLDOWN_MS,
+                blockedUntil: 0
+            });
 
             res.json({ success: true, message: 'A new OTP has been sent.' });
         } catch (error) {

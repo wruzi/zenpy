@@ -173,6 +173,11 @@
             loadingScreen: document.getElementById('loadingScreen')
         };
 
+        const RESEND_COOLDOWN_SECONDS = 180;
+        const RESEND_MAX_TRIES = 2;
+        let resendAttempts = 0;
+        let resendCooldownInterval = null;
+
         function setError(message = '') {
             if (!message) {
                 els.signupError.classList.add('hidden');
@@ -188,6 +193,44 @@
             setTimeout(() => {
                 window.location.href = '/dashboard';
             }, 700);
+        }
+
+        function clearResendCooldown() {
+            if (resendCooldownInterval) {
+                clearInterval(resendCooldownInterval);
+                resendCooldownInterval = null;
+            }
+        }
+
+        function startResendCooldown(seconds = RESEND_COOLDOWN_SECONDS) {
+            clearResendCooldown();
+
+            let remaining = Number(seconds) || RESEND_COOLDOWN_SECONDS;
+            els.resendOtpBtn.disabled = true;
+
+            const tick = () => {
+                const min = Math.floor(remaining / 60);
+                const sec = remaining % 60;
+                els.resendOtpBtn.textContent = `Resend in ${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+
+                if (remaining <= 0) {
+                    clearResendCooldown();
+                    if (resendAttempts >= RESEND_MAX_TRIES) {
+                        els.resendOtpBtn.disabled = true;
+                        els.resendOtpBtn.textContent = 'Resend Locked';
+                        setError('Try again later.');
+                    } else {
+                        els.resendOtpBtn.disabled = false;
+                        els.resendOtpBtn.textContent = 'Resend OTP';
+                    }
+                    return;
+                }
+
+                remaining -= 1;
+            };
+
+            tick();
+            resendCooldownInterval = setInterval(tick, 1000);
         }
 
         async function validateAuthToken() {
@@ -242,6 +285,10 @@
                 }
 
                 els.otpPanel.classList.remove('hidden');
+                resendAttempts = 0;
+                clearResendCooldown();
+                els.resendOtpBtn.disabled = false;
+                els.resendOtpBtn.textContent = 'Resend OTP';
                 showToast('OTP sent to your email.', 'success');
             } catch (error) {
                 setError('Network error while sending OTP.');
@@ -296,6 +343,13 @@
                 return;
             }
 
+            if (resendAttempts >= RESEND_MAX_TRIES) {
+                els.resendOtpBtn.disabled = true;
+                els.resendOtpBtn.textContent = 'Resend Locked';
+                setError('Try again later.');
+                return;
+            }
+
             els.resendOtpBtn.disabled = true;
             els.resendOtpBtn.textContent = 'Resending...';
 
@@ -312,12 +366,23 @@
                     return;
                 }
 
+                resendAttempts += 1;
                 showToast('OTP resent to your email.', 'info');
+
+                if (resendAttempts >= RESEND_MAX_TRIES) {
+                    els.resendOtpBtn.disabled = true;
+                    els.resendOtpBtn.textContent = 'Resend Locked';
+                    setError('Try again later.');
+                } else {
+                    startResendCooldown(RESEND_COOLDOWN_SECONDS);
+                }
             } catch (error) {
                 setError('Network error while resending OTP.');
             } finally {
-                els.resendOtpBtn.disabled = false;
-                els.resendOtpBtn.textContent = 'Resend OTP';
+                if (!resendCooldownInterval && resendAttempts < RESEND_MAX_TRIES) {
+                    els.resendOtpBtn.disabled = false;
+                    els.resendOtpBtn.textContent = 'Resend OTP';
+                }
             }
         });
 

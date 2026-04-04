@@ -54,7 +54,8 @@ const jsonStore = createJsonStore({
     keys: Object.keys(dataFiles),
     defaults: dataFiles,
     tableName: process.env.SUPABASE_JSON_TABLE || 'json_store',
-    logger: console
+    logger: console,
+    localMirror: String(process.env.SUPABASE_LOCAL_MIRROR || 'false').toLowerCase() === 'true'
 });
 
 app.locals.readJSON = (filename) => jsonStore.readJSON(filename);

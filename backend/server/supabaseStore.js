@@ -14,7 +14,7 @@ function safeParseJSON(rawValue, fallback) {
     }
 }
 
-function createJsonStore({ dataDir, keys = [], defaults = {}, tableName = 'json_store', logger = console }) {
+function createJsonStore({ dataDir, keys = [], defaults = {}, tableName = 'json_store', logger = console, localMirror = false }) {
     const cache = new Map();
     const keySet = new Set(keys);
     const pendingWrites = new Map();
@@ -50,6 +50,11 @@ function createJsonStore({ dataDir, keys = [], defaults = {}, tableName = 'json_
     function writeLocalFile(key, data) {
         const filePath = localFilePath(key);
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+    }
+
+    function shouldWriteLocal() {
+        if (mode === 'local') return true;
+        return !!localMirror;
     }
 
     function queueSupabaseWrite(key, data) {
@@ -111,7 +116,9 @@ function createJsonStore({ dataDir, keys = [], defaults = {}, tableName = 'json_
             if (remoteMap.has(key)) {
                 const remoteValue = deepClone(remoteMap.get(key));
                 cache.set(key, remoteValue);
-                writeLocalFile(key, remoteValue);
+                if (shouldWriteLocal()) {
+                    writeLocalFile(key, remoteValue);
+                }
             } else {
                 queueSupabaseWrite(key, cache.get(key));
             }
@@ -136,10 +143,12 @@ function createJsonStore({ dataDir, keys = [], defaults = {}, tableName = 'json_
         const cloned = deepClone(data);
         cache.set(key, cloned);
 
-        try {
-            writeLocalFile(key, cloned);
-        } catch (error) {
-            logger.error(`[supabase-store] local write failed for ${key}:`, error.message);
+        if (shouldWriteLocal()) {
+            try {
+                writeLocalFile(key, cloned);
+            } catch (error) {
+                logger.error(`[supabase-store] local write failed for ${key}:`, error.message);
+            }
         }
 
         queueSupabaseWrite(key, cloned);
@@ -148,31 +157,40 @@ function createJsonStore({ dataDir, keys = [], defaults = {}, tableName = 'json_
     async function init() {
         ensureLocalDir();
 
-        for (const key of keySet) {
-            cache.set(key, readLocalFile(key));
-        }
-
         const supabaseUrl = (process.env.SUPABASE_URL || '').trim();
         const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || '').trim();
 
-        if (!supabaseUrl || !supabaseKey) {
+        if (supabaseUrl && supabaseKey) {
+            try {
+                supabase = createClient(supabaseUrl, supabaseKey, {
+                    auth: { persistSession: false, autoRefreshToken: false }
+                });
+
+                for (const key of keySet) {
+                    if (localMirror) {
+                        cache.set(key, readLocalFile(key));
+                    } else {
+                        const fallback = Object.prototype.hasOwnProperty.call(defaults, key) ? deepClone(defaults[key]) : [];
+                        cache.set(key, fallback);
+                    }
+                }
+
+                mode = 'supabase';
+                await hydrateFromSupabase();
+                logger.log(`[supabase-store] Supabase sync active (table: ${tableName})${localMirror ? ' with local mirror.' : ' without local mirror.'}`);
+                return;
+            } catch (error) {
+                mode = 'local';
+                supabase = null;
+                logger.error('[supabase-store] Supabase unavailable. Falling back to local JSON files:', error.message);
+            }
+        } else {
             mode = 'local';
             logger.warn('[supabase-store] SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing. Using local JSON files.');
-            return;
         }
 
-        try {
-            supabase = createClient(supabaseUrl, supabaseKey, {
-                auth: { persistSession: false, autoRefreshToken: false }
-            });
-
-            await hydrateFromSupabase();
-            mode = 'supabase';
-            logger.log(`[supabase-store] Supabase sync active (table: ${tableName}).`);
-        } catch (error) {
-            mode = 'local';
-            supabase = null;
-            logger.error('[supabase-store] Supabase unavailable. Falling back to local JSON files:', error.message);
+        for (const key of keySet) {
+            cache.set(key, readLocalFile(key));
         }
     }
 

@@ -12,8 +12,30 @@ const SIGNUP_OTP_TTL_MS = 10 * 60 * 1000;
 const SIGNUP_RESEND_COOLDOWN_MS = 3 * 60 * 1000;
 const SIGNUP_RESEND_MAX_TRIES = 2;
 const SIGNUP_RESEND_BLOCK_MS = 12 * 60 * 60 * 1000;
+const APP_BASE_URL = (process.env.APP_BASE_URL || '').trim();
+const GITHUB_CALLBACK_URL = (process.env.GITHUB_CALLBACK_URL || '').trim();
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 const IS_PRODUCTION = (process.env.NODE_ENV || '').toLowerCase() === 'production';
+
+function trimTrailingSlash(value = '') {
+    return String(value || '').trim().replace(/\/+$/, '');
+}
+
+function resolveBaseUrl(req) {
+    const configuredBase = trimTrailingSlash(APP_BASE_URL);
+    if (configuredBase) return configuredBase;
+
+    const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+    const proto = forwardedProto || req.protocol || 'http';
+    const host = req.get('host');
+    return trimTrailingSlash(`${proto}://${host}`);
+}
+
+function resolveGithubCallbackUrl(req) {
+    const configuredCallback = trimTrailingSlash(GITHUB_CALLBACK_URL);
+    if (configuredCallback) return configuredCallback;
+    return `${resolveBaseUrl(req)}/auth/github/callback`;
+}
 
 module.exports = function(app) {
     const { readJSON, writeJSON } = app.locals;
@@ -249,7 +271,7 @@ module.exports = function(app) {
     passport.use(new GitHubStrategy({
         clientID: process.env.GITHUB_CLIENT_ID || 'placeholder',
         clientSecret: process.env.GITHUB_CLIENT_SECRET || 'placeholder',
-        callbackURL: "/auth/github/callback",
+        callbackURL: GITHUB_CALLBACK_URL || '/auth/github/callback',
         scope: ['user:email']
     },
     function(accessToken, refreshToken, profile, cb) {
@@ -275,14 +297,23 @@ module.exports = function(app) {
     // --- OAuth Routes ---
 
     // GitHub Auth
-    app.get('/auth/github',
-        passport.authenticate('github', { scope: [ 'user:email' ] }));
+    app.get('/auth/github', (req, res, next) => {
+        const callbackURL = resolveGithubCallbackUrl(req);
+        passport.authenticate('github', {
+            scope: ['user:email'],
+            callbackURL
+        })(req, res, next);
+    });
 
-    app.get('/auth/github/callback', 
-        passport.authenticate('github', { failureRedirect: '/login' }),
-        function(req, res) {
-            handleSuccessfulOauthAndRedirectToFrontend(req, res);
-        });
+    app.get('/auth/github/callback', (req, res, next) => {
+        const callbackURL = resolveGithubCallbackUrl(req);
+        passport.authenticate('github', {
+            failureRedirect: '/login',
+            callbackURL
+        })(req, res, next);
+    }, function(req, res) {
+        handleSuccessfulOauthAndRedirectToFrontend(req, res);
+    });
 
     app.post('/api/auth/signup/request-otp', async (req, res) => {
         try {

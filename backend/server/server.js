@@ -14,6 +14,7 @@ const { createJsonStore } = require('./supabaseStore');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
+app.set('trust proxy', 1);
 
 // --- Middleware ---
 app.use(cors());
@@ -210,12 +211,21 @@ app.get('/api/health', (req, res) => {
 
 // --- Start Server ---
 const PORT = process.env.PORT || 3000;
+const HOST = (process.env.HOST || '0.0.0.0').trim();
+const PUBLIC_IP = (process.env.PUBLIC_IP || '216.24.57.1').trim();
+const PUBLIC_DOMAIN = (process.env.PUBLIC_DOMAIN || 'zenpy.games').trim();
+const LOCAL_URL = `http://localhost:${PORT}`;
+const IP_URL = `http://${PUBLIC_IP}:${PORT}`;
+const DOMAIN_URL = `https://${PUBLIC_DOMAIN}`;
 
 async function bootstrap() {
     await jsonStore.init();
 
-    server.listen(PORT, () => {
-        console.log(`\n🚀 ZenPy server running on http://localhost:${PORT}`);
+    server.listen(PORT, HOST, () => {
+        console.log(`\n🚀 ZenPy server is running`);
+        console.log(`🌐 Local URL: ${LOCAL_URL}`);
+        console.log(`🌍 Public IP URL: ${IP_URL}`);
+        console.log(`🔗 Domain URL: ${DOMAIN_URL}`);
         console.log(`📁 Data directory: ${DATA_DIR}`);
         console.log(`🗄️ Storage mode: ${jsonStore.getMode()}`);
         console.log(`🎮 Ready to code!\n`);
